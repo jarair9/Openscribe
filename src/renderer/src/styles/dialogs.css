@@ -1,0 +1,283 @@
+/* Modal overlay and dialogs. */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-dialog);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(4, 4, 5, 0.7);
+  backdrop-filter: blur(6px);
+  animation: overlay-in var(--dur) ease both;
+}
+
+.dialog {
+  width: min(560px, 100%);
+  max-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-panel);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 32px 80px rgba(0, 0, 0, 0.62);
+  overflow: hidden;
+  border-color: #2e2e33;
+  animation: dialog-in 200ms var(--ease) both;
+}
+
+.dialog.wide {
+  width: min(900px, 100%);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border);
+  border-bottom-color: var(--edge-hairline);
+}
+
+.dialog-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.dialog-subtitle {
+  margin: 4px 0 0;
+  font-size: var(--text-md);
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-top: 5px;
+}
+
+.dialog-body {
+  padding: 18px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 13px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-rail);
+  border-top-color: var(--edge-hairline);
+}
+
+.dialog-footer .footer-hint {
+  margin-right: auto;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.confirm-message {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* Export ------------------------------------------------------------------ */
+
+.export-layout {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.export-filmstrip {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+
+.export-strip-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 11px;
+  border-bottom: 1px solid var(--edge-hairline);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.export-strip-length {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+.export-strip-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 268px;
+}
+
+.export-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+}
+
+.export-cell figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--text-3xs);
+  color: var(--text-faint);
+}
+
+.export-cell-index {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-active);
+  color: var(--text-secondary);
+  font-size: var(--text-3xs);
+}
+
+.export-thumb {
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--edge-divider);
+  border-radius: var(--radius);
+  background: var(--asset-paper);
+  overflow: hidden;
+}
+
+.export-thumb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.export-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.export-dir {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.export-dir .text-input {
+  min-width: 0;
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  text-overflow: ellipsis;
+}
+
+.export-note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+.export-note.warn {
+  color: var(--warning);
+}
+
+.export-running {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.export-bar {
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-sunken);
+  box-shadow: inset 0 0 0 1px var(--edge-hairline);
+  overflow: hidden;
+}
+
+.export-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-strong), var(--accent));
+  transition: width var(--dur) var(--ease);
+}
+
+.export-running-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+}
+
+.export-running-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.export-error,
+.export-done {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.export-error {
+  color: var(--danger);
+}
+
+.export-done {
+  color: var(--success);
+}
+
+/* The off-screen painter. Laid out at real pixel size so getScreenCTM works,
+   but never visible and never interactive. */
+.export-stage {
+  position: fixed;
+  top: 0;
+  left: -20000px;
+  opacity: 0;
+  pointer-events: none;
+}

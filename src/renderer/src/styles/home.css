@@ -1,0 +1,502 @@
+/* Start screen. */
+
+.recent-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 10px 0;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  text-align: left;
+}
+
+.recent-item:hover {
+  background: var(--surface-panel);
+  border-color: var(--border);
+}
+
+.recent-item .recent-name {
+  font-size: 12.5px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-item .recent-path {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-item .recent-meta {
+  margin-left: auto;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.welcome-mark {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--surface-raised-hover);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+  color: var(--text);
+}
+
+.welcome.home {
+  position: relative;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+  background:
+    radial-gradient(900px 520px at 12% -10%, rgba(255, 63, 208, 0.1), transparent 60%),
+    radial-gradient(720px 440px at 88% 0%, rgba(226, 28, 175, 0.07), transparent 60%),
+    radial-gradient(820px 430px at 20% -8%, rgba(255, 255, 255, 0.05), transparent 64%),
+    var(--surface-canvas);
+}
+
+.welcome.home::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(940px 640px at 50% 0%, rgba(0, 0, 0, 0.9), transparent 74%);
+  mask-image: radial-gradient(940px 640px at 50% 0%, rgba(0, 0, 0, 0.9), transparent 74%);
+  pointer-events: none;
+}
+
+.home-inner {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(24px, 4.5vh, 48px) clamp(24px, 5vw, 56px) 48px;
+}
+
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 720px;
+}
+
+.home-brand {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 15px;
+  align-items: center;
+}
+
+.home-mark {
+  grid-row: 1 / span 2;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: linear-gradient(160deg, #232327, var(--surface-subheader));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 10px 24px rgba(0, 0, 0, 0.45);
+}
+
+.home-mark img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.home-title {
+  grid-column: 2;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(23px, 2.4vw, 30px);
+  font-weight: 640;
+  letter-spacing: -0.55px;
+  line-height: 1.12;
+}
+
+.home-flourish {
+  grid-column: 2;
+  width: min(212px, 100%);
+  height: 11px;
+  margin-top: 3px;
+  overflow: visible;
+}
+
+.home-flourish path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.8;
+  stroke-dasharray: 280;
+  stroke-dashoffset: 280;
+  animation: home-flourish-draw 1s 0.2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.home-tagline {
+  margin: 20px 0 0;
+  max-width: 44ch;
+  font-size: 14px;
+  line-height: 1.62;
+  color: var(--text-secondary);
+}
+
+.home-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.home-primary,
+.home-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 40px;
+  padding: 0 15px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.home-primary {
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  color: #101013;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.38);
+}
+
+.home-primary:hover {
+  background: #ffffff;
+  border-color: var(--text-bright);
+  transform: translateY(-1px);
+}
+
+.home-ghost {
+  background: var(--surface-subheader);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+}
+
+.home-ghost:hover {
+  background: var(--surface-raised-hover);
+  border-color: var(--tile-edge-hover);
+  transform: translateY(-1px);
+}
+
+.home-cta kbd {
+  margin-left: 3px;
+  padding: 2px 5px;
+  border: 1px solid currentColor;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  opacity: 0.42;
+}
+
+.home-footnote {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 30px;
+  font-size: 11px;
+  color: var(--text-disabled);
+}
+
+.home-footnote code {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.home-projects {
+  margin-top: clamp(30px, 4vh, 46px);
+}
+
+.home-projects-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.home-projects-head h2 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.home-count {
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--tile-icon-bg);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-project {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--surface-subheader), #121214);
+  transition: border-color var(--dur) ease, transform var(--dur) ease, box-shadow var(--dur) ease;
+}
+
+.home-project:hover {
+  border-color: var(--tile-edge-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-pop);
+}
+
+.home-project-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--edge-hairline);
+  background: #0e0e10;
+}
+
+.project-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.project-thumb-fallback {
+  background: linear-gradient(160deg, #1a1a1d, #121214);
+}
+
+.project-thumb-loading {
+  background: linear-gradient(100deg, #131315 40%, #1d1d21 50%, #131315 60%);
+  background-size: 200% 100%;
+  animation: thumb-shimmer 1.4s ease infinite;
+}
+
+.home-project-info {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px 13px;
+  text-align: left;
+}
+
+.home-project-name {
+  overflow: hidden;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-project-meta {
+  overflow: hidden;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-project-edit {
+  padding: 11px 12px 12px;
+}
+
+.home-project-remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 7px;
+  background: rgba(20, 20, 23, 0.82);
+  color: var(--text-muted);
+  opacity: 0;
+  backdrop-filter: blur(4px);
+  transition: opacity 120ms ease, background 120ms ease, color 120ms ease;
+}
+
+.home-project:hover .home-project-remove,
+.home-project-remove:focus-visible {
+  opacity: 1;
+}
+
+.home-project-remove:hover {
+  background: #b23c3c;
+  color: var(--text-bright);
+}
+
+.home-rename {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 9px;
+  border: 1px solid #3d3d46;
+  border-radius: 10px;
+  background: #1e1e22;
+}
+
+.home-rename-input {
+  flex: 1;
+  height: 27px;
+  background: #121215;
+  font-size: 12.5px;
+}
+
+.home-rename-input:focus {
+  border-color: var(--border-strong);
+  outline: none;
+}
+
+.home-rename-btn {
+  display: grid;
+  flex: none;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 7px;
+  background: #2b2b31;
+  color: var(--text-secondary);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.home-rename-btn:hover {
+  background: #3a3a42;
+  color: var(--text);
+}
+
+.home-rename-btn:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.home-empty {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 30px 22px 26px;
+  border: 1px dashed #2f2f35;
+  border-radius: 12px;
+  background: #16161a;
+  text-align: center;
+}
+
+.home-empty svg {
+  margin-bottom: 12px;
+  color: #43434a;
+}
+
+.home-empty-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.home-empty-body {
+  margin: 6px 0 0;
+  max-width: 33ch;
+  color: var(--text-disabled);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+.home-empty-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  margin-top: 16px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: #24242a;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.home-empty-action:hover {
+  background: #2d2d34;
+  border-color: #55555d;
+}
+
+.home-projects-hint {
+  margin: 14px 4px 1px;
+  color: var(--text-disabled);
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+
+@media (max-width: 940px) {
+  .home-grid {
+    grid-template-columns: repeat(auto-fill, minmax(184px, 1fr));
+  }
+}
+
+@media (max-height: 600px) {
+  .home-footnote {
+    display: none;
+  }
+}
+
+/* Motion preferences are evaluated last so they can veto an animation declared above. */
+@media (prefers-reduced-motion: reduce) {
+  .home-flourish path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .home-primary:hover,
+  .home-ghost:hover {
+    transform: none;
+  }
+  .project-thumb-loading {
+    animation: none;
+  }
+}

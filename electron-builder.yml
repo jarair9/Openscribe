@@ -1,0 +1,23 @@
+appId: studio.openwhiteboard.app
+productName: OpenWhiteboard Studio
+directories:
+  output: release
+files:
+  - out/**
+  - package.json
+extraResources:
+  - from: open-assets
+    to: open-assets
+  - from: src/assets/Openscribe.png
+    to: Openscribe.png
+  # Video export needs an encoder on every machine, not only on the ones that
+  # happen to have ffmpeg installed.
+  - from: resources/ffmpeg/ffmpeg.exe
+    to: ffmpeg/ffmpeg.exe
+  - from: resources/ffmpeg/FFMPEG-LICENSE.txt
+    to: ffmpeg/FFMPEG-LICENSE.txt
+win:
+  target: nsis
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true

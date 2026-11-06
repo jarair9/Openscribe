@@ -1,0 +1,48 @@
+{
+  "name": "openwhiteboard-studio",
+  "version": "0.1.0",
+  "description": "Local-first, open-source whiteboard animation studio",
+  "license": "MIT",
+  "author": "OpenWhiteboard Contributors",
+  "private": true,
+  "main": "./out/main/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "generate:hand-catalog": "node scripts/generate-hand-catalog.mjs",
+    "predev": "npm run generate:hand-catalog",
+    "dev": "electron-vite dev",
+    "prebuild": "npm run generate:hand-catalog",
+    "build": "npm run typecheck && electron-vite build",
+    "preview": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "package": "npm run build && electron-builder --win --config electron-builder.yml"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.64.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "svgpath": "^2.6.0",
+    "tegaki": "^1.1.0",
+    "zod": "^4.6.7",
+    "zustand": "^5.0.16"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "electron": "^45.1.0",
+    "electron-vite": "^6.0.0",
+    "happy-dom": "^21.0.4",
+    "pngjs": "^7.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

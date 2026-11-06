@@ -1,0 +1,312 @@
+/* Drawing surface, selection handles, guides, camera. */
+
+.canvas-host {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-color: var(--text-bright);
+  background-image: none;
+  background-size: 24px 24px;
+}
+
+.canvas-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.canvas-svg.tool-pan {
+  cursor: grab;
+}
+
+.canvas-svg.panning {
+  cursor: grabbing;
+}
+
+.canvas-svg.tool-text {
+  cursor: text;
+}
+
+.canvas-svg.tool-create {
+  cursor: crosshair;
+}
+
+.canvas-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* A floating instrument, not a piece of paper: it matches the chrome so the
+   white canvas reads as the only bright thing on screen. */
+.canvas-hud {
+  position: absolute;
+  bottom: calc(var(--space-3) + 2px);
+  right: calc(var(--space-3) + 2px);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  min-height: 34px;
+  border: 1px solid var(--edge-divider);
+  border-radius: var(--radius-md);
+  background: rgba(18, 18, 20, 0.92);
+  box-shadow: var(--shadow-pop), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  color: var(--text-secondary);
+}
+
+.canvas-hud .zoom-value {
+  min-width: 52px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.canvas-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  background: rgba(24, 28, 34, 0.94);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-pop);
+  min-height: 30px;
+  border-color: var(--border-strong);
+}
+
+.canvas-badge .camera-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 1px;
+  border: 1.5px solid var(--camera);
+}
+
+.canvas-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.canvas-empty-card {
+  pointer-events: auto;
+  max-width: calc(100% - 32px);
+  padding: 26px;
+  text-align: center;
+  background: rgba(21, 21, 22, 0.97);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-pop);
+  width: 360px;
+  border-top: 2px solid var(--primary);
+}
+
+.canvas-empty-card h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.canvas-empty-card p {
+  margin: 0 0 14px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.canvas-text-editor {
+  position: absolute;
+  z-index: 20;
+  background: #fff;
+  color: var(--surface-subheader);
+  border: 1.5px solid var(--accent);
+  border-radius: 2px;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  padding: 0;
+  line-height: 1.2;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.selection-box {
+  fill: none;
+  stroke: var(--selection);
+  stroke-width: 1.5;
+}
+
+.selection-handle {
+  fill: #ffffff;
+  stroke: var(--selection);
+  stroke-width: 1.5;
+}
+
+.selection-handle:hover {
+  fill: var(--selection);
+}
+
+.rotate-handle-line {
+  stroke: var(--selection);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 3;
+}
+
+.camera-frame {
+  fill: none;
+  stroke: var(--camera);
+  stroke-width: 1.5;
+  stroke-dasharray: none;
+}
+
+.camera-label {
+  fill: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.guide-line {
+  stroke: var(--camera);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.canvas-hud .zoom-value:hover {
+  background: #f0f0f2;
+}
+
+.storyboard-add {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bg-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.bg-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.bg-swatch:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.bg-swatch.active {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.bg-swatch-add {
+  display: grid;
+  place-items: center;
+  background: var(--surface-raised-hover);
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.28);
+  color: var(--text-secondary);
+}
+
+.bg-swatch-add:hover {
+  background: var(--surface-selected);
+  color: var(--text-bright);
+}
+
+.bg-color-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bg-more-toggle {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bg-more-toggle:hover {
+  color: var(--accent);
+}
+
+.canvas-page {
+  fill: #ffffff;
+  stroke: none;
+  filter: none;
+}
+
+.canvas-hud .icon-btn:hover:not(:disabled) {
+  background: #f0f0f2;
+}
+
+.camera-diagonal {
+  stroke: var(--camera);
+}
+
+.camera-handle {
+  fill: #ffffff;
+  stroke: var(--camera);
+  stroke-width: 1.5px;
+}
+
+.camera-handle:hover {
+  fill: var(--camera);
+}
+
+.camera-chip {
+  fill: var(--camera);
+}
+
+.zoom-rail-btn {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  border: 1px solid #2c2c30;
+  background: var(--surface-subheader);
+  color: var(--text-secondary);
+  flex: none;
+}
+
+.zoom-rail-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+  color: var(--text-bright);
+}
+
+.zoom-rail-line {
+  flex: 1;
+  width: 1px;
+  min-height: 14px;
+  background: #2f2f34;
+}

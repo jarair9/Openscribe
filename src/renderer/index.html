@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: ows-asset: ows-library:; media-src 'self' data: blob: ows-asset: ows-library:; connect-src 'self' ows-asset: ows-library: ws://localhost:* http://localhost:*; font-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="../assets/Openscribe.png" />
+    <title>OpenWhiteboard Studio</title>
+    <style>
+      /* Boot splash. Painted by the document itself so the window has something
+         to show before the bundle has parsed, mounted, and read the project
+         store. React removes it once the first frame is on screen. */
+      html {
+        background: #0a0a0b;
+      }
+
+      #boot {
+        position: fixed;
+        inset: 0;
+        z-index: 9000;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(760px 400px at 50% 34%, #131316 0%, #0a0a0b 68%),
+          #0a0a0b;
+        color: #f1f1f2;
+        font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+        transition: opacity 260ms ease, visibility 260ms ease;
+      }
+
+      body.booted #boot {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .boot-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        animation: boot-rise 460ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+      }
+
+      @keyframes boot-rise {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* A real, indeterminate progress bar: a rounded track with a gradient
+         sweep that keeps moving while the app is genuinely loading. */
+      .boot-track {
+        position: relative;
+        width: 220px;
+        height: 5px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+
+      .boot-bar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 42%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #e21caf, #ff3fd0);
+        animation: boot-sweep 1.35s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      }
+
+      @keyframes boot-sweep {
+        0% {
+          transform: translateX(-110%);
+        }
+        100% {
+          transform: translateX(280%);
+        }
+      }
+
+      .boot-stage {
+        margin-top: 16px;
+        min-height: 15px;
+        font-size: 11.5px;
+        letter-spacing: 0.15px;
+        color: #8a8a90;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .boot-card {
+          animation: none;
+        }
+
+        .boot-bar {
+          animation: none;
+          transform: translateX(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="boot" role="status" aria-live="polite">
+      <div class="boot-card">
+        <div class="boot-track">
+          <div class="boot-bar"></div>
+        </div>
+        <div class="boot-stage" id="boot-stage">Loading</div>
+      </div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+/*
+  OpenWhiteboard Studio — stylesheet entry point.
+
+  Load order is the layering contract:
+    tokens     raw values, nothing else
+    base       document defaults and the app frame
+    controls   primitives shared by every surface
+    <domain>   one file per surface, in shell order
+    motion     keyframes and font faces, referenced by the above
+
+  A component's rules belong to exactly one file. Never re-declare a selector in a
+  later layer to change its appearance — edit the rule where it lives.
+*/
+
+@import './tokens.css';
+@import './base.css';
+@import './motion.css';
+@import './controls.css';
+@import './shell.css';
+@import './panel.css';
+@import './canvas.css';
+@import './dock.css';
+@import './inspector.css';
+@import './home.css';
+@import './dialogs.css';
+@import './overlays.css';

@@ -1,0 +1,6050 @@
+[
+ {
+  "id": "4792",
+  "name": "Fountain pen",
+  "group": "pens",
+  "mode": "left",
+  "tip": [
+   0.0127,
+   0.0259
+  ],
+  "tip2": [
+   0.0254,
+   0.0603
+  ],
+  "arm": [
+   0.931,
+   0.983
+  ]
+ },
+ {
+  "id": "4793",
+  "name": "Blue marker",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0021,
+   0.0046
+  ],
+  "tip2": [
+   0.0118,
+   0.0391
+  ],
+  "arm": [
+   0.948,
+   0.989
+  ]
+ },
+ {
+  "id": "4794",
+  "name": "Blue ballpoint",
+  "group": "pens",
+  "mode": "gesture",
+  "tip": [
+   0.0068,
+   0.0079
+  ],
+  "tip2": [
+   0.0357,
+   0.0579
+  ],
+  "arm": [
+   0.827,
+   0.989
+  ]
+ },
+ {
+  "id": "4795",
+  "name": "Red crayon",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0077,
+   0.0314
+  ],
+  "tip2": [
+   0.0258,
+   0.0583
+  ],
+  "arm": [
+   0.59,
+   0.987
+  ]
+ },
+ {
+  "id": "4796",
+  "name": "Blue biro",
+  "group": "pens",
+  "mode": "left",
+  "tip": [
+   0.0072,
+   0.0112
+  ],
+  "tip2": [
+   0.0306,
+   0.027
+  ],
+  "arm": [
+   0.941,
+   0.966
+  ]
+ },
+ {
+  "id": "4797",
+  "name": "Blue crayon",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0258,
+   0.0404
+  ],
+  "tip2": [
+   0.0309,
+   0.0493
+  ],
+  "arm": [
+   0.897,
+   0.964
+  ]
+ },
+ {
+  "id": "4798",
+  "name": "Green crayon",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0309,
+   0.0493
+  ],
+  "tip2": [
+   0.0387,
+   0.0762
+  ],
+  "arm": [
+   0.896,
+   0.964
+  ]
+ },
+ {
+  "id": "4799",
+  "name": "Yellow crayon",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0284,
+   0.0493
+  ],
+  "tip2": [
+   0.0387,
+   0.0807
+  ],
+  "arm": [
+   0.894,
+   0.964
+  ]
+ },
+ {
+  "id": "4800",
+  "name": "Purple crayon",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0284,
+   0.0404
+  ],
+  "tip2": [
+   0.0335,
+   0.0673
+  ],
+  "arm": [
+   0.897,
+   0.964
+  ]
+ },
+ {
+  "id": "4801",
+  "name": "Brown crayon",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0284,
+   0.0359
+  ],
+  "tip2": [
+   0.0335,
+   0.0448
+  ],
+  "arm": [
+   0.897,
+   0.964
+  ]
+ },
+ {
+  "id": "4802",
+  "name": "Orange crayon",
+  "group": "pens",
+  "mode": "left",
+  "tip": [
+   0.0361,
+   0.0762
+  ],
+  "tip2": [
+   0.0438,
+   0.0359
+  ],
+  "arm": [
+   0.893,
+   0.964
+  ]
+ },
+ {
+  "id": "4803",
+  "name": "Red biro",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0072,
+   0.0112
+  ],
+  "tip2": [
+   0.0198,
+   0.027
+  ],
+  "arm": [
+   0.941,
+   0.966
+  ]
+ },
+ {
+  "id": "4804",
+  "name": "Green biro",
+  "group": "pens",
+  "mode": "left",
+  "tip": [
+   0.0198,
+   0.027
+  ],
+  "tip2": [
+   0.0072,
+   0.0112
+  ],
+  "arm": [
+   0.939,
+   0.964
+  ]
+ },
+ {
+  "id": "4805",
+  "name": "Black biro",
+  "group": "pens",
+  "mode": "left",
+  "tip": [
+   0.0198,
+   0.027
+  ],
+  "tip2": [
+   0.0072,
+   0.0112
+  ],
+  "arm": [
+   0.939,
+   0.964
+  ]
+ },
+ {
+  "id": "4806",
+  "name": "Red ballpoint",
+  "group": "pens",
+  "mode": "gesture",
+  "tip": [
+   0.0221,
+   0.0289
+  ],
+  "tip2": [
+   0.0204,
+   0.0105
+  ],
+  "arm": [
+   0.868,
+   0.987
+  ]
+ },
+ {
+  "id": "4807",
+  "name": "Green ballpoint",
+  "group": "pens",
+  "mode": "gesture",
+  "tip": [
+   0.0204,
+   0.0105
+  ],
+  "tip2": [
+   0.0272,
+   0.0289
+  ],
+  "arm": [
+   0.917,
+   0.987
+  ]
+ },
+ {
+  "id": "4808",
+  "name": "Red marker",
+  "group": "pens",
+  "mode": "top",
+  "tip": [
+   0.0314,
+   0.0448
+  ],
+  "tip2": [
+   0.0275,
+   0.0364
+  ],
+  "arm": [
+   0.948,
+   0.989
+  ]
+ },
+ {
+  "id": "4809",
+  "name": "Green marker",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0209,
+   0.0084
+  ],
+  "tip2": [
+   0.0314,
+   0.0448
+  ],
+  "arm": [
+   0.949,
+   0.989
+  ]
+ },
+ {
+  "id": "4810",
+  "name": "Yellow marker",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0249,
+   0.0196
+  ],
+  "tip2": [
+   0.0209,
+   0.0084
+  ],
+  "arm": [
+   0.949,
+   0.989
+  ]
+ },
+ {
+  "id": "4811",
+  "name": "Purple marker",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0196,
+   0.0084
+  ],
+  "tip2": [
+   0.0249,
+   0.0196
+  ],
+  "arm": [
+   0.949,
+   0.989
+  ]
+ },
+ {
+  "id": "4812",
+  "name": "Green highlighter",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0087,
+   0.1156
+  ],
+  "tip2": [
+   0.0104,
+   0.0925
+  ],
+  "arm": [
+   0.864,
+   0.951
+  ]
+ },
+ {
+  "id": "4813",
+  "name": "Yellow highlighter",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0069,
+   0.1098
+  ],
+  "tip2": [
+   0.0087,
+   0.1156
+  ],
+  "arm": [
+   0.865,
+   0.951
+  ]
+ },
+ {
+  "id": "4814",
+  "name": "Blue highlighter",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0104,
+   0.0925
+  ],
+  "tip2": [
+   0.0104,
+   0.1069
+  ],
+  "arm": [
+   0.867,
+   0.951
+  ]
+ },
+ {
+  "id": "4815",
+  "name": "Orange highlighter",
+  "group": "pens",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0069,
+   0.1098
+  ],
+  "tip2": [
+   0.0087,
+   0.1156
+  ],
+  "arm": [
+   0.865,
+   0.951
+  ]
+ },
+ {
+  "id": "4816",
+  "name": "Rosie adult eraser",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1017,
+   0.164
+  ],
+  "tip2": [
+   0.1017,
+   0.165
+  ],
+  "arm": [
+   0.759,
+   0.875
+  ]
+ },
+ {
+  "id": "4817",
+  "name": "Rosie adult biro blue",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0716,
+   0.0942
+  ],
+  "tip2": [
+   0.0728,
+   0.0933
+  ],
+  "arm": [
+   0.616,
+   0.94
+  ]
+ },
+ {
+  "id": "4818",
+  "name": "Rosie pencil",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0757,
+   0.0833
+  ],
+  "tip2": [
+   0.0726,
+   0.1308
+  ],
+  "arm": [
+   0.522,
+   0.952
+  ]
+ },
+ {
+  "id": "4819",
+  "name": "Rosie adult pencil 2",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0554,
+   0.0783
+  ],
+  "tip2": [
+   0.0569,
+   0.08
+  ],
+  "arm": [
+   0.564,
+   0.941
+  ]
+ },
+ {
+  "id": "4820",
+  "name": "Rosie black fineliner",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0483,
+   0.1175
+  ],
+  "tip2": [
+   0.047,
+   0.1175
+  ],
+  "arm": [
+   0.671,
+   0.94
+  ]
+ },
+ {
+  "id": "4821",
+  "name": "Rosie sharpie",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0722,
+   0.0542
+  ],
+  "tip2": [
+   0.0722,
+   0.0542
+  ],
+  "arm": [
+   0.443,
+   0.953
+  ]
+ },
+ {
+  "id": "4822",
+  "name": "Rosie adult highlighter",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0675,
+   0.0825
+  ],
+  "tip2": [
+   0.0715,
+   0.0908
+  ],
+  "arm": [
+   0.649,
+   0.942
+  ]
+ },
+ {
+  "id": "4823",
+  "name": "Rosie adult fountain pen",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0887,
+   0.0733
+  ],
+  "tip2": [
+   0.6289,
+   0.9517
+  ],
+  "arm": [
+   0.647,
+   0.941
+  ]
+ },
+ {
+  "id": "4824",
+  "name": "Rosie red marker",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0834,
+   0.0917
+  ],
+  "tip2": [
+   0.0847,
+   0.0917
+  ],
+  "arm": [
+   0.642,
+   0.932
+  ]
+ },
+ {
+  "id": "4825",
+  "name": "Rosie black marker",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0759,
+   0.0675
+  ],
+  "tip2": [
+   0.0814,
+   0.0667
+  ],
+  "arm": [
+   0.604,
+   0.943
+  ]
+ },
+ {
+  "id": "4826",
+  "name": "Rosie adult eraser",
+  "group": "rosie",
+  "mode": "bottom-left",
+  "tip": [
+   0.6941,
+   0.9608
+  ],
+  "tip2": [
+   0.6941,
+   0.9608
+  ],
+  "arm": [
+   0.706,
+   0.94
+  ]
+ },
+ {
+  "id": "4827",
+  "name": "Rosie silver ball pen",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0691,
+   0.0867
+  ],
+  "tip2": [
+   0.0715,
+   0.0858
+  ],
+  "arm": [
+   0.643,
+   0.935
+  ]
+ },
+ {
+  "id": "4828",
+  "name": "Rosie blue crayon",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0608,
+   0.0975
+  ],
+  "tip2": [
+   0.062,
+   0.095
+  ],
+  "arm": [
+   0.675,
+   0.922
+  ]
+ },
+ {
+  "id": "4829",
+  "name": "Rosie adult move in hand",
+  "group": "rosie",
+  "mode": "gesture",
+  "tip": [
+   0.4836,
+   0.0242
+  ],
+  "tip2": [
+   0.4836,
+   0.0242
+  ],
+  "arm": [
+   0.537,
+   0.958
+  ]
+ },
+ {
+  "id": "4830",
+  "name": "Rosie adult move in fingers",
+  "group": "rosie",
+  "mode": "gesture",
+  "tip": [
+   0.3943,
+   0.0285
+  ],
+  "tip2": [
+   0.3943,
+   0.0285
+  ],
+  "arm": [
+   0.481,
+   0.96
+  ]
+ },
+ {
+  "id": "4831",
+  "name": "Rosie chalk",
+  "group": "rosie",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0637,
+   0.1083
+  ],
+  "tip2": [
+   0.0549,
+   0.1092
+  ],
+  "arm": [
+   0.707,
+   0.913
+  ]
+ },
+ {
+  "id": "4832",
+  "name": "Matt pencil 1",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0518,
+   0.0586
+  ],
+  "tip2": [
+   0.0518,
+   0.0586
+  ],
+  "arm": [
+   0.601,
+   0.943
+  ]
+ },
+ {
+  "id": "4833",
+  "name": "Matt pencil eraser",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0474,
+   0.0477
+  ],
+  "tip2": [
+   0.0474,
+   0.0477
+  ],
+  "arm": [
+   0.695,
+   0.948
+  ]
+ },
+ {
+  "id": "4834",
+  "name": "Matt silver ball pen",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0551,
+   0.0688
+  ],
+  "tip2": [
+   0.0565,
+   0.0688
+  ],
+  "arm": [
+   0.654,
+   0.965
+  ]
+ },
+ {
+  "id": "4835",
+  "name": "Matt sharpie",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0529,
+   0.0703
+  ],
+  "tip2": [
+   0.0557,
+   0.0703
+  ],
+  "arm": [
+   0.635,
+   0.933
+  ]
+ },
+ {
+  "id": "4836",
+  "name": "Matt black pencil",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0516,
+   0.0578
+  ],
+  "tip2": [
+   0.0516,
+   0.0578
+  ],
+  "arm": [
+   0.622,
+   0.952
+  ]
+ },
+ {
+  "id": "4837",
+  "name": "Matt white pencil",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0715,
+   0.0551
+  ],
+  "tip2": [
+   0.0666,
+   0.1268
+  ],
+  "arm": [
+   0.546,
+   0.97
+  ]
+ },
+ {
+  "id": "4838",
+  "name": "Matt orange crayon",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0587,
+   0.0844
+  ],
+  "tip2": [
+   0.0616,
+   0.0836
+  ],
+  "arm": [
+   0.621,
+   0.956
+  ]
+ },
+ {
+  "id": "4839",
+  "name": "Matt blue crayon",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.083,
+   0.0805
+  ],
+  "tip2": [
+   0.083,
+   0.0805
+  ],
+  "arm": [
+   0.655,
+   0.951
+  ]
+ },
+ {
+  "id": "4840",
+  "name": "Matt paint brush",
+  "group": "matt",
+  "mode": "bristle",
+  "tip": [
+   0.1591,
+   0.1077
+  ],
+  "tip2": [
+   0.1473,
+   0.1108
+  ],
+  "arm": [
+   0.613,
+   0.964
+  ]
+ },
+ {
+  "id": "4841",
+  "name": "Matt black biro",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0219,
+   0.0683
+  ],
+  "tip2": [
+   0.0244,
+   0.0633
+  ],
+  "arm": [
+   0.7,
+   0.976
+  ]
+ },
+ {
+  "id": "4842",
+  "name": "Matt black pencil",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0233,
+   0.0767
+  ],
+  "tip2": [
+   0.0244,
+   0.0767
+  ],
+  "arm": [
+   0.758,
+   0.959
+  ]
+ },
+ {
+  "id": "4843",
+  "name": "Matt chalk 1",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0156,
+   0.06
+  ],
+  "tip2": [
+   0.0178,
+   0.0625
+  ],
+  "arm": [
+   0.752,
+   0.94
+  ]
+ },
+ {
+  "id": "4844",
+  "name": "Matt blue biro",
+  "group": "matt",
+  "mode": "top-left",
+  "tip": [
+   0.0145,
+   0.0667
+  ],
+  "tip2": [
+   0.0267,
+   0.065
+  ],
+  "arm": [
+   0.705,
+   0.955
+  ]
+ },
+ {
+  "id": "4845",
+  "name": "Matt fountain pen",
+  "group": "matt",
+  "mode": "top-left",
+  "tip": [
+   0.0482,
+   0.0408
+  ],
+  "tip2": [
+   0.0482,
+   0.0408
+  ],
+  "arm": [
+   0.621,
+   0.978
+  ]
+ },
+ {
+  "id": "4846",
+  "name": "Matt pencil 3",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0309,
+   0.0475
+  ],
+  "tip2": [
+   0.0309,
+   0.0475
+  ],
+  "arm": [
+   0.647,
+   0.964
+  ]
+ },
+ {
+  "id": "4847",
+  "name": "Matt chalk 2",
+  "group": "matt",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0302,
+   0.0436
+  ],
+  "tip2": [
+   0.0322,
+   0.0409
+  ],
+  "arm": [
+   0.559,
+   0.973
+  ]
+ },
+ {
+  "id": "4848",
+  "name": "Matt pencil 2",
+  "group": "matt",
+  "mode": "left",
+  "tip": [
+   0.0332,
+   0.0392
+  ],
+  "tip2": [
+   0.6661,
+   0.1117
+  ],
+  "arm": [
+   0.619,
+   0.962
+  ]
+ },
+ {
+  "id": "4849",
+  "name": "Matt adult move in hand",
+  "group": "matt",
+  "mode": "gesture",
+  "tip": [
+   0.4825,
+   0.0319
+  ],
+  "tip2": [
+   0.4825,
+   0.0319
+  ],
+  "arm": [
+   0.482,
+   0.984
+  ]
+ },
+ {
+  "id": "4850",
+  "name": "Hannah black biro",
+  "group": "hannah",
+  "mode": "top-left",
+  "tip": [
+   0.0875,
+   0.0475
+  ],
+  "tip2": [
+   0.0875,
+   0.0492
+  ],
+  "arm": [
+   0.653,
+   0.951
+  ]
+ },
+ {
+  "id": "4851",
+  "name": "Hannah blue biro",
+  "group": "hannah",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0431,
+   0.0483
+  ],
+  "tip2": [
+   0.0443,
+   0.0483
+  ],
+  "arm": [
+   0.676,
+   0.943
+  ]
+ },
+ {
+  "id": "4852",
+  "name": "Hannah pencil 1",
+  "group": "hannah",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0759,
+   0.0618
+  ],
+  "tip2": [
+   0.0771,
+   0.0618
+  ],
+  "arm": [
+   0.708,
+   0.942
+  ]
+ },
+ {
+  "id": "4853",
+  "name": "Hannah pencil 2",
+  "group": "hannah",
+  "mode": "top-left",
+  "tip": [
+   0.0909,
+   0.0492
+  ],
+  "tip2": [
+   0.0922,
+   0.05
+  ],
+  "arm": [
+   0.659,
+   0.934
+  ]
+ },
+ {
+  "id": "4854",
+  "name": "Hannah pencil eraser",
+  "group": "hannah",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0564,
+   0.1672
+  ],
+  "tip2": [
+   0.0564,
+   0.1672
+  ],
+  "arm": [
+   0.659,
+   0.95
+  ]
+ },
+ {
+  "id": "4855",
+  "name": "Hannah sharpie",
+  "group": "hannah",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0738,
+   0.1767
+  ],
+  "tip2": [
+   0.0861,
+   0.0642
+  ],
+  "arm": [
+   0.672,
+   0.948
+  ]
+ },
+ {
+  "id": "4856",
+  "name": "Hannah fountain pen",
+  "group": "hannah",
+  "mode": "top-left",
+  "tip": [
+   0.1096,
+   0.0592
+  ],
+  "tip2": [
+   0.1082,
+   0.0592
+  ],
+  "arm": [
+   0.65,
+   0.958
+  ]
+ },
+ {
+  "id": "4857",
+  "name": "Hannah red marker",
+  "group": "hannah",
+  "mode": "top-left",
+  "tip": [
+   0.0816,
+   0.0392
+  ],
+  "tip2": [
+   0.0816,
+   0.0392
+  ],
+  "arm": [
+   0.712,
+   0.938
+  ]
+ },
+ {
+  "id": "4858",
+  "name": "Hannah highlighter",
+  "group": "hannah",
+  "mode": "shipped-ok",
+  "tip": [
+   0.077,
+   0.0367
+  ],
+  "tip2": [
+   0.0692,
+   0.1667
+  ],
+  "arm": [
+   0.668,
+   0.939
+  ]
+ },
+ {
+  "id": "4859",
+  "name": "Hannah adult eraser",
+  "group": "hannah",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0624,
+   0.0738
+  ],
+  "tip2": [
+   0.0624,
+   0.0738
+  ],
+  "arm": [
+   0.679,
+   0.949
+  ]
+ },
+ {
+  "id": "4860",
+  "name": "Hannah blue crayon",
+  "group": "hannah",
+  "mode": "top-left",
+  "tip": [
+   0.0846,
+   0.0458
+  ],
+  "tip2": [
+   0.0833,
+   0.0467
+  ],
+  "arm": [
+   0.688,
+   0.947
+  ]
+ },
+ {
+  "id": "4861",
+  "name": "Hannah white pencil",
+  "group": "hannah",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0825,
+   0.0549
+  ],
+  "tip2": [
+   0.0861,
+   0.0566
+  ],
+  "arm": [
+   0.691,
+   0.945
+  ]
+ },
+ {
+  "id": "4862",
+  "name": "Hannah paint brush",
+  "group": "hannah",
+  "mode": "bristle",
+  "tip": [
+   0.1477,
+   0.1104
+  ],
+  "tip2": [
+   0.1325,
+   0.1136
+  ],
+  "arm": [
+   0.704,
+   0.93
+  ]
+ },
+ {
+  "id": "4863",
+  "name": "Hannah adult move in finger",
+  "group": "hannah",
+  "mode": "gesture",
+  "tip": [
+   0.2704,
+   0.0315
+  ],
+  "tip2": [
+   0.2704,
+   0.0315
+  ],
+  "arm": [
+   0.48,
+   0.983
+  ]
+ },
+ {
+  "id": "4864",
+  "name": "Hannah adult move in hand",
+  "group": "hannah",
+  "mode": "gesture",
+  "tip": [
+   0.484,
+   0.0176
+  ],
+  "tip2": [
+   0.484,
+   0.0176
+  ],
+  "arm": [
+   0.507,
+   0.983
+  ]
+ },
+ {
+  "id": "4865",
+  "name": "Hannah chalk 1",
+  "group": "hannah",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0702,
+   0.064
+  ],
+  "tip2": [
+   0.0677,
+   0.0648
+  ],
+  "arm": [
+   0.642,
+   0.93
+  ]
+ },
+ {
+  "id": "4866",
+  "name": "Hannah chalk 2",
+  "group": "hannah",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0227,
+   0.0608
+  ],
+  "tip2": [
+   0.0238,
+   0.065
+  ],
+  "arm": [
+   0.757,
+   0.939
+  ]
+ },
+ {
+  "id": "4867",
+  "name": "Mike blue biro",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9274,
+   0.0367
+  ],
+  "tip2": [
+   0.9263,
+   0.0367
+  ],
+  "arm": [
+   0.137,
+   0.96
+  ]
+ },
+ {
+  "id": "4868",
+  "name": "Mike black biro",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9458,
+   0.0467
+  ],
+  "tip2": [
+   0.9458,
+   0.0467
+  ],
+  "arm": [
+   0.316,
+   0.955
+  ]
+ },
+ {
+  "id": "4869",
+  "name": "Mike pencil 1",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9327,
+   0.04
+  ],
+  "tip2": [
+   0.9338,
+   0.0408
+  ],
+  "arm": [
+   0.341,
+   0.955
+  ]
+ },
+ {
+  "id": "4870",
+  "name": "Mike pencil 2",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9298,
+   0.0425
+  ],
+  "tip2": [
+   0.9272,
+   0.0433
+  ],
+  "arm": [
+   0.391,
+   0.957
+  ]
+ },
+ {
+  "id": "4871",
+  "name": "Mike pencil eraser",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9532,
+   0.0383
+  ],
+  "tip2": [
+   0.9532,
+   0.0383
+  ],
+  "arm": [
+   0.354,
+   0.963
+  ]
+ },
+ {
+  "id": "4872",
+  "name": "Mike white pencil",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9405,
+   0.0358
+  ],
+  "tip2": [
+   0.9393,
+   0.0358
+  ],
+  "arm": [
+   0.354,
+   0.971
+  ]
+ },
+ {
+  "id": "4873",
+  "name": "Mike sharpie",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9472,
+   0.045
+  ],
+  "tip2": [
+   0.9448,
+   0.0517
+  ],
+  "arm": [
+   0.339,
+   0.935
+  ]
+ },
+ {
+  "id": "4874",
+  "name": "Mike black fineliner",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9256,
+   0.0383
+  ],
+  "tip2": [
+   0.9298,
+   0.0375
+  ],
+  "arm": [
+   0.406,
+   0.932
+  ]
+ },
+ {
+  "id": "4875",
+  "name": "Mike highlighter",
+  "group": "mike",
+  "mode": "left",
+  "tip": [
+   0.0967,
+   0.92
+  ],
+  "tip2": [
+   0.9259,
+   0.0342
+  ],
+  "arm": [
+   0.395,
+   0.957
+  ]
+ },
+ {
+  "id": "4876",
+  "name": "Mike red marker",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9375,
+   0.0383
+  ],
+  "tip2": [
+   0.925,
+   0.0292
+  ],
+  "arm": [
+   0.138,
+   0.975
+  ]
+ },
+ {
+  "id": "4877",
+  "name": "Mike black marker",
+  "group": "mike",
+  "mode": "bottom",
+  "tip": [
+   0.4515,
+   0.9725
+  ],
+  "tip2": [
+   0.0724,
+   0.9408
+  ],
+  "arm": [
+   0.427,
+   0.968
+  ]
+ },
+ {
+  "id": "4878",
+  "name": "Mike silver ball pen",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.945,
+   0.0558
+  ],
+  "tip2": [
+   0.9409,
+   0.0542
+  ],
+  "arm": [
+   0.116,
+   0.962
+  ]
+ },
+ {
+  "id": "4879",
+  "name": "Mike blue crayon",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.94,
+   0.0483
+  ],
+  "tip2": [
+   0.9331,
+   0.0458
+  ],
+  "arm": [
+   0.148,
+   0.972
+  ]
+ },
+ {
+  "id": "4880",
+  "name": "Mike paint brush",
+  "group": "mike",
+  "mode": "bristle",
+  "tip": [
+   0.648,
+   0.2867
+  ],
+  "tip2": [
+   0.5806,
+   0.1167
+  ],
+  "arm": [
+   0.194,
+   0.943
+  ]
+ },
+ {
+  "id": "4881",
+  "name": "Mike adult eraser",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9489,
+   0.0683
+  ],
+  "tip2": [
+   0.9489,
+   0.0683
+  ],
+  "arm": [
+   0.362,
+   0.962
+  ]
+ },
+ {
+  "id": "4882",
+  "name": "Mike chalk",
+  "group": "mike",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9318,
+   0.0442
+  ],
+  "tip2": [
+   0.0775,
+   0.9575
+  ],
+  "arm": [
+   0.472,
+   0.968
+  ]
+ },
+ {
+  "id": "4883",
+  "name": "Mike adult move in finger",
+  "group": "mike",
+  "mode": "gesture",
+  "tip": [
+   0.7399,
+   0.0227
+  ],
+  "tip2": [
+   0.7399,
+   0.0227
+  ],
+  "arm": [
+   0.464,
+   0.973
+  ]
+ },
+ {
+  "id": "4884",
+  "name": "Mike adult move in hand",
+  "group": "mike",
+  "mode": "gesture",
+  "tip": [
+   0.6171,
+   0.0169
+  ],
+  "tip2": [
+   0.6171,
+   0.0169
+  ],
+  "arm": [
+   0.235,
+   0.999
+  ]
+ },
+ {
+  "id": "4885",
+  "name": "Hiswill adult biro blue",
+  "group": "hiswill",
+  "mode": "top-left",
+  "tip": [
+   0.0992,
+   0.0708
+  ],
+  "tip2": [
+   0.1041,
+   0.0708
+  ],
+  "arm": [
+   0.487,
+   0.957
+  ]
+ },
+ {
+  "id": "4886",
+  "name": "Hiswill adult biro black",
+  "group": "hiswill",
+  "mode": "top-left",
+  "tip": [
+   0.0986,
+   0.0908
+  ],
+  "tip2": [
+   0.094,
+   0.0892
+  ],
+  "arm": [
+   0.509,
+   0.942
+  ]
+ },
+ {
+  "id": "4887",
+  "name": "Hiswill pencil 1",
+  "group": "hiswill",
+  "mode": "bottom-left",
+  "tip": [
+   0.5656,
+   0.9692
+  ],
+  "tip2": [
+   0.0806,
+   0.09
+  ],
+  "arm": [
+   0.591,
+   0.953
+  ]
+ },
+ {
+  "id": "4888",
+  "name": "Hiswill pencil 2",
+  "group": "hiswill",
+  "mode": "top-left",
+  "tip": [
+   0.0752,
+   0.0984
+  ],
+  "tip2": [
+   0.0766,
+   0.0976
+  ],
+  "arm": [
+   0.593,
+   0.966
+  ]
+ },
+ {
+  "id": "4889",
+  "name": "Hiswill pencil eraser",
+  "group": "hiswill",
+  "mode": "left",
+  "tip": [
+   0.0949,
+   0.0625
+  ],
+  "tip2": [
+   0.0949,
+   0.0625
+  ],
+  "arm": [
+   0.529,
+   0.943
+  ]
+ },
+ {
+  "id": "4890",
+  "name": "Hiswill black pencil",
+  "group": "hiswill",
+  "mode": "top-left",
+  "tip": [
+   0.0893,
+   0.1023
+  ],
+  "tip2": [
+   0.0893,
+   0.1038
+  ],
+  "arm": [
+   0.539,
+   0.935
+  ]
+ },
+ {
+  "id": "4891",
+  "name": "Hiswill white pencil",
+  "group": "hiswill",
+  "mode": "top-left",
+  "tip": [
+   0.0764,
+   0.116
+  ],
+  "tip2": [
+   0.0737,
+   0.1152
+  ],
+  "arm": [
+   0.586,
+   0.92
+  ]
+ },
+ {
+  "id": "4892",
+  "name": "Hiswill black fineliner",
+  "group": "hiswill",
+  "mode": "top-left",
+  "tip": [
+   0.1017,
+   0.0808
+  ],
+  "tip2": [
+   0.1017,
+   0.0808
+  ],
+  "arm": [
+   0.531,
+   0.973
+  ]
+ },
+ {
+  "id": "4893",
+  "name": "Hiswill sharpie",
+  "group": "hiswill",
+  "mode": "left",
+  "tip": [
+   0.0816,
+   0.1144
+  ],
+  "tip2": [
+   0.0842,
+   0.1136
+  ],
+  "arm": [
+   0.587,
+   0.954
+  ]
+ },
+ {
+  "id": "4894",
+  "name": "Hiswill black marker",
+  "group": "hiswill",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0748,
+   0.095
+  ],
+  "tip2": [
+   0.0721,
+   0.0917
+  ],
+  "arm": [
+   0.656,
+   0.958
+  ]
+ },
+ {
+  "id": "4895",
+  "name": "Hiswill highlighter",
+  "group": "hiswill",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0669,
+   0.0908
+  ],
+  "tip2": [
+   0.0723,
+   0.0842
+  ],
+  "arm": [
+   0.608,
+   0.946
+  ]
+ },
+ {
+  "id": "4896",
+  "name": "Hiswill fountain pen",
+  "group": "hiswill",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0668,
+   0.075
+  ],
+  "tip2": [
+   0.0668,
+   0.0742
+  ],
+  "arm": [
+   0.544,
+   0.966
+  ]
+ },
+ {
+  "id": "4897",
+  "name": "Hiswill orange crayon",
+  "group": "hiswill",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0712,
+   0.0467
+  ],
+  "tip2": [
+   0.0712,
+   0.0443
+  ],
+  "arm": [
+   0.56,
+   0.964
+  ]
+ },
+ {
+  "id": "4898",
+  "name": "Hiswill blue crayon",
+  "group": "hiswill",
+  "mode": "shipped-ok",
+  "tip": [
+   0.125,
+   0.0733
+  ],
+  "tip2": [
+   0.125,
+   0.1433
+  ],
+  "arm": [
+   0.487,
+   0.973
+  ]
+ },
+ {
+  "id": "4899",
+  "name": "Hiswill paint brush",
+  "group": "hiswill",
+  "mode": "bristle",
+  "tip": [
+   0.2767,
+   0.1279
+  ],
+  "tip2": [
+   0.2533,
+   0.1402
+  ],
+  "arm": [
+   0.549,
+   0.986
+  ]
+ },
+ {
+  "id": "4900",
+  "name": "Hiswill adult eraser",
+  "group": "hiswill",
+  "mode": "top-left",
+  "tip": [
+   0.1056,
+   0.0368
+  ],
+  "tip2": [
+   0.1056,
+   0.0368
+  ],
+  "arm": [
+   0.63,
+   0.962
+  ]
+ },
+ {
+  "id": "4901",
+  "name": "Hiswill chalk",
+  "group": "hiswill",
+  "mode": "left",
+  "tip": [
+   0.084,
+   0.0658
+  ],
+  "tip2": [
+   0.0885,
+   0.0567
+  ],
+  "arm": [
+   0.548,
+   0.963
+  ]
+ },
+ {
+  "id": "4902",
+  "name": "Hiswill adult move in finger",
+  "group": "hiswill",
+  "mode": "gesture",
+  "tip": [
+   0.2693,
+   0.0238
+  ],
+  "tip2": [
+   0.2693,
+   0.0238
+  ],
+  "arm": [
+   0.626,
+   0.999
+  ]
+ },
+ {
+  "id": "4903",
+  "name": "Hiswill adult move in hand",
+  "group": "hiswill",
+  "mode": "gesture",
+  "tip": [
+   0.4829,
+   0.0285
+  ],
+  "tip2": [
+   0.4829,
+   0.0285
+  ],
+  "arm": [
+   0.741,
+   0.975
+  ]
+ },
+ {
+  "id": "4904",
+  "name": "Daniel blue biro",
+  "group": "daniel",
+  "mode": "right",
+  "tip": [
+   0.9288,
+   0.0856
+  ],
+  "tip2": [
+   0.9274,
+   0.0856
+  ],
+  "arm": [
+   0.395,
+   0.982
+  ]
+ },
+ {
+  "id": "4905",
+  "name": "Daniel pencil 1",
+  "group": "daniel",
+  "mode": "top-right",
+  "tip": [
+   0.9361,
+   0.0742
+  ],
+  "tip2": [
+   0.9373,
+   0.075
+  ],
+  "arm": [
+   0.361,
+   0.955
+  ]
+ },
+ {
+  "id": "4906",
+  "name": "Daniel pencil 2",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9051,
+   0.07
+  ],
+  "tip2": [
+   0.9064,
+   0.07
+  ],
+  "arm": [
+   0.367,
+   0.968
+  ]
+ },
+ {
+  "id": "4907",
+  "name": "Daniel pencil eraser",
+  "group": "daniel",
+  "mode": "right",
+  "tip": [
+   0.9347,
+   0.0426
+  ],
+  "tip2": [
+   0.9347,
+   0.0426
+  ],
+  "arm": [
+   0.363,
+   0.97
+  ]
+ },
+ {
+  "id": "4908",
+  "name": "Daniel black pencil",
+  "group": "daniel",
+  "mode": "top-right",
+  "tip": [
+   0.9325,
+   0.0369
+  ],
+  "tip2": [
+   0.931,
+   0.0369
+  ],
+  "arm": [
+   0.45,
+   0.95
+  ]
+ },
+ {
+  "id": "4909",
+  "name": "Daniel white pencil",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9246,
+   0.0692
+  ],
+  "tip2": [
+   0.9259,
+   0.07
+  ],
+  "arm": [
+   0.373,
+   0.958
+  ]
+ },
+ {
+  "id": "4910",
+  "name": "Daniel sharpie",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.955,
+   0.0542
+  ],
+  "tip2": [
+   0.9538,
+   0.0542
+  ],
+  "arm": [
+   0.344,
+   0.945
+  ]
+ },
+ {
+  "id": "4911",
+  "name": "Daniel black marker",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9513,
+   0.0525
+  ],
+  "tip2": [
+   0.9487,
+   0.0508
+  ],
+  "arm": [
+   0.364,
+   0.964
+  ]
+ },
+ {
+  "id": "4912",
+  "name": "Daniel red marker",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9453,
+   0.0542
+  ],
+  "tip2": [
+   0.9441,
+   0.0542
+  ],
+  "arm": [
+   0.349,
+   0.962
+  ]
+ },
+ {
+  "id": "4913",
+  "name": "Daniel highlighter",
+  "group": "daniel",
+  "mode": "right",
+  "tip": [
+   0.9451,
+   0.06
+  ],
+  "tip2": [
+   0.9464,
+   0.0608
+  ],
+  "arm": [
+   0.345,
+   0.963
+  ]
+ },
+ {
+  "id": "4914",
+  "name": "Daniel blue crayon",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9433,
+   0.0492
+  ],
+  "tip2": [
+   0.9352,
+   0.0541
+  ],
+  "arm": [
+   0.384,
+   0.971
+  ]
+ },
+ {
+  "id": "4915",
+  "name": "Daniel silver ball pen",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9141,
+   0.0392
+  ],
+  "tip2": [
+   0.9094,
+   0.0384
+  ],
+  "arm": [
+   0.393,
+   0.985
+  ]
+ },
+ {
+  "id": "4916",
+  "name": "Daniel fountain pen",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.935,
+   0.0272
+  ],
+  "tip2": [
+   0.939,
+   0.0256
+  ],
+  "arm": [
+   0.153,
+   0.959
+  ]
+ },
+ {
+  "id": "4917",
+  "name": "Daniel paint brush",
+  "group": "daniel",
+  "mode": "bristle",
+  "tip": [
+   0.8441,
+   0.11
+  ],
+  "tip2": [
+   0.8502,
+   0.1175
+  ],
+  "arm": [
+   0.336,
+   0.959
+  ]
+ },
+ {
+  "id": "4918",
+  "name": "Daniel chalk",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9364,
+   0.0672
+  ],
+  "tip2": [
+   0.0636,
+   0.923
+  ],
+  "arm": [
+   0.357,
+   0.961
+  ]
+ },
+ {
+  "id": "4919",
+  "name": "Daniel adult eraser",
+  "group": "daniel",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9453,
+   0.0816
+  ],
+  "tip2": [
+   0.9453,
+   0.0816
+  ],
+  "arm": [
+   0.367,
+   0.974
+  ]
+ },
+ {
+  "id": "4920",
+  "name": "Daniel adult move in fingers",
+  "group": "daniel",
+  "mode": "gesture",
+  "tip": [
+   0.6194,
+   0.0274
+  ],
+  "tip2": [
+   0.6194,
+   0.0274
+  ],
+  "arm": [
+   0.18,
+   0.966
+  ]
+ },
+ {
+  "id": "4921",
+  "name": "Daniel adult move in hand",
+  "group": "daniel",
+  "mode": "gesture",
+  "tip": [
+   0.5953,
+   0.0292
+  ],
+  "tip2": [
+   0.5953,
+   0.0292
+  ],
+  "arm": [
+   0.167,
+   0.987
+  ]
+ },
+ {
+  "id": "4922",
+  "name": "Sibin black biro",
+  "group": "sibin",
+  "mode": "shipped-ok",
+  "tip": [
+   0.054,
+   0.0875
+  ],
+  "tip2": [
+   0.054,
+   0.0867
+  ],
+  "arm": [
+   0.648,
+   0.97
+  ]
+ },
+ {
+  "id": "4923",
+  "name": "Sibin pencil 1",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.0555,
+   0.0795
+  ],
+  "tip2": [
+   0.0555,
+   0.0795
+  ],
+  "arm": [
+   0.581,
+   0.969
+  ]
+ },
+ {
+  "id": "4924",
+  "name": "Sibin pencil 2",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.0629,
+   0.0869
+  ],
+  "tip2": [
+   0.0643,
+   0.0877
+  ],
+  "arm": [
+   0.588,
+   0.967
+  ]
+ },
+ {
+  "id": "4925",
+  "name": "Sibin pencil eraser",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.059,
+   0.0758
+  ],
+  "tip2": [
+   0.059,
+   0.0758
+  ],
+  "arm": [
+   0.631,
+   0.969
+  ]
+ },
+ {
+  "id": "4926",
+  "name": "Sibin white pencil",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.0567,
+   0.091
+  ],
+  "tip2": [
+   0.058,
+   0.0918
+  ],
+  "arm": [
+   0.608,
+   0.943
+  ]
+ },
+ {
+  "id": "4927",
+  "name": "Sibin sharpie",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.0613,
+   0.0869
+  ],
+  "tip2": [
+   0.0613,
+   0.0869
+  ],
+  "arm": [
+   0.545,
+   0.961
+  ]
+ },
+ {
+  "id": "4928",
+  "name": "Sibin black fineliner",
+  "group": "sibin",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0528,
+   0.0967
+  ],
+  "tip2": [
+   0.0551,
+   0.0975
+  ],
+  "arm": [
+   0.638,
+   0.943
+  ]
+ },
+ {
+  "id": "4929",
+  "name": "Sibin black marker",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.0526,
+   0.06
+  ],
+  "tip2": [
+   0.0526,
+   0.0608
+  ],
+  "arm": [
+   0.566,
+   0.967
+  ]
+ },
+ {
+  "id": "4930",
+  "name": "Sibin red marker",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.0456,
+   0.0617
+  ],
+  "tip2": [
+   0.0511,
+   0.0567
+  ],
+  "arm": [
+   0.566,
+   0.956
+  ]
+ },
+ {
+  "id": "4931",
+  "name": "Sibin highlighter",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.0506,
+   0.06
+  ],
+  "tip2": [
+   0.0506,
+   0.0625
+  ],
+  "arm": [
+   0.624,
+   0.959
+  ]
+ },
+ {
+  "id": "4932",
+  "name": "Sibin blue crayon",
+  "group": "sibin",
+  "mode": "top-left",
+  "tip": [
+   0.0456,
+   0.0875
+  ],
+  "tip2": [
+   0.0432,
+   0.09
+  ],
+  "arm": [
+   0.632,
+   0.959
+  ]
+ },
+ {
+  "id": "4933",
+  "name": "Sibin fountain pen",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.0567,
+   0.0992
+  ],
+  "tip2": [
+   0.0556,
+   0.0992
+  ],
+  "arm": [
+   0.627,
+   0.943
+  ]
+ },
+ {
+  "id": "4934",
+  "name": "Sibin silver ball pen",
+  "group": "sibin",
+  "mode": "top-left",
+  "tip": [
+   0.0798,
+   0.0692
+  ],
+  "tip2": [
+   0.0851,
+   0.0692
+  ],
+  "arm": [
+   0.535,
+   0.956
+  ]
+ },
+ {
+  "id": "4935",
+  "name": "Sibin paint brush",
+  "group": "sibin",
+  "mode": "bristle",
+  "tip": [
+   0.6144,
+   0.4425
+  ],
+  "tip2": [
+   0.6778,
+   0.4933
+  ],
+  "arm": [
+   0.579,
+   0.963
+  ]
+ },
+ {
+  "id": "4936",
+  "name": "Sibin adult eraser",
+  "group": "sibin",
+  "mode": "bottom-right",
+  "tip": [
+   0.9527,
+   0.885
+  ],
+  "tip2": [
+   0.9527,
+   0.885
+  ],
+  "arm": [
+   0.617,
+   0.96
+  ]
+ },
+ {
+  "id": "4937",
+  "name": "Sibin chalk",
+  "group": "sibin",
+  "mode": "left",
+  "tip": [
+   0.0627,
+   0.055
+  ],
+  "tip2": [
+   0.0602,
+   0.0567
+  ],
+  "arm": [
+   0.553,
+   0.96
+  ]
+ },
+ {
+  "id": "4938",
+  "name": "Sibin adult move in finger",
+  "group": "sibin",
+  "mode": "gesture",
+  "tip": [
+   0.2512,
+   0.0269
+  ],
+  "tip2": [
+   0.2512,
+   0.0269
+  ],
+  "arm": [
+   0.883,
+   0.982
+  ]
+ },
+ {
+  "id": "4939",
+  "name": "Suneeta blue biro",
+  "group": "suneeta",
+  "mode": "top-right",
+  "tip": [
+   0.504,
+   0.1106
+  ],
+  "tip2": [
+   0.0582,
+   0.0772
+  ],
+  "arm": [
+   0.702,
+   0.943
+  ]
+ },
+ {
+  "id": "4940",
+  "name": "Suneeta black biro",
+  "group": "suneeta",
+  "mode": "top-right",
+  "tip": [
+   0.6351,
+   0.0843
+  ],
+  "tip2": [
+   0.6081,
+   0.089
+  ],
+  "arm": [
+   0.66,
+   0.964
+  ]
+ },
+ {
+  "id": "4941",
+  "name": "Suneeta pencil 1",
+  "group": "suneeta",
+  "mode": "left",
+  "tip": [
+   0.0518,
+   0.0631
+  ],
+  "tip2": [
+   0.0505,
+   0.0623
+  ],
+  "arm": [
+   0.709,
+   0.95
+  ]
+ },
+ {
+  "id": "4942",
+  "name": "Suneeta pencil 2",
+  "group": "suneeta",
+  "mode": "top-right",
+  "tip": [
+   0.572,
+   0.0658
+  ],
+  "tip2": [
+   0.5249,
+   0.0825
+  ],
+  "arm": [
+   0.709,
+   0.958
+  ]
+ },
+ {
+  "id": "4943",
+  "name": "Suneeta pencil eraser",
+  "group": "suneeta",
+  "mode": "top-left",
+  "tip": [
+   0.0499,
+   0.0664
+  ],
+  "tip2": [
+   0.0499,
+   0.0664
+  ],
+  "arm": [
+   0.698,
+   0.965
+  ]
+ },
+ {
+  "id": "4944",
+  "name": "Suneeta white pencil",
+  "group": "suneeta",
+  "mode": "top-left",
+  "tip": [
+   0.0425,
+   0.059
+  ],
+  "tip2": [
+   0.0425,
+   0.0607
+  ],
+  "arm": [
+   0.671,
+   0.958
+  ]
+ },
+ {
+  "id": "4945",
+  "name": "Suneeta black pencil",
+  "group": "suneeta",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0531,
+   0.0675
+  ],
+  "tip2": [
+   0.0531,
+   0.0683
+  ],
+  "arm": [
+   0.69,
+   0.964
+  ]
+ },
+ {
+  "id": "4946",
+  "name": "Suneeta black fineliner",
+  "group": "suneeta",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0591,
+   0.0686
+  ],
+  "tip2": [
+   0.0578,
+   0.0686
+  ],
+  "arm": [
+   0.703,
+   0.95
+  ]
+ },
+ {
+  "id": "4947",
+  "name": "Suneeta black marker",
+  "group": "suneeta",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0586,
+   0.0967
+  ],
+  "tip2": [
+   0.0612,
+   0.0975
+  ],
+  "arm": [
+   0.704,
+   0.96
+  ]
+ },
+ {
+  "id": "4948",
+  "name": "Suneeta red marker",
+  "group": "suneeta",
+  "mode": "left",
+  "tip": [
+   0.0558,
+   0.0567
+  ],
+  "tip2": [
+   0.0558,
+   0.0558
+  ],
+  "arm": [
+   0.689,
+   0.943
+  ]
+ },
+ {
+  "id": "4949",
+  "name": "Suneeta sharpie",
+  "group": "suneeta",
+  "mode": "top-left",
+  "tip": [
+   0.0378,
+   0.0893
+  ],
+  "tip2": [
+   0.0378,
+   0.0893
+  ],
+  "arm": [
+   0.734,
+   0.954
+  ]
+ },
+ {
+  "id": "4950",
+  "name": "Suneeta highlighter",
+  "group": "suneeta",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0622,
+   0.082
+  ],
+  "tip2": [
+   0.0596,
+   0.0811
+  ],
+  "arm": [
+   0.698,
+   0.967
+  ]
+ },
+ {
+  "id": "4951",
+  "name": "Suneeta blue crayon",
+  "group": "suneeta",
+  "mode": "top-left",
+  "tip": [
+   0.0481,
+   0.0705
+  ],
+  "tip2": [
+   0.0467,
+   0.073
+  ],
+  "arm": [
+   0.663,
+   0.971
+  ]
+ },
+ {
+  "id": "4952",
+  "name": "Suneeta fountain pen",
+  "group": "suneeta",
+  "mode": "top-left",
+  "tip": [
+   0.0479,
+   0.0639
+  ],
+  "tip2": [
+   0.0453,
+   0.0631
+  ],
+  "arm": [
+   0.688,
+   0.939
+  ]
+ },
+ {
+  "id": "4953",
+  "name": "Suneeta silver ball pen",
+  "group": "suneeta",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0561,
+   0.06
+  ],
+  "tip2": [
+   0.0561,
+   0.06
+  ],
+  "arm": [
+   0.692,
+   0.953
+  ]
+ },
+ {
+  "id": "4954",
+  "name": "Suneeta paint brush",
+  "group": "suneeta",
+  "mode": "bristle",
+  "tip": [
+   0.2027,
+   0.0861
+  ],
+  "tip2": [
+   0.1865,
+   0.0902
+  ],
+  "arm": [
+   0.664,
+   0.963
+  ]
+ },
+ {
+  "id": "4955",
+  "name": "Suneeta adult eraser",
+  "group": "suneeta",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0717,
+   0.0683
+  ],
+  "tip2": [
+   0.0717,
+   0.0683
+  ],
+  "arm": [
+   0.695,
+   0.958
+  ]
+ },
+ {
+  "id": "4956",
+  "name": "Suneeta chalk",
+  "group": "suneeta",
+  "mode": "left",
+  "tip": [
+   0.0633,
+   0.0425
+  ],
+  "tip2": [
+   0.0774,
+   0.0433
+  ],
+  "arm": [
+   0.642,
+   0.963
+  ]
+ },
+ {
+  "id": "4957",
+  "name": "Suneeta adult move in finger",
+  "group": "suneeta",
+  "mode": "gesture",
+  "tip": [
+   0.2816,
+   0.0323
+  ],
+  "tip2": [
+   0.2816,
+   0.0323
+  ],
+  "arm": [
+   0.605,
+   0.975
+  ]
+ },
+ {
+  "id": "4958",
+  "name": "Suneeta adult move in hand",
+  "group": "suneeta",
+  "mode": "gesture",
+  "tip": [
+   0.3754,
+   0.0223
+  ],
+  "tip2": [
+   0.3754,
+   0.0223
+  ],
+  "arm": [
+   0.587,
+   0.988
+  ]
+ },
+ {
+  "id": "4959",
+  "name": "Joe black biro",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0401,
+   0.1275
+  ],
+  "tip2": [
+   0.0378,
+   0.1275
+  ],
+  "arm": [
+   0.683,
+   0.967
+  ]
+ },
+ {
+  "id": "4960",
+  "name": "Joe blue biro",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.042,
+   0.1091
+  ],
+  "tip2": [
+   0.042,
+   0.1083
+  ],
+  "arm": [
+   0.659,
+   0.97
+  ]
+ },
+ {
+  "id": "4961",
+  "name": "Joe pencil 1",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0561,
+   0.08
+  ],
+  "tip2": [
+   0.0548,
+   0.0792
+  ],
+  "arm": [
+   0.59,
+   0.966
+  ]
+ },
+ {
+  "id": "4962",
+  "name": "Joe pencil 2",
+  "group": "joe",
+  "mode": "bottom",
+  "tip": [
+   0.6078,
+   0.9702
+  ],
+  "tip2": [
+   0.6183,
+   0.9678
+  ],
+  "arm": [
+   0.636,
+   0.963
+  ]
+ },
+ {
+  "id": "4963",
+  "name": "Joe pencil eraser",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0502,
+   0.0675
+  ],
+  "tip2": [
+   0.0502,
+   0.0675
+  ],
+  "arm": [
+   0.567,
+   0.978
+  ]
+ },
+ {
+  "id": "4964",
+  "name": "Joe white pencil",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.035,
+   0.0835
+  ],
+  "tip2": [
+   0.0387,
+   0.0843
+  ],
+  "arm": [
+   0.648,
+   0.969
+  ]
+ },
+ {
+  "id": "4965",
+  "name": "Joe black pencil",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.039,
+   0.08
+  ],
+  "tip2": [
+   0.0403,
+   0.08
+  ],
+  "arm": [
+   0.627,
+   0.962
+  ]
+ },
+ {
+  "id": "4966",
+  "name": "Joe highlighter",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0416,
+   0.1033
+  ],
+  "tip2": [
+   0.0416,
+   0.1033
+  ],
+  "arm": [
+   0.607,
+   0.976
+  ]
+ },
+ {
+  "id": "4967",
+  "name": "Joe sharpie",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0556,
+   0.0867
+  ],
+  "tip2": [
+   0.0556,
+   0.0858
+  ],
+  "arm": [
+   0.554,
+   0.982
+  ]
+ },
+ {
+  "id": "4968",
+  "name": "Joe black fineliner",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0507,
+   0.0951
+  ],
+  "tip2": [
+   0.0453,
+   0.0943
+  ],
+  "arm": [
+   0.633,
+   0.973
+  ]
+ },
+ {
+  "id": "4969",
+  "name": "Joe black marker",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0491,
+   0.0858
+  ],
+  "tip2": [
+   0.0491,
+   0.085
+  ],
+  "arm": [
+   0.635,
+   0.971
+  ]
+ },
+ {
+  "id": "4970",
+  "name": "Joe fountain pen",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0443,
+   0.086
+  ],
+  "tip2": [
+   0.6445,
+   0.9727
+  ],
+  "arm": [
+   0.663,
+   0.973
+  ]
+ },
+ {
+  "id": "4971",
+  "name": "Joe blue crayon",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0472,
+   0.1058
+  ],
+  "tip2": [
+   0.0497,
+   0.1083
+  ],
+  "arm": [
+   0.622,
+   0.968
+  ]
+ },
+ {
+  "id": "4972",
+  "name": "Joe paint brush",
+  "group": "joe",
+  "mode": "bristle",
+  "tip": [
+   0.1839,
+   0.0942
+  ],
+  "tip2": [
+   0.1962,
+   0.0917
+  ],
+  "arm": [
+   0.711,
+   0.951
+  ]
+ },
+ {
+  "id": "4973",
+  "name": "Joe eraser",
+  "group": "joe",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0484,
+   0.0752
+  ],
+  "tip2": [
+   0.0484,
+   0.0752
+  ],
+  "arm": [
+   0.653,
+   0.97
+  ]
+ },
+ {
+  "id": "4974",
+  "name": "Joe chalk",
+  "group": "joe",
+  "mode": "left",
+  "tip": [
+   0.0463,
+   0.0736
+  ],
+  "tip2": [
+   0.0537,
+   0.0653
+  ],
+  "arm": [
+   0.67,
+   0.965
+  ]
+ },
+ {
+  "id": "4975",
+  "name": "Joe adult move in fingers",
+  "group": "joe",
+  "mode": "gesture",
+  "tip": [
+   0.4447,
+   0.0177
+  ],
+  "tip2": [
+   0.4447,
+   0.0177
+  ],
+  "arm": [
+   0.281,
+   0.982
+  ]
+ },
+ {
+  "id": "4976",
+  "name": "Joe adult move in hand",
+  "group": "joe",
+  "mode": "gesture",
+  "tip": [
+   0.5656,
+   0.0185
+  ],
+  "tip2": [
+   0.5656,
+   0.0185
+  ],
+  "arm": [
+   0.342,
+   0.986
+  ]
+ },
+ {
+  "id": "4977",
+  "name": "Yasmin child biro black",
+  "group": "yasmin",
+  "mode": "top-right",
+  "tip": [
+   0.7454,
+   0.15
+  ],
+  "tip2": [
+   0.6924,
+   0.1575
+  ],
+  "arm": [
+   0.614,
+   0.953
+  ]
+ },
+ {
+  "id": "4978",
+  "name": "Yasmin pencil 2",
+  "group": "yasmin",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0826,
+   0.116
+  ],
+  "tip2": [
+   0.0838,
+   0.116
+  ],
+  "arm": [
+   0.64,
+   0.954
+  ]
+ },
+ {
+  "id": "4979",
+  "name": "Yasmin pencil eraser",
+  "group": "yasmin",
+  "mode": "left",
+  "tip": [
+   0.0466,
+   0.0926
+  ],
+  "tip2": [
+   0.0466,
+   0.0926
+  ],
+  "arm": [
+   0.615,
+   0.975
+  ]
+ },
+ {
+  "id": "4980",
+  "name": "Yasmin pencil 1",
+  "group": "yasmin",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0471,
+   0.1062
+  ],
+  "tip2": [
+   0.0471,
+   0.1062
+  ],
+  "arm": [
+   0.653,
+   0.965
+  ]
+ },
+ {
+  "id": "4981",
+  "name": "Yasmin black fineliner",
+  "group": "yasmin",
+  "mode": "shipped-ok",
+  "tip": [
+   0.08,
+   0.1258
+  ],
+  "tip2": [
+   0.0788,
+   0.125
+  ],
+  "arm": [
+   0.659,
+   0.944
+  ]
+ },
+ {
+  "id": "4982",
+  "name": "Yasmin black crayon",
+  "group": "yasmin",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0488,
+   0.13
+  ],
+  "tip2": [
+   0.0499,
+   0.13
+  ],
+  "arm": [
+   0.701,
+   0.953
+  ]
+ },
+ {
+  "id": "4983",
+  "name": "Yasmin blue crayon",
+  "group": "yasmin",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0468,
+   0.1169
+  ],
+  "tip2": [
+   0.0468,
+   0.1185
+  ],
+  "arm": [
+   0.633,
+   0.96
+  ]
+ },
+ {
+  "id": "4984",
+  "name": "Yasmin orange crayon",
+  "group": "yasmin",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0556,
+   0.1225
+  ],
+  "tip2": [
+   0.0556,
+   0.1233
+  ],
+  "arm": [
+   0.656,
+   0.949
+  ]
+ },
+ {
+  "id": "4985",
+  "name": "Yasmin sharpie",
+  "group": "yasmin",
+  "mode": "top-left",
+  "tip": [
+   0.047,
+   0.1154
+  ],
+  "tip2": [
+   0.0446,
+   0.1163
+  ],
+  "arm": [
+   0.668,
+   0.957
+  ]
+ },
+ {
+  "id": "4986",
+  "name": "Yasmin highlighter",
+  "group": "yasmin",
+  "mode": "top-left",
+  "tip": [
+   0.0589,
+   0.1236
+  ],
+  "tip2": [
+   0.0604,
+   0.1228
+  ],
+  "arm": [
+   0.604,
+   0.967
+  ]
+ },
+ {
+  "id": "4987",
+  "name": "Yasmin black marker",
+  "group": "yasmin",
+  "mode": "top-right",
+  "tip": [
+   0.6811,
+   0.0431
+  ],
+  "tip2": [
+   0.6424,
+   0.0732
+  ],
+  "arm": [
+   0.68,
+   0.946
+  ]
+ },
+ {
+  "id": "4988",
+  "name": "Yasmin red marker",
+  "group": "yasmin",
+  "mode": "top-right",
+  "tip": [
+   0.6972,
+   0.1016
+  ],
+  "tip2": [
+   0.6362,
+   0.1293
+  ],
+  "arm": [
+   0.665,
+   0.933
+  ]
+ },
+ {
+  "id": "4989",
+  "name": "Yasmin paint brush",
+  "group": "yasmin",
+  "mode": "bristle",
+  "tip": [
+   0.1945,
+   0.1189
+  ],
+  "tip2": [
+   0.1751,
+   0.1213
+  ],
+  "arm": [
+   0.716,
+   0.952
+  ]
+ },
+ {
+  "id": "4990",
+  "name": "Yasmin child eraser",
+  "group": "yasmin",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0596,
+   0.0705
+  ],
+  "tip2": [
+   0.0596,
+   0.0705
+  ],
+  "arm": [
+   0.691,
+   0.959
+  ]
+ },
+ {
+  "id": "4991",
+  "name": "Yasmin chalk",
+  "group": "yasmin",
+  "mode": "left",
+  "tip": [
+   0.055,
+   0.0967
+  ],
+  "tip2": [
+   0.055,
+   0.1
+  ],
+  "arm": [
+   0.695,
+   0.962
+  ]
+ },
+ {
+  "id": "4992",
+  "name": "Yasmin child move in finger",
+  "group": "yasmin",
+  "mode": "gesture",
+  "tip": [
+   0.3261,
+   0.0254
+  ],
+  "tip2": [
+   0.3261,
+   0.0254
+  ],
+  "arm": [
+   0.399,
+   0.977
+  ]
+ },
+ {
+  "id": "4993",
+  "name": "Yasmin child move in hand",
+  "group": "yasmin",
+  "mode": "gesture",
+  "tip": [
+   0.5114,
+   0.0288
+  ],
+  "tip2": [
+   0.5114,
+   0.0288
+  ],
+  "arm": [
+   0.635,
+   0.962
+  ]
+ },
+ {
+  "id": "4994",
+  "name": "Jacob black biro",
+  "group": "jacob",
+  "mode": "top-right",
+  "tip": [
+   0.9349,
+   0.05
+  ],
+  "tip2": [
+   0.9333,
+   0.05
+  ],
+  "arm": [
+   0.148,
+   0.963
+  ]
+ },
+ {
+  "id": "4995",
+  "name": "Jacob pencil 1",
+  "group": "jacob",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9269,
+   0.0948
+  ],
+  "tip2": [
+   0.9297,
+   0.0939
+  ],
+  "arm": [
+   0.224,
+   0.937
+  ]
+ },
+ {
+  "id": "4996",
+  "name": "Jacob black biro",
+  "group": "jacob",
+  "mode": "right",
+  "tip": [
+   0.9321,
+   0.0504
+  ],
+  "tip2": [
+   0.9354,
+   0.0504
+  ],
+  "arm": [
+   0.161,
+   0.96
+  ]
+ },
+ {
+  "id": "4997",
+  "name": "Jacob pencil 2",
+  "group": "jacob",
+  "mode": "top-left",
+  "tip": [
+   0.2047,
+   0.2517
+  ],
+  "tip2": [
+   0.9211,
+   0.0819
+  ],
+  "arm": [
+   0.134,
+   0.974
+  ]
+ },
+ {
+  "id": "4998",
+  "name": "Jacob pencil eraser",
+  "group": "jacob",
+  "mode": "right",
+  "tip": [
+   0.9464,
+   0.0478
+  ],
+  "tip2": [
+   0.9464,
+   0.0478
+  ],
+  "arm": [
+   0.128,
+   0.976
+  ]
+ },
+ {
+  "id": "4999",
+  "name": "Jacob child pencil black",
+  "group": "jacob",
+  "mode": "right",
+  "tip": [
+   0.9322,
+   0.0786
+  ],
+  "tip2": [
+   0.9336,
+   0.0786
+  ],
+  "arm": [
+   0.124,
+   0.972
+  ]
+ },
+ {
+  "id": "5000",
+  "name": "Jacob child crayon orange",
+  "group": "jacob",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9273,
+   0.1427
+  ],
+  "tip2": [
+   0.9273,
+   0.1409
+  ],
+  "arm": [
+   0.12,
+   0.955
+  ]
+ },
+ {
+  "id": "5001",
+  "name": "Jacob child crayon black",
+  "group": "jacob",
+  "mode": "top-right",
+  "tip": [
+   0.9298,
+   0.1191
+  ],
+  "tip2": [
+   0.9298,
+   0.1191
+  ],
+  "arm": [
+   0.184,
+   0.971
+  ]
+ },
+ {
+  "id": "5002",
+  "name": "Jacob child marker black",
+  "group": "jacob",
+  "mode": "top-right",
+  "tip": [
+   0.9318,
+   0.1487
+  ],
+  "tip2": [
+   0.9333,
+   0.1504
+  ],
+  "arm": [
+   0.147,
+   0.957
+  ]
+ },
+ {
+  "id": "5003",
+  "name": "Jacob child highlighter",
+  "group": "jacob",
+  "mode": "top-right",
+  "tip": [
+   0.9274,
+   0.1583
+  ],
+  "tip2": [
+   0.9174,
+   0.1539
+  ],
+  "arm": [
+   0.146,
+   0.954
+  ]
+ },
+ {
+  "id": "5004",
+  "name": "Jacob child marker red",
+  "group": "jacob",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0826,
+   0.2
+  ],
+  "tip2": [
+   0.9034,
+   0.1301
+  ],
+  "arm": [
+   0.169,
+   0.945
+  ]
+ },
+ {
+  "id": "5005",
+  "name": "Jacob child sharpie",
+  "group": "jacob",
+  "mode": "right",
+  "tip": [
+   0.9494,
+   0.1296
+  ],
+  "tip2": [
+   0.9494,
+   0.1278
+  ],
+  "arm": [
+   0.125,
+   0.961
+  ]
+ },
+ {
+  "id": "5006",
+  "name": "Jacob paint brush",
+  "group": "jacob",
+  "mode": "bristle",
+  "tip": [
+   0.8137,
+   0.1224
+  ],
+  "tip2": [
+   0.8203,
+   0.1208
+  ],
+  "arm": [
+   0.148,
+   0.954
+  ]
+ },
+ {
+  "id": "5007",
+  "name": "Jacob child eraser",
+  "group": "jacob",
+  "mode": "right",
+  "tip": [
+   0.9336,
+   0.1255
+  ],
+  "tip2": [
+   0.9336,
+   0.1255
+  ],
+  "arm": [
+   0.117,
+   0.964
+  ]
+ },
+ {
+  "id": "5008",
+  "name": "Jacob chalk",
+  "group": "jacob",
+  "mode": "shipped-ok",
+  "tip": [
+   0.9187,
+   0.1168
+  ],
+  "tip2": [
+   0.9096,
+   0.116
+  ],
+  "arm": [
+   0.133,
+   0.96
+  ]
+ },
+ {
+  "id": "5009",
+  "name": "Jacob child move in fingers",
+  "group": "jacob",
+  "mode": "gesture",
+  "tip": [
+   0.5085,
+   0.0331
+  ],
+  "tip2": [
+   0.5085,
+   0.0331
+  ],
+  "arm": [
+   0.53,
+   0.955
+  ]
+ },
+ {
+  "id": "5010",
+  "name": "Jacob blue crayon",
+  "group": "jacob",
+  "mode": "right",
+  "tip": [
+   0.9283,
+   0.0508
+  ],
+  "tip2": [
+   0.9283,
+   0.0517
+  ],
+  "arm": [
+   0.472,
+   0.999
+  ]
+ },
+ {
+  "id": "5011",
+  "name": "Jacob green crayon",
+  "group": "jacob",
+  "mode": "top-right",
+  "tip": [
+   0.9558,
+   0.1
+  ],
+  "tip2": [
+   0.9576,
+   0.1025
+  ],
+  "arm": [
+   0.407,
+   0.999
+  ]
+ },
+ {
+  "id": "5012",
+  "name": "Jacob blue fineliner",
+  "group": "jacob",
+  "mode": "top-right",
+  "tip": [
+   0.7949,
+   0.0475
+  ],
+  "tip2": [
+   0.7949,
+   0.0475
+  ],
+  "arm": [
+   0.7,
+   0.999
+  ]
+ },
+ {
+  "id": "5013",
+  "name": "Jacob orange pencil",
+  "group": "jacob",
+  "mode": "top-right",
+  "tip": [
+   0.6413,
+   0.0192
+  ],
+  "tip2": [
+   0.0265,
+   0.2933
+  ],
+  "arm": [
+   0.807,
+   0.984
+  ]
+ },
+ {
+  "id": "5014",
+  "name": "Billy child biro black",
+  "group": "billy",
+  "mode": "right",
+  "tip": [
+   0.8841,
+   0.385
+  ],
+  "tip2": [
+   0.1367,
+   0.1664
+  ],
+  "arm": [
+   0.5,
+   0.962
+  ]
+ },
+ {
+  "id": "5015",
+  "name": "Billy blue pencil",
+  "group": "billy",
+  "mode": "top-left",
+  "tip": [
+   0.105,
+   0.0526
+  ],
+  "tip2": [
+   0.1065,
+   0.0518
+  ],
+  "arm": [
+   0.593,
+   0.935
+  ]
+ },
+ {
+  "id": "5016",
+  "name": "Billy child pencil 2",
+  "group": "billy",
+  "mode": "top-right",
+  "tip": [
+   0.9328,
+   0.3044
+  ],
+  "tip2": [
+   0.8932,
+   0.3184
+  ],
+  "arm": [
+   0.55,
+   0.937
+  ]
+ },
+ {
+  "id": "5017",
+  "name": "Billy pencil eraser",
+  "group": "billy",
+  "mode": "shipped-ok",
+  "tip": [
+   0.057,
+   0.0602
+  ],
+  "tip2": [
+   0.057,
+   0.0602
+  ],
+  "arm": [
+   0.708,
+   0.947
+  ]
+ },
+ {
+  "id": "5018",
+  "name": "Billy pencil",
+  "group": "billy",
+  "mode": "top-left",
+  "tip": [
+   0.0609,
+   0.0649
+  ],
+  "tip2": [
+   0.0596,
+   0.064
+  ],
+  "arm": [
+   0.657,
+   0.951
+  ]
+ },
+ {
+  "id": "5019",
+  "name": "Billy child crayon blue",
+  "group": "billy",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0762,
+   0.0681
+  ],
+  "tip2": [
+   0.0777,
+   0.0664
+  ],
+  "arm": [
+   0.593,
+   0.94
+  ]
+ },
+ {
+  "id": "5020",
+  "name": "Billy child sharpie",
+  "group": "billy",
+  "mode": "top-right",
+  "tip": [
+   0.845,
+   0.1947
+  ],
+  "tip2": [
+   0.7737,
+   0.1965
+  ],
+  "arm": [
+   0.63,
+   0.936
+  ]
+ },
+ {
+  "id": "5021",
+  "name": "Billy child marker black",
+  "group": "billy",
+  "mode": "right",
+  "tip": [
+   0.9344,
+   0.2429
+  ],
+  "tip2": [
+   0.8991,
+   0.2964
+  ],
+  "arm": [
+   0.48,
+   0.935
+  ]
+ },
+ {
+  "id": "5022",
+  "name": "Billy child highlighter",
+  "group": "billy",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0805,
+   0.0876
+  ],
+  "tip2": [
+   0.0831,
+   0.085
+  ],
+  "arm": [
+   0.644,
+   0.94
+  ]
+ },
+ {
+  "id": "5023",
+  "name": "Billy child eraser",
+  "group": "billy",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0725,
+   0.0939
+  ],
+  "tip2": [
+   0.0725,
+   0.0939
+  ],
+  "arm": [
+   0.831,
+   0.944
+  ]
+ },
+ {
+  "id": "5024",
+  "name": "Billy child move in finger",
+  "group": "billy",
+  "mode": "gesture",
+  "tip": [
+   0.1863,
+   0.0496
+  ],
+  "tip2": [
+   0.1863,
+   0.0496
+  ],
+  "arm": [
+   0.695,
+   0.943
+  ]
+ },
+ {
+  "id": "5025",
+  "name": "Billy child move in hand",
+  "group": "billy",
+  "mode": "gesture",
+  "tip": [
+   0.4823,
+   0.0389
+  ],
+  "tip2": [
+   0.4823,
+   0.0389
+  ],
+  "arm": [
+   0.646,
+   0.961
+  ]
+ },
+ {
+  "id": "5026",
+  "name": "Billy child paint brush",
+  "group": "billy",
+  "mode": "bristle",
+  "tip": [
+   0.0719,
+   0.0741
+  ],
+  "tip2": [
+   0.0578,
+   0.0891
+  ],
+  "arm": [
+   0.862,
+   0.999
+  ]
+ },
+ {
+  "id": "5027",
+  "name": "Billy child chalk",
+  "group": "billy",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0801,
+   0.1252
+  ],
+  "tip2": [
+   0.0788,
+   0.133
+  ],
+  "arm": [
+   0.651,
+   0.95
+  ]
+ },
+ {
+  "id": "5028",
+  "name": "Billy child crayon green",
+  "group": "billy",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0564,
+   0.0801
+  ],
+  "tip2": [
+   0.0564,
+   0.0816
+  ],
+  "arm": [
+   0.646,
+   0.998
+  ]
+ },
+ {
+  "id": "5029",
+  "name": "Billy black crayon",
+  "group": "billy",
+  "mode": "left",
+  "tip": [
+   0.0906,
+   0.055
+  ],
+  "tip2": [
+   0.0906,
+   0.055
+  ],
+  "arm": [
+   0.63,
+   0.999
+  ]
+ },
+ {
+  "id": "5030",
+  "name": "Billy orange crayon",
+  "group": "billy",
+  "mode": "top",
+  "tip": [
+   0.5093,
+   0.0425
+  ],
+  "tip2": [
+   0.5056,
+   0.0425
+  ],
+  "arm": [
+   0.279,
+   0.999
+  ]
+ },
+ {
+  "id": "5031",
+  "name": "Billy blue fineliner",
+  "group": "billy",
+  "mode": "top",
+  "tip": [
+   0.345,
+   0.0335
+  ],
+  "tip2": [
+   0.05,
+   0.0748
+  ],
+  "arm": [
+   0.723,
+   0.999
+  ]
+ },
+ {
+  "id": "5032",
+  "name": "Billy red marker",
+  "group": "billy",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0697,
+   0.0554
+  ],
+  "tip2": [
+   0.9278,
+   0.2625
+  ],
+  "arm": [
+   0.61,
+   0.975
+  ]
+ },
+ {
+  "id": "5033",
+  "name": "Billy black pencil",
+  "group": "billy",
+  "mode": "top-left",
+  "tip": [
+   0.1133,
+   0.0516
+  ],
+  "tip2": [
+   0.1117,
+   0.0508
+  ],
+  "arm": [
+   0.679,
+   0.999
+  ]
+ },
+ {
+  "id": "5034",
+  "name": "Billy orange pencil",
+  "group": "billy",
+  "mode": "right",
+  "tip": [
+   0.8825,
+   0.4383
+  ],
+  "tip2": [
+   0.9637,
+   0.4184
+  ],
+  "arm": [
+   0.4,
+   0.999
+  ]
+ },
+ {
+  "id": "5035",
+  "name": "Billy pink pencil",
+  "group": "billy",
+  "mode": "bottom-right",
+  "tip": [
+   0.9711,
+   0.6041
+  ],
+  "tip2": [
+   0.89,
+   0.5919
+  ],
+  "arm": [
+   0.193,
+   0.999
+  ]
+ },
+ {
+  "id": "5036",
+  "name": "Jonny black biro",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0484,
+   0.0925
+  ],
+  "tip2": [
+   0.0473,
+   0.18
+  ],
+  "arm": [
+   0.722,
+   0.963
+  ]
+ },
+ {
+  "id": "5037",
+  "name": "Jonny blue biro",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0571,
+   0.0842
+  ],
+  "tip2": [
+   0.0558,
+   0.1642
+  ],
+  "arm": [
+   0.681,
+   0.962
+  ]
+ },
+ {
+  "id": "5038",
+  "name": "Jonny pencil 1",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0529,
+   0.0877
+  ],
+  "tip2": [
+   0.0481,
+   0.1754
+  ],
+  "arm": [
+   0.696,
+   0.951
+  ]
+ },
+ {
+  "id": "5039",
+  "name": "Jonny pencil 2",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0468,
+   0.0909
+  ],
+  "tip2": [
+   0.0479,
+   0.0917
+  ],
+  "arm": [
+   0.716,
+   0.945
+  ]
+ },
+ {
+  "id": "5040",
+  "name": "Jonny pencil eraser",
+  "group": "jonny",
+  "mode": "left",
+  "tip": [
+   0.0336,
+   0.0795
+  ],
+  "tip2": [
+   0.0336,
+   0.0795
+  ],
+  "arm": [
+   0.728,
+   0.948
+  ]
+ },
+ {
+  "id": "5041",
+  "name": "Jonny white pencil",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0554,
+   0.073
+  ],
+  "tip2": [
+   0.0543,
+   0.073
+  ],
+  "arm": [
+   0.7,
+   0.951
+  ]
+ },
+ {
+  "id": "5042",
+  "name": "Jonny sharpie",
+  "group": "jonny",
+  "mode": "top-left",
+  "tip": [
+   0.0489,
+   0.0828
+  ],
+  "tip2": [
+   0.0454,
+   0.0828
+  ],
+  "arm": [
+   0.71,
+   0.956
+  ]
+ },
+ {
+  "id": "5043",
+  "name": "Jonny black marker",
+  "group": "jonny",
+  "mode": "top-left",
+  "tip": [
+   0.0566,
+   0.0658
+  ],
+  "tip2": [
+   0.0554,
+   0.0658
+  ],
+  "arm": [
+   0.699,
+   0.966
+  ]
+ },
+ {
+  "id": "5044",
+  "name": "Jonny orange crayon",
+  "group": "jonny",
+  "mode": "top-left",
+  "tip": [
+   0.0477,
+   0.0733
+  ],
+  "tip2": [
+   0.0477,
+   0.0733
+  ],
+  "arm": [
+   0.688,
+   0.961
+  ]
+ },
+ {
+  "id": "5045",
+  "name": "Jonny adult eraser",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0344,
+   0.071
+  ],
+  "tip2": [
+   0.0344,
+   0.071
+  ],
+  "arm": [
+   0.716,
+   0.963
+  ]
+ },
+ {
+  "id": "5046",
+  "name": "Jonny adult chalk",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0325,
+   0.0508
+  ],
+  "tip2": [
+   0.0442,
+   0.0517
+  ],
+  "arm": [
+   0.669,
+   0.97
+  ]
+ },
+ {
+  "id": "5047",
+  "name": "Jonny black pencil",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0453,
+   0.075
+  ],
+  "tip2": [
+   0.0476,
+   0.0758
+  ],
+  "arm": [
+   0.709,
+   0.962
+  ]
+ },
+ {
+  "id": "5048",
+  "name": "Jonny silver ball pen",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0486,
+   0.0858
+  ],
+  "tip2": [
+   0.0509,
+   0.0858
+  ],
+  "arm": [
+   0.711,
+   0.954
+  ]
+ },
+ {
+  "id": "5049",
+  "name": "Jonny red marker",
+  "group": "jonny",
+  "mode": "left",
+  "tip": [
+   0.0426,
+   0.0808
+  ],
+  "tip2": [
+   0.0437,
+   0.0808
+  ],
+  "arm": [
+   0.724,
+   0.957
+  ]
+ },
+ {
+  "id": "5050",
+  "name": "Jonny black fineliner",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0321,
+   0.0608
+  ],
+  "tip2": [
+   0.0307,
+   0.0608
+  ],
+  "arm": [
+   0.674,
+   0.969
+  ]
+ },
+ {
+  "id": "5051",
+  "name": "Jonny adult move in hand",
+  "group": "jonny",
+  "mode": "gesture",
+  "tip": [
+   0.6395,
+   0.0142
+  ],
+  "tip2": [
+   0.6395,
+   0.0142
+  ],
+  "arm": [
+   0.417,
+   0.983
+  ]
+ },
+ {
+  "id": "5052",
+  "name": "Jonny paint brush",
+  "group": "jonny",
+  "mode": "bristle",
+  "tip": [
+   0.1183,
+   0.075
+  ],
+  "tip2": [
+   0.1169,
+   0.0767
+  ],
+  "arm": [
+   0.645,
+   0.976
+  ]
+ },
+ {
+  "id": "5053",
+  "name": "Jonny adult move in fingers",
+  "group": "jonny",
+  "mode": "gesture",
+  "tip": [
+   0.4086,
+   0.0158
+  ],
+  "tip2": [
+   0.4086,
+   0.0158
+  ],
+  "arm": [
+   0.503,
+   0.982
+  ]
+ },
+ {
+  "id": "5054",
+  "name": "Jonny fountain pen",
+  "group": "jonny",
+  "mode": "top-left",
+  "tip": [
+   0.0589,
+   0.0175
+  ],
+  "tip2": [
+   0.0722,
+   0.0167
+  ],
+  "arm": [
+   0.503,
+   0.983
+  ]
+ },
+ {
+  "id": "5055",
+  "name": "Jonny highlighter",
+  "group": "jonny",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0208,
+   0.1142
+  ],
+  "tip2": [
+   0.0096,
+   0.1175
+  ],
+  "arm": [
+   0.627,
+   0.979
+  ]
+ },
+ {
+  "id": "5080",
+  "name": "zombie biro",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1865,
+   0.3675
+  ],
+  "tip2": [
+   0.1946,
+   0.3525
+  ],
+  "arm": [
+   0.678,
+   0.999
+  ]
+ },
+ {
+  "id": "5081",
+  "name": "zombie blue marker",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.3494,
+   0.0925
+  ],
+  "tip2": [
+   0.344,
+   0.0963
+  ],
+  "arm": [
+   0.808,
+   0.999
+  ]
+ },
+ {
+  "id": "5082",
+  "name": "zombie blue pen",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.2464,
+   0.3887
+  ],
+  "tip2": [
+   0.2409,
+   0.355
+  ],
+  "arm": [
+   0.68,
+   0.999
+  ]
+ },
+ {
+  "id": "5083",
+  "name": "zombie board wiper",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.1899,
+   0.245
+  ],
+  "tip2": [
+   0.162,
+   0.2437
+  ],
+  "arm": [
+   0.907,
+   0.999
+  ]
+ },
+ {
+  "id": "5084",
+  "name": "zombie board wipe bg",
+  "group": "Seasonal",
+  "mode": "top",
+  "tip": [
+   0.3993,
+   0.0688
+  ],
+  "tip2": [
+   0.429,
+   0.115
+  ],
+  "arm": [
+   0.742,
+   0.999
+  ]
+ },
+ {
+  "id": "5085",
+  "name": "zombie paint brush",
+  "group": "Seasonal",
+  "mode": "bristle",
+  "tip": [
+   0.415,
+   0.2712
+  ],
+  "tip2": [
+   0.818,
+   0.1975
+  ],
+  "arm": [
+   0.819,
+   0.999
+  ]
+ },
+ {
+  "id": "5086",
+  "name": "zombie eraser 1",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.1908,
+   0.2412
+  ],
+  "tip2": [
+   0.1505,
+   0.2587
+  ],
+  "arm": [
+   0.781,
+   0.999
+  ]
+ },
+ {
+  "id": "5087",
+  "name": "zombie eraser 2",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.3561,
+   0.24
+  ],
+  "tip2": [
+   0.3816,
+   0.2575
+  ],
+  "arm": [
+   0.888,
+   0.999
+  ]
+ },
+ {
+  "id": "5088",
+  "name": "zombie green pencil",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.285,
+   0.1388
+  ],
+  "tip2": [
+   0.3124,
+   0.1988
+  ],
+  "arm": [
+   0.687,
+   0.999
+  ]
+ },
+ {
+  "id": "5089",
+  "name": "zombie pencil small",
+  "group": "Seasonal",
+  "mode": "top",
+  "tip": [
+   0.2277,
+   0.1212
+  ],
+  "tip2": [
+   0.1781,
+   0.27
+  ],
+  "arm": [
+   0.76,
+   0.999
+  ]
+ },
+ {
+  "id": "5090",
+  "name": "zombie pmarker orange",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.198,
+   0.1762
+  ],
+  "tip2": [
+   0.1058,
+   0.1938
+  ],
+  "arm": [
+   0.803,
+   0.999
+  ]
+ },
+ {
+  "id": "5091",
+  "name": "zombie pmarker black",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.2549,
+   0.25
+  ],
+  "tip2": [
+   0.3171,
+   0.0988
+  ],
+  "arm": [
+   0.804,
+   0.999
+  ]
+ },
+ {
+  "id": "5092",
+  "name": "zombie eraser fluid",
+  "group": "Seasonal",
+  "mode": "top",
+  "tip": [
+   0.2561,
+   0.17
+  ],
+  "tip2": [
+   0.1516,
+   0.29
+  ],
+  "arm": [
+   0.826,
+   0.999
+  ]
+ },
+ {
+  "id": "5093",
+  "name": "zombie chalk yellow",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.2306,
+   0.2
+  ],
+  "tip2": [
+   0.1943,
+   0.2125
+  ],
+  "arm": [
+   0.777,
+   0.999
+  ]
+ },
+ {
+  "id": "5094",
+  "name": "zombie pen white",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.1534,
+   0.1925
+  ],
+  "tip2": [
+   0.2293,
+   0.2062
+  ],
+  "arm": [
+   0.829,
+   0.999
+  ]
+ },
+ {
+  "id": "5095",
+  "name": "witch biro",
+  "group": "Seasonal",
+  "mode": "top-right",
+  "tip": [
+   0.505,
+   0.0633
+  ],
+  "tip2": [
+   0.4255,
+   0.04
+  ],
+  "arm": [
+   0.76,
+   0.999
+  ]
+ },
+ {
+  "id": "5096",
+  "name": "witch blue marker",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.0353,
+   0.2338
+  ],
+  "tip2": [
+   0.0353,
+   0.2338
+  ],
+  "arm": [
+   0.784,
+   0.999
+  ]
+ },
+ {
+  "id": "5097",
+  "name": "witch blue pen",
+  "group": "Seasonal",
+  "mode": "top-right",
+  "tip": [
+   0.5151,
+   0.0956
+  ],
+  "tip2": [
+   0.5151,
+   0.0956
+  ],
+  "arm": [
+   0.783,
+   0.999
+  ]
+ },
+ {
+  "id": "5098",
+  "name": "witch whiteboard",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.0687,
+   0.085
+  ],
+  "tip2": [
+   0.0671,
+   0.0825
+  ],
+  "arm": [
+   0.82,
+   0.999
+  ]
+ },
+ {
+  "id": "5099",
+  "name": "witch paint brush",
+  "group": "Seasonal",
+  "mode": "bristle",
+  "tip": [
+   0.7899,
+   0.145
+  ],
+  "tip2": [
+   0.7554,
+   0.075
+  ],
+  "arm": [
+   0.793,
+   0.999
+  ]
+ },
+ {
+  "id": "5100",
+  "name": "witch eraser 1",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0503,
+   0.1713
+  ],
+  "tip2": [
+   0.0503,
+   0.1737
+  ],
+  "arm": [
+   0.854,
+   0.999
+  ]
+ },
+ {
+  "id": "5101",
+  "name": "witch eraser 2",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0642,
+   0.1113
+  ],
+  "tip2": [
+   0.0701,
+   0.1187
+  ],
+  "arm": [
+   0.816,
+   0.999
+  ]
+ },
+ {
+  "id": "5102",
+  "name": "witch mechanical",
+  "group": "Seasonal",
+  "mode": "top-right",
+  "tip": [
+   0.5669,
+   0.025
+  ],
+  "tip2": [
+   0.5816,
+   0.0587
+  ],
+  "arm": [
+   0.753,
+   0.999
+  ]
+ },
+ {
+  "id": "5103",
+  "name": "witch pencil",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.0373,
+   0.1825
+  ],
+  "tip2": [
+   0.0354,
+   0.1837
+  ],
+  "arm": [
+   0.743,
+   0.999
+  ]
+ },
+ {
+  "id": "5104",
+  "name": "witch orange sharpie",
+  "group": "Seasonal",
+  "mode": "top-right",
+  "tip": [
+   0.3764,
+   0.0975
+  ],
+  "tip2": [
+   0.33,
+   0.0362
+  ],
+  "arm": [
+   0.811,
+   0.999
+  ]
+ },
+ {
+  "id": "5105",
+  "name": "witch black sharpie",
+  "group": "Seasonal",
+  "mode": "top-right",
+  "tip": [
+   0.3824,
+   0.055
+  ],
+  "tip2": [
+   0.417,
+   0.0988
+  ],
+  "arm": [
+   0.823,
+   0.999
+  ]
+ },
+ {
+  "id": "5106",
+  "name": "witch eraser fluid",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.0275,
+   0.1588
+  ],
+  "tip2": [
+   0.0275,
+   0.1588
+  ],
+  "arm": [
+   0.822,
+   0.999
+  ]
+ },
+ {
+  "id": "5107",
+  "name": "witch yellow chalk",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0622,
+   0.1375
+  ],
+  "tip2": [
+   0.0622,
+   0.1375
+  ],
+  "arm": [
+   0.796,
+   0.999
+  ]
+ },
+ {
+  "id": "5108",
+  "name": "witch white biro",
+  "group": "Seasonal",
+  "mode": "top",
+  "tip": [
+   0.4212,
+   0.0275
+  ],
+  "tip2": [
+   0.4637,
+   0.07
+  ],
+  "arm": [
+   0.828,
+   0.999
+  ]
+ },
+ {
+  "id": "5109",
+  "name": "skeleton biro",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1794,
+   0.4788
+  ],
+  "tip2": [
+   0.1771,
+   0.4775
+  ],
+  "arm": [
+   0.687,
+   0.731
+  ]
+ },
+ {
+  "id": "5110",
+  "name": "skeleton blue marker",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1141,
+   0.4562
+  ],
+  "tip2": [
+   0.113,
+   0.46
+  ],
+  "arm": [
+   0.696,
+   0.738
+  ]
+ },
+ {
+  "id": "5111",
+  "name": "skeleton blue biro",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1696,
+   0.4313
+  ],
+  "tip2": [
+   0.1696,
+   0.4313
+  ],
+  "arm": [
+   0.688,
+   0.764
+  ]
+ },
+ {
+  "id": "5112",
+  "name": "skeleton whiteboard",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.1961,
+   0.2787
+  ],
+  "tip2": [
+   0.2052,
+   0.2775
+  ],
+  "arm": [
+   0.798,
+   0.791
+  ]
+ },
+ {
+  "id": "5113",
+  "name": "skeleton paint brush",
+  "group": "Seasonal",
+  "mode": "bristle",
+  "tip": [
+   0.8147,
+   0.4238
+  ],
+  "tip2": [
+   0.8781,
+   0.4825
+  ],
+  "arm": [
+   0.746,
+   0.776
+  ]
+ },
+ {
+  "id": "5114",
+  "name": "skeleton eraser 1",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1411,
+   0.375
+  ],
+  "tip2": [
+   0.1583,
+   0.4088
+  ],
+  "arm": [
+   0.686,
+   0.68
+  ]
+ },
+ {
+  "id": "5115",
+  "name": "skeleton eraser 2",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.2732,
+   0.4063
+  ],
+  "tip2": [
+   0.3366,
+   0.27
+  ],
+  "arm": [
+   0.769,
+   0.695
+  ]
+ },
+ {
+  "id": "5116",
+  "name": "skeleton mechanical",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.2133,
+   0.34
+  ],
+  "tip2": [
+   0.1327,
+   0.4462
+  ],
+  "arm": [
+   0.703,
+   0.698
+  ]
+ },
+ {
+  "id": "5117",
+  "name": "skeleton pencil",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1744,
+   0.4813
+  ],
+  "tip2": [
+   0.1744,
+   0.4825
+  ],
+  "arm": [
+   0.686,
+   0.726
+  ]
+ },
+ {
+  "id": "5118",
+  "name": "skeleton orange pm",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.2048,
+   0.45
+  ],
+  "tip2": [
+   0.2048,
+   0.4525
+  ],
+  "arm": [
+   0.779,
+   0.76
+  ]
+ },
+ {
+  "id": "5119",
+  "name": "skeleton black pm",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1319,
+   0.44
+  ],
+  "tip2": [
+   0.1628,
+   0.4412
+  ],
+  "arm": [
+   0.718,
+   0.685
+  ]
+ },
+ {
+  "id": "5120",
+  "name": "skeleton eraser fluid",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1929,
+   0.4437
+  ],
+  "tip2": [
+   0.1942,
+   0.4475
+  ],
+  "arm": [
+   0.71,
+   0.716
+  ]
+ },
+ {
+  "id": "5121",
+  "name": "skeleton yellow chalk",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.219,
+   0.425
+  ],
+  "tip2": [
+   0.2305,
+   0.4113
+  ],
+  "arm": [
+   0.732,
+   0.705
+  ]
+ },
+ {
+  "id": "5122",
+  "name": "skeleton white biro",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1631,
+   0.4275
+  ],
+  "tip2": [
+   0.1619,
+   0.4275
+  ],
+  "arm": [
+   0.781,
+   0.637
+  ]
+ },
+ {
+  "id": "5123",
+  "name": "swamp black biro",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.0971,
+   0.178
+  ],
+  "tip2": [
+   0.1093,
+   0.183
+  ],
+  "arm": [
+   0.701,
+   0.868
+  ]
+ },
+ {
+  "id": "5124",
+  "name": "swamp Blue marker",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.1192,
+   0.17
+  ],
+  "tip2": [
+   0.2152,
+   0.432
+  ],
+  "arm": [
+   0.757,
+   0.87
+  ]
+ },
+ {
+  "id": "5125",
+  "name": "swamp blue biro",
+  "group": "Seasonal",
+  "mode": "bottom-left",
+  "tip": [
+   0.2583,
+   0.457
+  ],
+  "tip2": [
+   0.1512,
+   0.288
+  ],
+  "arm": [
+   0.758,
+   0.831
+  ]
+ },
+ {
+  "id": "5126",
+  "name": "swamp whiteboard",
+  "group": "Seasonal",
+  "mode": "top",
+  "tip": [
+   0.2815,
+   0.051
+  ],
+  "tip2": [
+   0.2815,
+   0.051
+  ],
+  "arm": [
+   0.657,
+   0.909
+  ]
+ },
+ {
+  "id": "5127",
+  "name": "swamp paint brush",
+  "group": "Seasonal",
+  "mode": "bristle",
+  "tip": [
+   0.5166,
+   0.144
+  ],
+  "tip2": [
+   0.5419,
+   0.127
+  ],
+  "arm": [
+   0.753,
+   0.875
+  ]
+ },
+ {
+  "id": "5128",
+  "name": "swamp eraser 1",
+  "group": "Seasonal",
+  "mode": "bottom-right",
+  "tip": [
+   0.9614,
+   0.768
+  ],
+  "tip2": [
+   0.202,
+   0.164
+  ],
+  "arm": [
+   0.765,
+   0.858
+  ]
+ },
+ {
+  "id": "5129",
+  "name": "swamp eraser 2",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.1038,
+   0.118
+  ],
+  "tip2": [
+   0.1015,
+   0.124
+  ],
+  "arm": [
+   0.743,
+   0.904
+  ]
+ },
+ {
+  "id": "5130",
+  "name": "swamp mechanical",
+  "group": "Seasonal",
+  "mode": "bottom-right",
+  "tip": [
+   0.9636,
+   0.833
+  ],
+  "tip2": [
+   0.0618,
+   0.162
+  ],
+  "arm": [
+   0.738,
+   0.929
+  ]
+ },
+ {
+  "id": "5131",
+  "name": "swamp orange marker",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.053,
+   0.166
+  ],
+  "tip2": [
+   0.0342,
+   0.218
+  ],
+  "arm": [
+   0.762,
+   0.955
+  ]
+ },
+ {
+  "id": "5132",
+  "name": "swamp black marker",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.0574,
+   0.083
+  ],
+  "tip2": [
+   0.0442,
+   0.103
+  ],
+  "arm": [
+   0.729,
+   0.871
+  ]
+ },
+ {
+  "id": "5133",
+  "name": "swamp eraser fluid",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.1071,
+   0.044
+  ],
+  "tip2": [
+   0.1225,
+   0.056
+  ],
+  "arm": [
+   0.652,
+   0.958
+  ]
+ },
+ {
+  "id": "5134",
+  "name": "swamp yellow chalk",
+  "group": "Seasonal",
+  "mode": "top-left",
+  "tip": [
+   0.1071,
+   0.158
+  ],
+  "tip2": [
+   0.074,
+   0.195
+  ],
+  "arm": [
+   0.737,
+   0.902
+  ]
+ },
+ {
+  "id": "5135",
+  "name": "swamp white biro",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0419,
+   0.16
+  ],
+  "tip2": [
+   0.0419,
+   0.16
+  ],
+  "arm": [
+   0.693,
+   0.878
+  ]
+ },
+ {
+  "id": "5136",
+  "name": "giant black biro",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.2317,
+   0.3925
+  ],
+  "tip2": [
+   0.233,
+   0.3937
+  ],
+  "arm": [
+   0.708,
+   0.745
+  ]
+ },
+ {
+  "id": "5137",
+  "name": "giant blue marker",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1845,
+   0.2825
+  ],
+  "tip2": [
+   0.1834,
+   0.2825
+  ],
+  "arm": [
+   0.587,
+   0.854
+  ]
+ },
+ {
+  "id": "5138",
+  "name": "giant blue biro",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.2215,
+   0.4012
+  ],
+  "tip2": [
+   0.2215,
+   0.4012
+  ],
+  "arm": [
+   0.603,
+   0.848
+  ]
+ },
+ {
+  "id": "5139",
+  "name": "giant whiteboard",
+  "group": "Seasonal",
+  "mode": "bottom",
+  "tip": [
+   0.7086,
+   0.88
+  ],
+  "tip2": [
+   0.1935,
+   0.1837
+  ],
+  "arm": [
+   0.73,
+   0.849
+  ]
+ },
+ {
+  "id": "5140",
+  "name": "giant whiteboard bg",
+  "group": "Seasonal",
+  "mode": "bottom",
+  "tip": [
+   0.5339,
+   0.855
+  ],
+  "tip2": [
+   0.5353,
+   0.8375
+  ],
+  "arm": [
+   0.54,
+   0.823
+  ]
+ },
+ {
+  "id": "5141",
+  "name": "giant paintbrush",
+  "group": "Seasonal",
+  "mode": "bristle",
+  "tip": [
+   0.5959,
+   0.8975
+  ],
+  "tip2": [
+   0.6755,
+   0.9275
+  ],
+  "arm": [
+   0.473,
+   0.931
+  ]
+ },
+ {
+  "id": "5142",
+  "name": "giant paintbrush bg",
+  "group": "Seasonal",
+  "mode": "bristle",
+  "tip": [
+   0.2848,
+   0.0912
+  ],
+  "tip2": [
+   0.4874,
+   0.9625
+  ],
+  "arm": [
+   0.51,
+   0.963
+  ]
+ },
+ {
+  "id": "5143",
+  "name": "giant eraser 1",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.2211,
+   0.3075
+  ],
+  "tip2": [
+   0.8458,
+   0.7738
+  ],
+  "arm": [
+   0.706,
+   0.859
+  ]
+ },
+ {
+  "id": "5144",
+  "name": "giant eraser 2",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.0897,
+   0.2487
+  ],
+  "tip2": [
+   0.0858,
+   0.2525
+  ],
+  "arm": [
+   0.665,
+   0.858
+  ]
+ },
+ {
+  "id": "5145",
+  "name": "giant mechanical",
+  "group": "Seasonal",
+  "mode": "right",
+  "tip": [
+   0.8539,
+   0.7675
+  ],
+  "tip2": [
+   0.7683,
+   0.7775
+  ],
+  "arm": [
+   0.691,
+   0.801
+  ]
+ },
+ {
+  "id": "5146",
+  "name": "giant pencil",
+  "group": "Seasonal",
+  "mode": "right",
+  "tip": [
+   0.8335,
+   0.8225
+  ],
+  "tip2": [
+   0.7627,
+   0.795
+  ],
+  "arm": [
+   0.652,
+   0.851
+  ]
+ },
+ {
+  "id": "5147",
+  "name": "giant orange marker",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.216,
+   0.39
+  ],
+  "tip2": [
+   0.7902,
+   0.8438
+  ],
+  "arm": [
+   0.675,
+   0.89
+  ]
+ },
+ {
+  "id": "5148",
+  "name": "giant black marker",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1929,
+   0.3362
+  ],
+  "tip2": [
+   0.7583,
+   0.7475
+  ],
+  "arm": [
+   0.623,
+   0.828
+  ]
+ },
+ {
+  "id": "5149",
+  "name": "giant eraser fluid",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1714,
+   0.33
+  ],
+  "tip2": [
+   0.1776,
+   0.3287
+  ],
+  "arm": [
+   0.703,
+   0.829
+  ]
+ },
+ {
+  "id": "5150",
+  "name": "giant yellow chalk",
+  "group": "Seasonal",
+  "mode": "shipped-ok",
+  "tip": [
+   0.1417,
+   0.33
+  ],
+  "tip2": [
+   0.1393,
+   0.3262
+  ],
+  "arm": [
+   0.589,
+   0.731
+  ]
+ },
+ {
+  "id": "5151",
+  "name": "giant biro white",
+  "group": "Seasonal",
+  "mode": "left",
+  "tip": [
+   0.2,
+   0.3912
+  ],
+  "tip2": [
+   0.2079,
+   0.3925
+  ],
+  "arm": [
+   0.693,
+   0.776
+  ]
+ }
+]

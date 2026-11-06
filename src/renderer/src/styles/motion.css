@@ -1,0 +1,45 @@
+/* Keyframes and font faces — animations are named after the surface they belong to. */
+
+@font-face {
+  font-family: 'Polan Stronk'; src: url('../../../../fonts/sources/PolanStronk.otf') format('opentype'); font-style: normal; font-weight: 400; font-display: swap;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes busy-slide {
+  0% { left: -30%; } 100% { left: 100%; }
+}
+
+@keyframes scrim-in {
+  from { opacity: 0; } to { opacity: 1; }
+}
+
+@keyframes loading-sweep {
+  0% { transform: translateX(-110%); } 100% { transform: translateX(280%); }
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; } to { opacity: 1; }
+}
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.985); } to { opacity: 1; transform: none; }
+}
+
+@keyframes home-flourish-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes thumb-shimmer {
+  from { background-position: 200% 0; } to { background-position: -200% 0; }
+}
+
+@keyframes voice-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 91, 104, 0.45); } 50% { opacity: 0.65; box-shadow: 0 0 0 4px rgba(255, 91, 104, 0); }
+}
+
+@keyframes voice-spin {
+  to { transform: rotate(360deg); }
+}
