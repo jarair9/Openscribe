@@ -120,6 +120,7 @@ import {
 /* Each animation stage shows the one effect it holds; the full icon-tile set
    opens from that box, the way VideoScribe's "Type" popup works. */
 const ENTRANCE_TILES: TileOption<EntranceType>[] = [
+  { value: 'none', label: 'None', icon: <Ban size={17} />, title: 'No animation — appears instantly' },
   { value: 'handDraw', label: 'Hand', icon: <Hand size={17} />, title: 'Written by a hand holding the pen' },
   { value: 'penDraw', label: 'Pen', icon: <PenTool size={17} />, title: 'Drawn by a pen tip' },
   { value: 'draw', label: 'Draw', icon: <Pencil size={17} />, title: 'Ink appears with no instrument' },
@@ -858,7 +859,7 @@ function EntranceSection({
         value={entrance.type}
         options={ENTRANCE_TILES}
         columns={4}
-        onChange={(type) => patch({ type })}
+        onChange={(type) => patch(type === 'none' ? { type, duration: 0 } : { type })}
       />
       {drawStyle ? (
         <HandTypePicker
@@ -867,6 +868,7 @@ function EntranceSection({
           onChange={(instrumentId) => patch({ instrumentId })}
         />
       ) : null}
+      {entrance.type !== 'none' ? (
       <div className="field-row cols-2">
         <StepperField
           label="Duration"
@@ -883,6 +885,7 @@ function EntranceSection({
           onChange={(value) => patch({ easing: value })}
         />
       </div>
+      ) : null}
       {drawStyle ? (
         element.kind === 'image' || element.kind === 'shape' ? (
           <SelectField

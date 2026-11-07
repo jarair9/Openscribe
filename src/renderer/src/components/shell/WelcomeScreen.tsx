@@ -40,40 +40,44 @@ export function WelcomeScreen(): JSX.Element {
     <main className="welcome home">
       <div className="home-inner">
         <section className="home-hero">
-          <div className="home-brand">
-            <div className="home-mark">
-              <img src={brandLogo} alt="" />
+          <div className="home-hero-copy">
+            <div className="home-brand">
+              <div className="home-mark">
+                <img src={brandLogo} alt="" />
+              </div>
+              <h1 className="home-title">{PRODUCT.name}</h1>
+              <svg className="home-flourish" viewBox="0 0 260 16" aria-hidden="true" focusable="false">
+                <path d="M4 11 C 46 3, 78 14, 122 7 S 196 2, 256 9" />
+              </svg>
             </div>
-            <h1 className="home-title">{PRODUCT.name}</h1>
-            <svg className="home-flourish" viewBox="0 0 260 16" aria-hidden="true" focusable="false">
-              <path d="M4 11 C 46 3, 78 14, 122 7 S 196 2, 256 9" />
-            </svg>
+
+            <p className="home-tagline">
+              Hand-drawn explainer videos, built from files on this computer. No accounts, no
+              cloud, no telemetry.
+            </p>
           </div>
 
-          <p className="home-tagline">
-            Hand-drawn explainer videos, built from files on this computer. No accounts, no cloud,
-            no telemetry.
-          </p>
+          <div className="home-hero-actions">
+            <div className="home-cta">
+              <button className="home-primary" onClick={() => openDialog('newProject')}>
+                <FilePlus2 size={16} />
+                <span>New project</span>
+                <kbd>Ctrl N</kbd>
+              </button>
+              <button className="home-ghost" onClick={() => void openProjectFromDialog()}>
+                <FolderOpen size={16} />
+                <span>Open project</span>
+                <kbd>Ctrl O</kbd>
+              </button>
+            </div>
 
-          <div className="home-cta">
-            <button className="home-primary" onClick={() => openDialog('newProject')}>
-              <FilePlus2 size={16} />
-              <span>New project</span>
-              <kbd>Ctrl N</kbd>
-            </button>
-            <button className="home-ghost" onClick={() => void openProjectFromDialog()}>
-              <FolderOpen size={16} />
-              <span>Open project</span>
-              <kbd>Ctrl O</kbd>
-            </button>
-          </div>
-
-          <div className="home-footnote">
-            <HardDrive size={12} />
-            <span>
-              Saves as a <code>.{PRODUCT.projectExtension}</code> folder · {PRODUCT.license} · v
-              {PRODUCT.version}
-            </span>
+            <div className="home-footnote">
+              <HardDrive size={12} />
+              <span>
+                Saves as a <code>.{PRODUCT.projectExtension}</code> folder · {PRODUCT.license} · v
+                {PRODUCT.version}
+              </span>
+            </div>
           </div>
         </section>
 

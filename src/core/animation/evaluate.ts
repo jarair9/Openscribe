@@ -1,5 +1,6 @@
 import { clamp, clamp01, ease, lerp } from '../math'
 import { getEraserInstrument, instrumentHandedness } from '../instruments'
+import { mapRect } from './scribble'
 import { strokeFontForElement } from '../text/strokeFont'
 import type { Drawable, Element } from '../schema/project'
 import type { Direction, Rect, Vec2 } from '../schema/primitives'
@@ -29,6 +30,12 @@ export interface ElementVisualState {
   drawables: DrawableState[] | null
   activeDrawableId: string | null
   activeDrawableProgress: number
+  /** Coloring (scribble) progress of the active drawable's fill, 0..1. */
+  activeDrawableFill: number
+  /** World-space box the active drawable's fill is being colored into. */
+  activeDrawableBBox: Rect | null
+  /** Element-level zig-zag coloring reveal, used by images. */
+  scribble: { progress: number } | null
   /** Linear reveal for stroke-font text while its drawing entrance runs. */
   strokeDraw: number | null
   /** Present for directional reveal entrances. */
@@ -52,6 +59,9 @@ export function hiddenElementState(elementId: string): ElementVisualState {
     drawables: null,
     activeDrawableId: null,
     activeDrawableProgress: 0,
+    activeDrawableFill: 0,
+    activeDrawableBBox: null,
+    scribble: null,
     strokeDraw: null,
     wipe: null,
     handStyle: null,
@@ -81,7 +91,11 @@ export interface DrawProgress {
   states: DrawableState[]
   activeId: string | null
   activeProgress: number
+  activeFill: number
 }
+
+/** Share of a drawable's window spent outlining before the coloring pass. */
+const STROKE_SHARE = 0.6
 
 /**
  * Distribute a single entrance progress across drawables by weight.
@@ -94,7 +108,7 @@ export function distributeDrawProgress(
   overall: number
 ): DrawProgress {
   if (drawables.length === 0) {
-    return { states: [], activeId: null, activeProgress: 0 }
+    return { states: [], activeId: null, activeProgress: 0, activeFill: 0 }
   }
   const byId = new Map(drawables.map((drawable) => [drawable.id, drawable]))
   const ordered = order && order.length > 0
@@ -112,6 +126,7 @@ export function distributeDrawProgress(
   const states: DrawableState[] = []
   let activeId: string | null = null
   let activeProgress = 0
+  let activeFill = 0
   let cursor = 0
 
   ordered.forEach((drawable, index) => {
@@ -120,19 +135,20 @@ export function distributeDrawProgress(
     const end = index === ordered.length - 1 ? 1 : cursor + share
     const local =
       end <= start ? (progress >= end ? 1 : 0) : clamp01((progress - start) / (end - start))
-    states.push({
-      id: drawable.id,
-      draw: local,
-      fill: clamp01((local - 0.55) / 0.45)
-    })
+    // Outline first, then color in: the fill only starts once the nib has most
+    // of the way around, so coloring reads as a second pass rather than a fade.
+    const draw = clamp01(local / STROKE_SHARE)
+    const fill = clamp01((local - STROKE_SHARE) / (1 - STROKE_SHARE))
+    states.push({ id: drawable.id, draw, fill })
     if (activeId === null && progress < 1 && progress >= start && progress <= end) {
       activeId = drawable.id
-      activeProgress = local
+      activeProgress = draw
+      activeFill = fill
     }
     cursor = end
   })
 
-  return { states, activeId, activeProgress }
+  return { states, activeId, activeProgress, activeFill }
 }
 
 /**
@@ -144,7 +160,8 @@ export function evaluateElement(
   timing: ElementSchedule,
   localTime: number,
   drawables: Drawable[] = [],
-  cameraFrame: Rect = { x: 0, y: 0, width: 1280, height: 720 }
+  cameraFrame: Rect = { x: 0, y: 0, width: 1280, height: 720 },
+  assetViewBox: Rect | null = null
 ): ElementVisualState {
   if (!element.visible) return hiddenElementState(element.id)
   if (localTime < timing.start) return hiddenElementState(element.id)
@@ -165,6 +182,9 @@ export function evaluateElement(
   let drawableStates: DrawableState[] | null = null
   let activeDrawableId: string | null = null
   let activeDrawableProgress = 0
+  let activeDrawableFill = 0
+  let activeDrawableBBox: Rect | null = null
+  let scribble: { progress: number } | null = null
   let strokeDraw: number | null = null
   let wipe: WipeState | null = null
   let handStyle: 'handDraw' | 'penDraw' | null = null
@@ -191,7 +211,13 @@ export function evaluateElement(
   const isDrawStyle =
     entrance.type === 'draw' || entrance.type === 'handDraw' || entrance.type === 'penDraw'
 
-  if (isDrawStyle) {
+  if (entrance.type === 'none') {
+    // No entrance animation: the element is simply present from its start
+    // time, fully drawn, with no instrument, wipe or coloring pass.
+    if (drawables.length > 0) {
+      drawableStates = drawables.map((drawable) => ({ id: drawable.id, draw: 1, fill: 1 }))
+    }
+  } else if (isDrawStyle) {
     const order = element.kind === 'svg' ? element.drawOrder : null
     const strokeFont = element.kind === 'text' ? strokeFontForElement(element) : null
     if (entranceDone) {
@@ -207,6 +233,15 @@ export function evaluateElement(
         drawableStates = distributed.states
         activeDrawableId = distributed.activeId
         activeDrawableProgress = distributed.activeProgress
+        activeDrawableFill = distributed.activeFill
+        if (activeDrawableId && assetViewBox) {
+          const active = drawables.find((drawable) => drawable.id === activeDrawableId)
+          if (active) activeDrawableBBox = mapRect(active.bbox, assetViewBox, frame)
+        }
+      } else if (element.kind === 'image') {
+        // Raster images have no strokes to trace, so the hand colors them in
+        // with a zig-zag pass and the pixels appear only where it has been.
+        scribble = { progress: eased }
       } else {
         // Text and shapes have no recoverable strokes: reveal them with a
         // directional wipe so they still read as being drawn on. Text is
@@ -326,6 +361,9 @@ export function evaluateElement(
     drawables: drawableStates,
     activeDrawableId,
     activeDrawableProgress,
+    activeDrawableFill,
+    activeDrawableBBox,
+    scribble,
     strokeDraw,
     wipe,
     handStyle,

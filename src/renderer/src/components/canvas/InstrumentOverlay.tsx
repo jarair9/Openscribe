@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { JSX, MouseEvent as ReactMouseEvent, RefObject } from 'react'
 import { clamp01 } from '@core/math'
+import { scribbleTip } from '@core/animation/scribble'
 import { getInstrument, handPositionForTip, handScaleForStage } from '@core/instruments'
 import type { Direction, Rect } from '@core/schema/primitives'
 import type { ViewportState } from '../../state/editorStore'
@@ -17,6 +18,8 @@ export interface ActiveInstrument {
   /** Set for shape reveals that follow a wipe edge instead of a path. */
   wipeFrame?: Rect | null
   wipeDirection?: Direction
+  /** Set while coloring in a fill or image; the nib zig-zags across this box. */
+  scribbleFrame?: Rect | null
   /** Text is written along the baseline, line by line, rather than wiped. */
   wipeCursor?: { x: number; y: number; angle: number } | null
   /** Exact ink position for stroke-font handwriting. */
@@ -125,6 +128,14 @@ export function InstrumentOverlay({
     // Font-reveal text is written: the nib follows the line being written.
     if (active.wipeCursor) {
       commit(active.wipeCursor, active.wipeCursor.angle)
+      return
+    }
+
+    // Coloring pass: the nib zig-zags across the box being filled in, so the
+    // ink appears exactly where the hand has already been.
+    if (active.scribbleFrame) {
+      const tipPoint = scribbleTip(active.scribbleFrame, active.progress)
+      commit(tipPoint, tipPoint.angle)
       return
     }
 

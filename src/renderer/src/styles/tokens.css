@@ -54,6 +54,7 @@
   --canvas-chrome: var(--surface-canvas);
   --selection: #ff3fd0;
   --camera: #ff3fd0;
+  --camera-bright: #ff79e2;
   --radius-xs: 3px;
   --radius-sm: 4px;
   --radius: 6px;

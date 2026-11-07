@@ -210,6 +210,9 @@ export function SceneCanvas(): JSX.Element {
           : null,
         activeDrawableId: null,
         activeDrawableProgress: 0,
+        activeDrawableFill: 0,
+        activeDrawableBBox: null,
+        scribble: null,
         strokeDraw: state.strokeDraw === null ? null : 1,
         wipe: null,
         handStyle: null,
@@ -898,13 +901,11 @@ function GridLayer({ visible, viewport, size }: GridLayerProps): JSX.Element | n
           height={step}
           patternUnits="userSpaceOnUse"
         >
-          <circle
-            cx={0}
-            cy={0}
-            r={1.15 / viewport.zoom}
+          <path
+            d={`M ${step} 0 H 0 V ${step}`}
             fill="none"
-            stroke="rgba(18,20,26,0.3)"
-            strokeWidth={1.7 / viewport.zoom}
+            stroke="rgba(18,20,26,0.2)"
+            strokeWidth={1 / viewport.zoom}
           />
         </pattern>
       </defs>
@@ -1035,24 +1036,24 @@ function CameraChrome({
         return (
           <g key={camera.id}>
             <rect
-              className="camera-frame"
+              className={`camera-frame${editing ? ' editing' : ''}`}
               x={frame.x}
               y={frame.y}
               width={frame.width}
               height={frame.height}
-              strokeWidth={1.4 / zoom}
+              strokeWidth={editing ? 3 / zoom : 2 / zoom}
               opacity={selected ? 1 : 0.8}
               fill="none"
               pointerEvents="none"
             />
-            <g pointerEvents="none" opacity={0.55}>
+            <g pointerEvents="none" opacity={editing ? 0.85 : 0.55}>
               <line
                 x1={frame.x}
                 y1={frame.y}
                 x2={frame.x + frame.width}
                 y2={frame.y + frame.height}
-                className="camera-diagonal"
-                strokeWidth={1 / zoom}
+                className={`camera-diagonal${editing ? ' editing' : ''}`}
+                strokeWidth={editing ? 2.2 / zoom : 1.5 / zoom}
                 strokeDasharray={`${6 / zoom} ${5 / zoom}`}
               />
               <line
@@ -1060,8 +1061,8 @@ function CameraChrome({
                 y1={frame.y}
                 x2={frame.x}
                 y2={frame.y + frame.height}
-                className="camera-diagonal"
-                strokeWidth={1 / zoom}
+                className={`camera-diagonal${editing ? ' editing' : ''}`}
+                strokeWidth={editing ? 2.2 / zoom : 1.5 / zoom}
                 strokeDasharray={`${6 / zoom} ${5 / zoom}`}
               />
             </g>
@@ -1142,7 +1143,7 @@ function CameraChrome({
                 width={chipWidth}
                 height={chipHeight}
                 rx={4 / zoom}
-                className="camera-chip"
+                className={`camera-chip${editing ? ' editing' : ''}`}
               />
               <text
                 className="camera-label"

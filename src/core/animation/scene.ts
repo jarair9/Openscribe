@@ -51,12 +51,18 @@ export function evaluateScene(
   for (const element of scene.elements) {
     const timing = sceneSchedule?.elements[element.id]
     if (!timing) continue
+    const asset =
+      element.kind === 'svg'
+        ? project.assets.find((candidate) => candidate.id === element.assetId)
+        : undefined
+    const viewBox = asset && asset.kind === 'svg' && asset.svg ? asset.svg.viewBox : null
     elements[element.id] = evaluateElement(
       element,
       timing,
       localTime,
       drawablesForElement(project, element),
-      camera.frame
+      camera.frame,
+      viewBox
     )
   }
   return {

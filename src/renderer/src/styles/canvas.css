@@ -176,6 +176,10 @@
   stroke-dasharray: none;
 }
 
+.camera-frame.editing {
+  stroke: var(--camera-bright);
+}
+
 .camera-label {
   fill: #ffffff;
   font-weight: 600;
@@ -272,18 +276,26 @@
   stroke: var(--camera);
 }
 
+.camera-diagonal.editing {
+  stroke: var(--camera-bright);
+}
+
 .camera-handle {
   fill: #ffffff;
-  stroke: var(--camera);
+  stroke: var(--camera-bright);
   stroke-width: 1.5px;
 }
 
 .camera-handle:hover {
-  fill: var(--camera);
+  fill: var(--camera-bright);
 }
 
 .camera-chip {
   fill: var(--camera);
+}
+
+.camera-chip.editing {
+  fill: var(--camera-bright);
 }
 
 .zoom-rail-btn {

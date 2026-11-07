@@ -67,7 +67,8 @@ export function findActiveInstrument(
   const activeElements = scene.elements.filter((element) => {
     const state = visual.elements[element.id]
     return Boolean(
-      state?.handStyle && (state.activeDrawableId || state.wipe || state.strokeDraw !== null)
+      state?.handStyle &&
+        (state.activeDrawableId || state.wipe || state.scribble || state.strokeDraw !== null)
     )
   })
   // Manual timings can overlap. The animation that started latest is the one
@@ -82,6 +83,20 @@ export function findActiveInstrument(
     const drawableIndex = state.drawables?.findIndex(
       (drawable) => drawable.id === state.activeDrawableId
     ) ?? -1
+    // Once the outline is closed the hand stops tracing and colors the shape
+    // in, riding the zig-zag so ink appears under the nib.
+    if (state.activeDrawableBBox && state.activeDrawableFill > 0) {
+      return {
+        elementId: element.id,
+        drawableId: null,
+        progress: state.activeDrawableFill,
+        style: state.handStyle,
+        instrumentId: state.instrumentId,
+        handedness: state.handedness,
+        scribbleFrame: state.activeDrawableBBox,
+        pose: drawableIndex >= 0 ? drawableIndex : null
+      }
+    }
     return {
       elementId: element.id,
       drawableId: state.activeDrawableId,
@@ -108,6 +123,18 @@ export function findActiveInstrument(
         strokeCursor: world,
         pose: world.pose
       }
+    }
+  }
+  if (state.scribble) {
+    return {
+      elementId: element.id,
+      drawableId: null,
+      progress: state.scribble.progress,
+      style: state.handStyle,
+      instrumentId: state.instrumentId,
+      handedness: state.handedness,
+      scribbleFrame: element.frame,
+      pose: Math.floor(state.scribble.progress * 6)
     }
   }
   if (!state.wipe) return null

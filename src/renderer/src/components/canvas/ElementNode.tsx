@@ -1,5 +1,6 @@
 import type { CSSProperties, JSX, PointerEvent as ReactPointerEvent } from 'react'
 import type { ElementVisualState } from '@core/animation/evaluate'
+import { scribbleRects } from '@core/animation/scribble'
 import type { Asset, Element, Project } from '@core/schema/project'
 import { strokeFontForElement } from '@core/text/strokeFont'
 import { strokeDrawProgress, strokeWritingPlan } from '@core/text/strokeWriting'
@@ -134,29 +135,55 @@ function SvgArtwork({ element, state, asset, registerPath, frame }: SvgArtworkPr
         const fill = reveal ? reveal.fill : 1
         const traceFillOutline = drawable.stroke === null && drawable.fill !== null && draw < 1
         const dashed = draw < 0.999 && drawable.length > 0.5
+        const coloring = drawable.fill !== null && fill < 0.999
+        const fillClipId = coloring ? `ows-fill-${element.id}-${drawable.id}` : null
         return (
-          <path
-            key={drawable.id}
-            ref={(node) => registerPath?.(element.id, drawable.id, node)}
-            d={drawable.d}
-            fill={drawable.fill ?? 'none'}
-            fillOpacity={drawable.fill !== null ? drawable.fillOpacity * fill : 0}
-            fillRule={drawable.fillRule}
-            stroke={drawable.stroke ?? (traceFillOutline ? drawable.fill! : 'none')}
-            strokeWidth={traceFillOutline ? Math.max(1.5, drawable.strokeWidth) : drawable.strokeWidth}
-            strokeOpacity={
-              drawable.stroke !== null
-                ? drawable.strokeOpacity
-                : traceFillOutline
-                  ? drawable.fillOpacity * (1 - fill)
-                  : 0
-            }
-            strokeLinecap={drawable.lineCap}
-            strokeLinejoin={drawable.lineJoin}
-            strokeDasharray={dashed ? `${drawable.length} ${drawable.length}` : undefined}
-            strokeDashoffset={dashed ? drawable.length * (1 - draw) : undefined}
-            opacity={drawable.opacity}
-          />
+          <g key={drawable.id}>
+            {fillClipId ? (
+              <clipPath id={fillClipId}>
+                {scribbleRects(drawable.bbox, fill).map((band, index) => (
+                  <rect
+                    key={index}
+                    x={band.x}
+                    y={band.y}
+                    width={band.width}
+                    height={band.height}
+                  />
+                ))}
+              </clipPath>
+            ) : null}
+            {drawable.fill !== null ? (
+              <path
+                d={drawable.d}
+                fill={drawable.fill}
+                fillOpacity={drawable.fillOpacity}
+                fillRule={drawable.fillRule}
+                stroke="none"
+                opacity={drawable.opacity}
+                clipPath={fillClipId ? `url(#${fillClipId})` : undefined}
+              />
+            ) : null}
+            <path
+              ref={(node) => registerPath?.(element.id, drawable.id, node)}
+              d={drawable.d}
+              fill="none"
+              fillRule={drawable.fillRule}
+              stroke={drawable.stroke ?? (traceFillOutline ? drawable.fill! : 'none')}
+              strokeWidth={traceFillOutline ? Math.max(1.5, drawable.strokeWidth) : drawable.strokeWidth}
+              strokeOpacity={
+                drawable.stroke !== null
+                  ? drawable.strokeOpacity
+                  : traceFillOutline
+                    ? drawable.fillOpacity * (1 - fill)
+                    : 0
+              }
+              strokeLinecap={drawable.lineCap}
+              strokeLinejoin={drawable.lineJoin}
+              strokeDasharray={dashed ? `${drawable.length} ${drawable.length}` : undefined}
+              strokeDashoffset={dashed ? drawable.length * (1 - draw) : undefined}
+              opacity={drawable.opacity}
+            />
+          </g>
         )
       })}
     </g>

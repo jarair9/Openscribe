@@ -8,6 +8,7 @@ export const SCHEMA_VERSION = 1
 /* ------------------------------------------------------------------ */
 
 export const EntranceTypeSchema = z.enum([
+  'none',
   'draw',
   'handDraw',
   'penDraw',

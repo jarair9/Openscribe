@@ -1,6 +1,7 @@
 import type { JSX, PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import type { SceneVisual } from '@core/animation/scene'
 import type { WipeState } from '@core/animation/evaluate'
+import { scribbleRects } from '@core/animation/scribble'
 import type { Rect } from '@core/schema/primitives'
 import type { Element, Project, Scene } from '@core/schema/project'
 import { strokeWritingBounds } from '@core/text/strokeWriting'
@@ -67,6 +68,17 @@ export function SceneArtwork({
             </clipPath>
           )
         })}
+        {scene.elements.map((element) => {
+          const state = visual.elements[element.id]
+          if (!state?.scribble) return null
+          return (
+            <clipPath id={`${idPrefix}-scribble-${element.id}`} key={`scribble-${element.id}`}>
+              {scribbleRects(element.frame, state.scribble.progress).map((band, index) => (
+                <rect key={index} x={band.x} y={band.y} width={band.width} height={band.height} />
+              ))}
+            </clipPath>
+          )
+        })}
       </defs>
 
       {background.type === 'solid' ? (
@@ -105,7 +117,11 @@ export function SceneArtwork({
             token={token}
             opacity={1}
             clipId={
-              state.wipe ? `${idPrefix}-wipe-${element.id}` : undefined
+              state.wipe
+                ? `${idPrefix}-wipe-${element.id}`
+                : state.scribble
+                  ? `${idPrefix}-scribble-${element.id}`
+                  : undefined
             }
             selected={false}
             registerPath={registerPath}

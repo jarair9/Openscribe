@@ -8,3 +8,6 @@ Thumbs.db
 *.tsbuildinfo
 coverage/
 .vite/
+
+# Vendored FFmpeg binary — large, restored outside git.
+resources/ffmpeg/ffmpeg.exe

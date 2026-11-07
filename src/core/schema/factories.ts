@@ -113,6 +113,7 @@ const DEFAULT_ENTRANCE_BY_KIND: Record<AssetKindName | 'text' | 'shape', Entranc
 }
 
 const DEFAULT_DURATION_BY_ENTRANCE: Record<EntranceType, number> = {
+  none: 0,
   draw: 2.2,
   handDraw: 2.4,
   penDraw: 2.4,
