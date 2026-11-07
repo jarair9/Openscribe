@@ -458,6 +458,7 @@
 }
 
 .tile-picker {
+  position: relative;
   gap: 6px;
 }
 
@@ -473,11 +474,21 @@
 }
 
 .tile-picker-pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
   overflow: hidden;
   border: 1px solid var(--edge-control);
   border-radius: 10px;
   background: var(--surface-subheader);
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.42);
+}
+
+.tile-picker-pop.drop-up {
+  top: auto;
+  bottom: calc(100% + 6px);
 }
 
 .tile-picker-head {

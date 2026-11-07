@@ -468,8 +468,20 @@ export function TilePickerField<T extends string>({
   columns?: number
 }): JSX.Element {
   const [open, setOpen] = useState(false)
+  const [dropUp, setDropUp] = useState(false)
   const rootRef = useRef<HTMLDivElement | null>(null)
+  const triggerRef = useRef<HTMLButtonElement | null>(null)
   const selected = options.find((option) => option.value === value) ?? null
+
+  const toggle = (): void => {
+    if (!open) {
+      const rect = triggerRef.current?.getBoundingClientRect()
+      // The grid floats over the panel; flip above the trigger when there is
+      // not enough room below it inside the scrollable inspector.
+      setDropUp(Boolean(rect && window.innerHeight - rect.bottom < 260))
+    }
+    setOpen(!open)
+  }
 
   useEffect(() => {
     if (!open) return
@@ -502,11 +514,12 @@ export function TilePickerField<T extends string>({
       <span className="field-label">{label}</span>
       <button
         type="button"
+        ref={triggerRef}
         className={`tile tile-picker-trigger ${open ? 'open' : ''}`}
         aria-haspopup="dialog"
         aria-expanded={open}
         title={selected?.title ?? selected?.label ?? String(value)}
-        onClick={() => setOpen((state) => !state)}
+        onClick={toggle}
       >
         {selected?.image ? (
           <img className="tile-image" src={selected.image} alt="" draggable={false} />
@@ -517,7 +530,7 @@ export function TilePickerField<T extends string>({
       </button>
 
       {open ? (
-        <div className="tile-picker-pop" role="dialog" aria-label={label}>
+        <div className={`tile-picker-pop${dropUp ? ' drop-up' : ''}`} role="dialog" aria-label={label}>
           <div className="tile-picker-head">{label}</div>
           <div
             className="tile-grid tile-picker-grid"
