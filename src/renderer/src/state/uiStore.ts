@@ -12,10 +12,23 @@ export type DialogId =
 
 export type ToastKind = 'info' | 'success' | 'error'
 
+export interface ToastAction {
+  label: string
+  run: () => void
+}
+
 export interface Toast {
   id: number
   message: string
   kind: ToastKind
+  action?: ToastAction
+}
+
+export interface ToastOptions {
+  /** A single follow-up the user can take straight from the toast. */
+  action?: ToastAction
+  /** Override the automatic dismissal time in milliseconds. */
+  duration?: number
 }
 
 interface ConfirmOptions {
@@ -43,6 +56,7 @@ export interface LoadingState {
 
 interface UiState {
   dialog: DialogId
+  paletteOpen: boolean
   previewOpen: boolean
   busy: string | null
   loading: LoadingState | null
@@ -51,12 +65,15 @@ interface UiState {
 
   openDialog(dialog: DialogId): void
   closeDialog(): void
+  openPalette(): void
+  closePalette(): void
+  togglePalette(): void
   openPreview(): void
   closePreview(): void
   setBusy(busy: string | null): void
   startLoading(loading: LoadingState): void
   stopLoading(): void
-  toast(message: string, kind?: ToastKind): void
+  toast(message: string, kind?: ToastKind, options?: ToastOptions): void
   dismissToast(id: number): void
   askConfirm(options: ConfirmOptions): Promise<boolean>
   resolveConfirm(value: boolean): void
@@ -67,6 +84,7 @@ let confirmResolver: ((value: boolean) => void) | null = null
 
 export const useUiStore = create<UiState>((set, get) => ({
   dialog: null,
+  paletteOpen: false,
   previewOpen: false,
   busy: null,
   loading: null,
@@ -81,8 +99,20 @@ export const useUiStore = create<UiState>((set, get) => ({
     set({ dialog: null })
   },
 
+  openPalette() {
+    set({ paletteOpen: true })
+  },
+
+  closePalette() {
+    set({ paletteOpen: false })
+  },
+
+  togglePalette() {
+    set({ paletteOpen: !get().paletteOpen })
+  },
+
   openPreview() {
-    set({ previewOpen: true, dialog: null })
+    set({ previewOpen: true, dialog: null, paletteOpen: false })
   },
 
   closePreview() {
@@ -101,11 +131,12 @@ export const useUiStore = create<UiState>((set, get) => ({
     set({ loading: null })
   },
 
-  toast(message, kind = 'info') {
+  toast(message, kind = 'info', options) {
     toastId += 1
-    const toast: Toast = { id: toastId, message, kind }
+    const toast: Toast = { id: toastId, message, kind, action: options?.action }
     set({ toasts: [...get().toasts, toast].slice(-4) })
-    window.setTimeout(() => get().dismissToast(toast.id), kind === 'error' ? 7000 : 4200)
+    const duration = options?.duration ?? (kind === 'error' ? 7000 : 4200)
+    window.setTimeout(() => get().dismissToast(toast.id), duration)
   },
 
   dismissToast(id) {

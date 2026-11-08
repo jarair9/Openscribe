@@ -2,9 +2,8 @@ import { useEffect, useRef, useState, type JSX, type ReactNode } from 'react'
 import {
   ChevronDown,
   Clapperboard,
-  Hand,
+  Command,
   Minus,
-  MousePointer2,
   Play,
   Redo2,
   Save,
@@ -42,13 +41,24 @@ type CloseMenu = () => void
 export function TitleBar(): JSX.Element {
   const project = useProjectStore((state) => state.project)
   const dirty = useProjectStore((state) => state.dirty)
+  const saving = useProjectStore((state) => state.saving)
+  const saveError = useProjectStore((state) => state.saveError)
+  const lastAutoSaveAt = useProjectStore((state) => state.lastAutoSaveAt)
   const history = useProjectStore((state) => state.history)
   const apply = useProjectStore((state) => state.apply)
   const showGrid = useEditorStore((state) => state.showGrid)
   const snapping = useEditorStore((state) => state.snapping)
-  const tool = useEditorStore((state) => state.tool)
-  const setTool = useEditorStore((state) => state.setTool)
   const windowState = useWindowState()
+
+  const saveLabel = saveError
+    ? 'Save failed'
+    : saving
+      ? 'Saving…'
+      : dirty
+        ? 'Unsaved changes'
+        : lastAutoSaveAt
+          ? 'Autosaved'
+          : 'Saved'
 
   const [name, setName] = useState(project?.name ?? '')
   useEffect(() => setName(project?.name ?? ''), [project?.name])
@@ -154,6 +164,14 @@ export function TitleBar(): JSX.Element {
                 useUiStore.getState().openDialog('projectSettings')
               }}
             />
+            <MenuItem
+              label="Preferences…"
+              shortcut="Ctrl+,"
+              onClick={() => {
+                close()
+                useUiStore.getState().openDialog('preferences')
+              }}
+            />
           </>
         )}
       </TitleMenu>
@@ -240,6 +258,15 @@ export function TitleBar(): JSX.Element {
                 useEditorStore.getState().setTimelineMode('advanced')
               }}
             />
+            <div className="menu-sep" />
+            <MenuItem
+              label="Command palette…"
+              shortcut="Ctrl+K"
+              onClick={() => {
+                close()
+                useUiStore.getState().openPalette()
+              }}
+            />
           </>
         )}
       </TitleMenu>
@@ -255,7 +282,7 @@ export function TitleBar(): JSX.Element {
               }}
             />
             <MenuItem
-              label="About OpenWhiteboard"
+              label={`About ${PRODUCT.name}`}
               onClick={() => {
                 close()
                 useUiStore.getState().openDialog('about')
@@ -284,11 +311,34 @@ export function TitleBar(): JSX.Element {
               }
             }}
           />
+          <span
+            className={`save-state ${saveError ? 'error' : dirty ? 'dirty' : 'clean'}`}
+            title={
+              saveError
+                ? saveError
+                : lastAutoSaveAt && !dirty
+                  ? `Last autosave ${new Date(lastAutoSaveAt).toLocaleTimeString()}`
+                  : 'Saved to disk'
+            }
+            aria-live="polite"
+          >
+            <span className="save-dot" aria-hidden="true" />
+            {saveLabel}
+          </span>
         </div>
       ) : null}
 
       {project ? (
         <div className="titlebar-actions">
+          <button
+            className="icon-btn"
+            title="Command palette (Ctrl+K)"
+            aria-label="Command palette"
+            onClick={() => useUiStore.getState().openPalette()}
+          >
+            <Command size={15} />
+          </button>
+          <span className="titlebar-actions-sep" />
           <button
             className="btn btn-primary btn-sm titlebar-preview"
             title="Preview project (Ctrl+Enter)"
@@ -304,23 +354,6 @@ export function TitleBar(): JSX.Element {
           >
             <Clapperboard size={12} />
             Export
-          </button>
-          <span className="titlebar-actions-sep" />
-          <button
-            className={`icon-btn ${tool === 'select' ? 'active' : ''}`}
-            title="Select (V)"
-            aria-pressed={tool === 'select'}
-            onClick={() => setTool('select')}
-          >
-            <MousePointer2 size={15} />
-          </button>
-          <button
-            className={`icon-btn ${tool === 'pan' ? 'active' : ''}`}
-            title="Pan (H)"
-            aria-pressed={tool === 'pan'}
-            onClick={() => setTool('pan')}
-          >
-            <Hand size={15} />
           </button>
           <span className="titlebar-actions-sep" />
           <button

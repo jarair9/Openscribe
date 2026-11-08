@@ -1,4 +1,4 @@
-/* OpenWhiteboard Studio — design tokens. The only place raw colour, size or motion values live. */
+/* Openscribe — design tokens. The only place raw colour, size or motion values live. */
 
 :root {
   color-scheme: dark;
@@ -53,8 +53,10 @@
   --success: #4ec98f;
   --canvas-chrome: var(--surface-canvas);
   --selection: #ff3fd0;
-  --camera: #ff3fd0;
-  --camera-bright: #ff79e2;
+  /* Cameras are a separate instrument from selection, so framing never reads
+     as "selected artwork". */
+  --camera: #35d0f0;
+  --camera-bright: #86e9ff;
   --radius-xs: 3px;
   --radius-sm: 4px;
   --radius: 6px;

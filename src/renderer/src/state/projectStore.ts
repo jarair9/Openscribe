@@ -20,6 +20,10 @@ interface ProjectStoreState {
   session: SessionInfo | null
   dirty: boolean
   savedAt: string | null
+  lastAutoSaveAt: string | null
+  saving: boolean
+  saveError: string | null
+  revision: number
   history: HistoryState
   status: string | null
   transaction: string | null
@@ -31,7 +35,9 @@ interface ProjectStoreState {
   endTransaction(): void
   undo(): void
   redo(): void
-  markSaved(savedAt: string, session?: SessionInfo): void
+  markSaving(): void
+  markSaved(savedAt: string, session?: SessionInfo, revisionAtSave?: number, auto?: boolean): void
+  markSaveFailed(message: string): void
   updateSession(session: SessionInfo): void
   setStatus(status: string | null): void
 }
@@ -43,6 +49,10 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
   session: null,
   dirty: false,
   savedAt: null,
+  lastAutoSaveAt: null,
+  saving: false,
+  saveError: null,
+  revision: 0,
   history: createHistory(150),
   status: null,
   transaction: null,
@@ -58,6 +68,10 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
       },
       dirty: false,
       savedAt: opened.document.updatedAt,
+      lastAutoSaveAt: null,
+      saving: false,
+      saveError: null,
+      revision: 0,
       history: createHistory(150),
       status: null,
       transaction: null
@@ -72,6 +86,10 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
       session: null,
       dirty: false,
       savedAt: null,
+      lastAutoSaveAt: null,
+      saving: false,
+      saveError: null,
+      revision: 0,
       history: createHistory(150),
       status: null,
       transaction: null
@@ -95,6 +113,8 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
       project: next,
       history: shouldRecord ? recordHistory(history, project, label) : history,
       dirty: true,
+      revision: get().revision + 1,
+      saveError: null,
       status: label
     })
   },
@@ -120,7 +140,13 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
     const result = undoHistory(history, project)
     if (!result) return
     lastEdit = { label: '', at: 0 }
-    set({ project: result.project, history: result.history, dirty: true, status: `Undo ${result.label}` })
+    set({
+      project: result.project,
+      history: result.history,
+      dirty: true,
+      revision: get().revision + 1,
+      status: `Undo ${result.label}`
+    })
     useEditorStore.getState().prune(result.project)
   },
 
@@ -131,16 +157,34 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
     const result = redoHistory(history, project)
     if (!result) return
     lastEdit = { label: '', at: 0 }
-    set({ project: result.project, history: result.history, dirty: true, status: `Redo ${result.label}` })
+    set({
+      project: result.project,
+      history: result.history,
+      dirty: true,
+      revision: get().revision + 1,
+      status: `Redo ${result.label}`
+    })
     useEditorStore.getState().prune(result.project)
   },
 
-  markSaved(savedAt, session) {
+  markSaving() {
+    set({ saving: true, saveError: null })
+  },
+
+  markSaved(savedAt, session, revisionAtSave, auto = false) {
+    const stale = revisionAtSave !== undefined && revisionAtSave !== get().revision
     set({
-      dirty: false,
+      dirty: stale,
       savedAt,
+      lastAutoSaveAt: auto ? savedAt : get().lastAutoSaveAt,
+      saving: false,
+      saveError: null,
       session: session ?? get().session
     })
+  },
+
+  markSaveFailed(message) {
+    set({ saving: false, saveError: message })
   },
 
   updateSession(session) {

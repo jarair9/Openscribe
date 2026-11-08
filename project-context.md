@@ -40,7 +40,7 @@ Every major feature must be connected to the real project model, animation engin
 
 # 2. PRODUCT VISION AND PRINCIPLES
 
-Create a desktop application with a working title of `OpenWhiteboard Studio`. Keep the product name configurable so that it can be changed later without rewriting the application.
+Create a desktop application with a working title of `Openscribe`. Keep the product name configurable so that it can be changed later without rewriting the application.
 
 The product should feel like a professional creative desktop application: predictable, responsive, visually polished, easy to learn, and powerful enough for complex projects.
 
@@ -1729,7 +1729,7 @@ Organize the repository according to actual module responsibilities.
 
 A possible initial structure is:
 
-    openwhiteboard-studio/
+    openscribe/
     ├── apps/
     │   └── desktop/
     │       ├── main/

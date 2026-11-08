@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, webUtils } from 'electron'
 import type { StudioApi } from '@shared/api'
 import {
   IPC,
@@ -35,6 +35,9 @@ const api: StudioApi = {
   app: {
     info: () => invoke('app:info'),
     openLogsFolder: () => invoke('app:open-logs')
+  },
+  files: {
+    pathForFile: (file: File) => webUtils.getPathForFile(file)
   },
   window: {
     minimize: () => ipcRenderer.send(IPC.windowMinimize),

@@ -108,6 +108,138 @@
   gap: 6px;
 }
 
+/* Layers ------------------------------------------------------------------ */
+
+.layers-panel {
+  padding: 10px;
+}
+
+.layers-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.layer-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 4px 3px 6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+}
+
+.layer-row:hover {
+  border-color: var(--border-strong);
+}
+
+.layer-row.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.layer-row.hidden-layer .layer-name {
+  color: var(--text-disabled);
+  font-style: italic;
+}
+
+.layer-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 2px;
+  color: var(--text-secondary);
+  text-align: left;
+}
+
+.layer-row.active .layer-main {
+  color: var(--text-bright);
+}
+
+.layer-kind {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+}
+
+.layer-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11.5px;
+}
+
+.layer-actions {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex: none;
+  opacity: 0;
+  transition: opacity var(--dur-fast) ease;
+}
+
+.layer-row:hover .layer-actions,
+.layer-row:focus-within .layer-actions,
+.layer-row.active .layer-actions {
+  opacity: 1;
+}
+
+.layer-btn {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+
+.layer-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text-bright);
+}
+
+.layer-btn.active {
+  color: var(--accent);
+}
+
+/* Cameras ----------------------------------------------------------------- */
+
+.camera-row {
+  cursor: pointer;
+}
+
+.camera-row-hidden .panel-row-title,
+.camera-row-hidden .panel-row-sub,
+.camera-row-hidden .panel-row-icon {
+  opacity: 0.45;
+}
+
+.camera-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex: none;
+  margin-left: 2px;
+}
+
+.camera-row-actions .icon-btn {
+  width: 21px;
+  height: 21px;
+}
+
+.camera-row-actions .icon-btn.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
 .panel-scene-list {
   flex: 1;
   min-height: 0;
@@ -420,4 +552,19 @@
 .panel-row-actions {
   display: flex;
   gap: 6px;
+}
+
+.audio-row {
+  cursor: pointer;
+}
+
+.audio-row .row-chevron {
+  flex: none;
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+
+.audio-row .row-chevron.open {
+  transform: rotate(90deg);
+  color: var(--text-secondary);
 }

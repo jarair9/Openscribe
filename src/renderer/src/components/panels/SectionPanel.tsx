@@ -4,13 +4,18 @@ import {
   ArrowUp,
   ArrowUpRight,
   Camera as CameraIcon,
+  ChevronRight,
   Circle,
   Copy,
   Heading1,
   Image as ImageIcon,
+  Eye,
+  EyeOff,
   ImagePlus,
   Images,
   Loader2,
+  Lock,
+  LockOpen,
   Maximize2,
   Mic,
   Minus,
@@ -31,12 +36,15 @@ import {
   addCamera,
   addElement,
   addScene,
+  bringElementForward,
   duplicateScene,
   moveScene,
   removeCamera,
   removeScene,
   removeSceneAudioTrack,
-  updateCamera
+  sendElementBackward,
+  updateCamera,
+  updateElement
 } from '@core/project/operations'
 import { createCamera, createShapeElement, createTextElement, nextElementName } from '@core/schema/factories'
 import type { ShapeKind } from '@core/schema/project'
@@ -55,6 +63,7 @@ import { SceneThumbnail } from '../shell/SceneThumbnail'
 
 const PANEL_TITLES: Record<SectionPanelId, string> = {
   scenes: 'Scenes',
+  layers: 'Layers',
   text: 'Text',
   image: 'Media',
   shapes: 'Shapes',
@@ -77,6 +86,7 @@ export function SectionPanel(): JSX.Element | null {
       </header>
       <div className="section-panel-body">
         {panel === 'scenes' ? <ScenesPanel /> : null}
+        {panel === 'layers' ? <LayersPanel /> : null}
         {panel === 'text' ? <TextPanel /> : null}
         {panel === 'image' ? <ImagePanel /> : null}
         {panel === 'shapes' ? <ShapesPanel /> : null}
@@ -247,6 +257,136 @@ function ScenesPanel(): JSX.Element | null {
         </button>
       </div>
     </>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/* Layers                                                             */
+/* ------------------------------------------------------------------ */
+
+function LayersPanel(): JSX.Element | null {
+  const project = useProjectStore((state) => state.project)
+  const apply = useProjectStore((state) => state.apply)
+  const activeSceneId = useEditorStore((state) => state.activeSceneId)
+  const selection = useEditorStore((state) => state.selection)
+  const select = useEditorStore((state) => state.select)
+  if (!project) return null
+
+  const scene =
+    project.scenes.find((candidate) => candidate.id === activeSceneId) ?? project.scenes[0]
+  if (!scene) return null
+
+  // Front-most element sits at the top of the list, the way layer panels read.
+  const layers = [...scene.elements].reverse()
+  const selected = new Set(selection)
+
+  const toggle = (id: string, visible: boolean): void => {
+    apply(
+      visible ? 'Hide layer' : 'Show layer',
+      (current) =>
+        updateElement(current, scene.id, id, (element) => ({ ...element, visible })),
+      { coalesce: false }
+    )
+  }
+
+  const toggleLock = (id: string, locked: boolean): void => {
+    apply(
+      locked ? 'Lock layer' : 'Unlock layer',
+      (current) =>
+        updateElement(current, scene.id, id, (element) => ({ ...element, locked })),
+      { coalesce: false }
+    )
+  }
+
+  const reorder = (id: string, direction: 'forward' | 'backward'): void => {
+    apply(
+      direction === 'forward' ? 'Bring layer forward' : 'Send layer backward',
+      (current) =>
+        direction === 'forward'
+          ? bringElementForward(current, scene.id, id)
+          : sendElementBackward(current, scene.id, id),
+      { coalesce: false }
+    )
+  }
+
+  return (
+    <div className="panel-stack panel-stack-fill layers-panel">
+      {layers.length === 0 ? (
+        <div className="panel-empty">
+          <Square size={22} />
+          <span>This scene is empty.</span>
+          <span className="panel-empty-hint">Add text, artwork or a shape to see it here.</span>
+        </div>
+      ) : (
+        <div className="panel-list layers-list" role="list" aria-label="Scene layers">
+          {layers.map((element) => {
+            const active = selected.has(element.id)
+            return (
+              <div
+                key={element.id}
+                role="listitem"
+                className={`layer-row ${active ? 'active' : ''} ${
+                  element.visible ? '' : 'hidden-layer'
+                }`}
+              >
+                <button
+                  className="layer-main"
+                  onClick={() => select([element.id])}
+                  title={`${element.name}${element.locked ? ' · locked' : ''}`}
+                >
+                  <span className="layer-kind">
+                    {element.kind === 'text' ? (
+                      <Type size={13} />
+                    ) : element.kind === 'image' || element.kind === 'svg' ? (
+                      <ImageIcon size={13} />
+                    ) : (
+                      <Square size={13} />
+                    )}
+                  </span>
+                  <span className="layer-name">{element.name}</span>
+                </button>
+                <div className="layer-actions">
+                  <button
+                    className="layer-btn"
+                    title={element.visible ? 'Hide layer' : 'Show layer'}
+                    aria-label={element.visible ? 'Hide layer' : 'Show layer'}
+                    aria-pressed={!element.visible}
+                    onClick={() => toggle(element.id, !element.visible)}
+                  >
+                    {element.visible ? <Eye size={12} /> : <EyeOff size={12} />}
+                  </button>
+                  <button
+                    className={`layer-btn ${element.locked ? 'active' : ''}`}
+                    title={element.locked ? 'Unlock layer' : 'Lock layer'}
+                    aria-label={element.locked ? 'Unlock layer' : 'Lock layer'}
+                    aria-pressed={element.locked}
+                    onClick={() => toggleLock(element.id, !element.locked)}
+                  >
+                    {element.locked ? <Lock size={12} /> : <LockOpen size={12} />}
+                  </button>
+                  <button
+                    className="layer-btn"
+                    title="Bring forward"
+                    aria-label="Bring forward"
+                    onClick={() => reorder(element.id, 'forward')}
+                  >
+                    <ArrowUp size={12} />
+                  </button>
+                  <button
+                    className="layer-btn"
+                    title="Send backward"
+                    aria-label="Send backward"
+                    onClick={() => reorder(element.id, 'backward')}
+                  >
+                    <ArrowDown size={12} />
+                  </button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -486,24 +626,71 @@ function CameraPanel(): JSX.Element | null {
     selectCamera(null)
   }
 
+  const setCameraFlag = (cameraId: string, patch: { visible?: boolean; locked?: boolean }): void => {
+    apply(
+      patch.visible !== undefined ? 'Toggle camera visibility' : 'Toggle camera lock',
+      (current) => updateCamera(current, scene.id, cameraId, (camera) => ({ ...camera, ...patch })),
+      { coalesce: false }
+    )
+  }
+
   return (
     <div className="panel-stack">
       <div className="panel-list" role="list" aria-label="Cameras">
         {scene.cameras.map((camera) => (
-          <button
+          <div
             key={camera.id}
-            className={`panel-row ${camera.id === selectedCameraId ? 'active' : ''}`}
+            role="button"
+            tabIndex={0}
+            className={`panel-row camera-row ${camera.id === selectedCameraId ? 'active' : ''} ${
+              camera.visible === false ? 'camera-row-hidden' : ''
+            }`}
             onClick={() => selectCamera(camera.id)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                selectCamera(camera.id)
+              }
+            }}
           >
             <span className="panel-row-icon">
               <CameraIcon size={15} />
             </span>
             <span className="panel-row-text">
               <span className="panel-row-title">{camera.name}</span>
-              <span className="panel-row-sub">Starts at {formatSeconds(camera.startTime)}</span>
+              <span className="panel-row-sub">
+                {camera.visible === false ? 'Hidden · ' : ''}Starts at{' '}
+                {formatSeconds(camera.startTime)}
+              </span>
             </span>
             <span className="panel-row-meta">{Math.round(camera.viewWidth)} px</span>
-          </button>
+            <span className="camera-row-actions">
+              <button
+                className="icon-btn"
+                title={camera.visible === false ? 'Show frame' : 'Hide frame'}
+                aria-label={camera.visible === false ? 'Show camera frame' : 'Hide camera frame'}
+                aria-pressed={camera.visible === false}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setCameraFlag(camera.id, { visible: camera.visible === false })
+                }}
+              >
+                {camera.visible === false ? <EyeOff size={12} /> : <Eye size={12} />}
+              </button>
+              <button
+                className={`icon-btn ${camera.locked ? 'active' : ''}`}
+                title={camera.locked ? 'Unlock camera' : 'Lock camera'}
+                aria-label={camera.locked ? 'Unlock camera' : 'Lock camera'}
+                aria-pressed={camera.locked}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setCameraFlag(camera.id, { locked: !camera.locked })
+                }}
+              >
+                {camera.locked ? <Lock size={12} /> : <LockOpen size={12} />}
+              </button>
+            </span>
+          </div>
         ))}
       </div>
       <button className="btn btn-sm panel-wide-btn" onClick={add}>
@@ -522,7 +709,8 @@ function CameraPanel(): JSX.Element | null {
         </button>
       </div>
       <p className="panel-hint">
-        Cameras switch at their start time. Drag or resize the magenta frame on the canvas.
+        Click a frame on the canvas to select it, then drag it or use its corner and edge handles to
+        expand and compress. The eye hides a frame; the lock keeps it from moving.
       </p>
     </div>
   )
@@ -536,6 +724,8 @@ function MusicPanel(): JSX.Element | null {
   const project = useProjectStore((state) => state.project)
   const apply = useProjectStore((state) => state.apply)
   const activeSceneId = useEditorStore((state) => state.activeSceneId)
+  const selectedAudioTrackId = useEditorStore((state) => state.selectedAudioTrackId)
+  const selectAudioTrack = useEditorStore((state) => state.selectAudioTrack)
   if (!project) return null
 
   const scene =
@@ -559,31 +749,52 @@ function MusicPanel(): JSX.Element | null {
         </div>
       ) : (
         <div className="panel-list" role="list" aria-label="Scene audio">
-          {scene.audio.map((track) => (
-            <div key={track.id} className="panel-row static">
-              <span className="panel-row-icon">
-                <Music2 size={15} />
-              </span>
-              <span className="panel-row-text">
-                <span className="panel-row-title">{track.name}</span>
-                <span className="panel-row-sub">Starts at {formatSeconds(track.startTime)}</span>
-              </span>
-              <button
-                className="icon-btn danger"
-                title="Remove audio"
-                aria-label={`Remove ${track.name}`}
-                onClick={() =>
-                  apply(
-                    'Remove audio',
-                    (current) => removeSceneAudioTrack(current, scene.id, track.id),
-                    { coalesce: false }
-                  )
-                }
+          {scene.audio.map((track) => {
+            const selected = track.id === selectedAudioTrackId
+            return (
+              <div
+                key={track.id}
+                className={`panel-row audio-row${selected ? ' active' : ''}`}
+                role="button"
+                tabIndex={0}
+                aria-expanded={selected}
+                title="Open track settings in the inspector"
+                onClick={() => selectAudioTrack(selected ? null : track.id)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault()
+                    selectAudioTrack(selected ? null : track.id)
+                  }
+                }}
               >
-                <Trash2 size={13} />
-              </button>
-            </div>
-          ))}
+                <span className="panel-row-icon">
+                  <Music2 size={15} />
+                </span>
+                <span className="panel-row-text">
+                  <span className="panel-row-title">{track.name}</span>
+                  <span className="panel-row-sub">
+                    Starts at {formatSeconds(track.startTime)} · {Math.round(track.volume * 100)}%
+                  </span>
+                </span>
+                <ChevronRight size={13} className={`row-chevron${selected ? ' open' : ''}`} />
+                <button
+                  className="icon-btn danger"
+                  title="Remove audio"
+                  aria-label={`Remove ${track.name}`}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    apply(
+                      'Remove audio',
+                      (current) => removeSceneAudioTrack(current, scene.id, track.id),
+                      { coalesce: false }
+                    )
+                  }}
+                >
+                  <Trash2 size={13} />
+                </button>
+              </div>
+            )
+          })}
         </div>
       )}
 
@@ -626,6 +837,9 @@ function VoiceRecorder(): JSX.Element {
   const startedAtRef = useRef(0)
   const cancelledRef = useRef(false)
   const mountedRef = useRef(true)
+  const meterRef = useRef<HTMLCanvasElement | null>(null)
+  const analyserRef = useRef<AnalyserNode | null>(null)
+  const meterContextRef = useRef<AudioContext | null>(null)
   const toast = useUiStore((store) => store.toast)
 
   const stopTimer = (): void => {
@@ -639,6 +853,10 @@ function VoiceRecorder(): JSX.Element {
     stopTimer()
     for (const track of streamRef.current?.getTracks() ?? []) track.stop()
     streamRef.current = null
+    analyserRef.current = null
+    const context = meterContextRef.current
+    meterContextRef.current = null
+    if (context && context.state !== 'closed') void context.close()
   }
 
   const finish = async (mimeType: string): Promise<void> => {
@@ -656,6 +874,9 @@ function VoiceRecorder(): JSX.Element {
   }
 
   useEffect(() => {
+    // StrictMode remounts once in dev; without re-arming the flag every state
+    // update in finish() would be skipped and the card would stay "Recording".
+    mountedRef.current = true
     return () => {
       mountedRef.current = false
       cancelledRef.current = true
@@ -666,6 +887,52 @@ function VoiceRecorder(): JSX.Element {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (state !== 'recording') return
+    const levels = new Float32Array(28)
+    let frame = 0
+    const draw = (): void => {
+      frame = window.requestAnimationFrame(draw)
+      const canvas = meterRef.current
+      const analyser = analyserRef.current
+      if (!canvas || !analyser) return
+      const dpr = Math.min(2, window.devicePixelRatio || 1)
+      const width = canvas.clientWidth
+      const height = canvas.clientHeight
+      if (width === 0 || height === 0) return
+      if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
+        canvas.width = width * dpr
+        canvas.height = height * dpr
+      }
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      const bins = new Uint8Array(analyser.frequencyBinCount)
+      analyser.getByteFrequencyData(bins)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.clearRect(0, 0, width, height)
+      const gap = 3
+      const barWidth = (width - gap * (levels.length - 1)) / levels.length
+      const usable = Math.floor(bins.length * 0.7)
+      for (let index = 0; index < levels.length; index += 1) {
+        const from = Math.floor((index / levels.length) * usable)
+        const to = Math.max(from + 1, Math.floor(((index + 1) / levels.length) * usable))
+        let sum = 0
+        for (let bin = from; bin < to; bin += 1) sum += bins[bin] ?? 0
+        const target = sum / (to - from) / 255
+        levels[index] = levels[index]! + (target - levels[index]!) * 0.45
+        const barHeight = Math.max(2, levels[index]! * (height - 4))
+        const x = index * (barWidth + gap)
+        const y = (height - barHeight) / 2
+        ctx.fillStyle = `rgba(255, 91, 104, ${0.4 + levels[index]! * 0.6})`
+        ctx.beginPath()
+        ctx.roundRect(x, y, barWidth, barHeight, barWidth / 2)
+        ctx.fill()
+      }
+    }
+    frame = window.requestAnimationFrame(draw)
+    return () => window.cancelAnimationFrame(frame)
+  }, [state])
 
   const start = async (): Promise<void> => {
     if (state !== 'idle') return
@@ -691,6 +958,14 @@ function VoiceRecorder(): JSX.Element {
       recorder.onstop = () => void finish(recorder.mimeType)
       recorderRef.current = recorder
       recorder.start(200)
+      const context = new AudioContext()
+      meterContextRef.current = context
+      if (context.state === 'suspended') void context.resume()
+      const analyser = context.createAnalyser()
+      analyser.fftSize = 256
+      analyser.smoothingTimeConstant = 0.6
+      context.createMediaStreamSource(stream).connect(analyser)
+      analyserRef.current = analyser
       startedAtRef.current = performance.now()
       setElapsed(0)
       timerRef.current = window.setInterval(() => {
@@ -712,6 +987,7 @@ function VoiceRecorder(): JSX.Element {
   const stop = (): void => {
     const recorder = recorderRef.current
     if (recorder && recorder.state !== 'inactive') recorder.stop()
+    else if (state === 'recording') void finish(recorder?.mimeType ?? '')
   }
 
   const cancel = (): void => {
@@ -719,30 +995,31 @@ function VoiceRecorder(): JSX.Element {
     stop()
   }
 
+  const live = state === 'recording'
   return (
     <div className="voice-recorder">
-      {state === 'recording' ? (
-        <div className="voice-recorder-live">
-          <span className="voice-live-dot" />
-          <span className="voice-live-label">Recording</span>
-          <span className="voice-timer">{formatSeconds(elapsed)}</span>
-          <span className="voice-recorder-spacer" />
-          <button className="btn btn-sm voice-stop" onClick={stop}>
-            <Square size={10} /> Stop
-          </button>
-          <button
-            className="icon-btn"
-            title="Discard recording"
-            aria-label="Discard recording"
-            onClick={cancel}
-          >
-            <X size={13} />
-          </button>
-        </div>
-      ) : state === 'saving' ? (
-        <div className="voice-recorder-status">
-          <Loader2 size={14} className="voice-spin" />
-          Adding voiceover…
+      {live || state === 'saving' ? (
+        <div className={`voice-card${live ? ' live' : ''}`}>
+          <div className="voice-card-head">
+            {live ? <span className="voice-live-dot" /> : <Loader2 size={13} className="voice-spin" />}
+            <span className="voice-live-label">{live ? 'Recording' : 'Saving voiceover'}</span>
+            <span className="voice-timer">{formatSeconds(elapsed)}</span>
+          </div>
+          <canvas ref={meterRef} className="voice-meter" aria-hidden="true" />
+          <div className="voice-card-actions">
+            <button className="btn btn-sm voice-stop" onClick={stop} disabled={!live}>
+              <Square size={10} /> Stop & save
+            </button>
+            <button
+              className="icon-btn voice-discard"
+              title="Discard recording"
+              aria-label="Discard recording"
+              onClick={cancel}
+              disabled={!live}
+            >
+              <Trash2 size={13} />
+            </button>
+          </div>
         </div>
       ) : (
         <button

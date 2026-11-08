@@ -10,13 +10,11 @@ import { Pause, Play, RotateCcw, Volume2, VolumeX, X, ZoomIn, ZoomOut } from 'lu
 import { evaluateScene } from '@core/animation/scene'
 import { clamp, clamp01, formatSeconds } from '@core/math'
 import type { Rect } from '@core/schema/primitives'
-import type { Project } from '@core/schema/project'
 import {
   buildSchedule,
   sceneAt,
   type ProjectSchedule
 } from '@core/timeline/schedule'
-import { assetUrl } from '../../lib/assets'
 import { togglePlayback } from '../../hooks/usePlaybackClock'
 import { usePlaybackStore } from '../../state/playbackStore'
 import { useProjectStore } from '../../state/projectStore'
@@ -53,7 +51,8 @@ export function PreviewOverlay(): JSX.Element | null {
   const setRate = usePlaybackStore((state) => state.setRate)
   const setTime = usePlaybackStore((state) => state.setTime)
 
-  const [muted, setMuted] = useState(false)
+  const muted = usePlaybackStore((state) => state.muted)
+  const toggleMuted = usePlaybackStore((state) => state.toggleMuted)
   const [zoom, setZoom] = useState(1)
   const [previewViewport, setPreviewViewport] = useState(() => ({ width: window.innerWidth, height: window.innerHeight }))
   const previous = useRef<{ time: number; rate: number } | null>(null)
@@ -92,8 +91,6 @@ export function PreviewOverlay(): JSX.Element | null {
   }, [])
 
   const token = session?.assetToken ?? ''
-
-  usePreviewAudio(project, schedule, token, open, muted)
 
   useEffect(() => {
     if (!open) return
@@ -323,124 +320,11 @@ export function PreviewOverlay(): JSX.Element | null {
           title={muted ? 'Unmute audio' : 'Mute audio'}
           aria-label={muted ? 'Unmute audio' : 'Mute audio'}
           aria-pressed={muted}
-          onClick={() => setMuted((value) => !value)}
+          onClick={toggleMuted}
         >
           {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
         </button>
       </footer>
     </div>
   )
-}
-
-/* ------------------------------------------------------------------ */
-/* Audio                                                              */
-/* ------------------------------------------------------------------ */
-
-interface PreviewAudioEntry {
-  id: string
-  url: string
-  start: number
-  duration: number
-  inPoint: number
-  volume: number
-  fadeIn: number
-  fadeOut: number
-}
-
-function usePreviewAudio(
-  project: Project | null,
-  schedule: ProjectSchedule,
-  token: string,
-  active: boolean,
-  muted: boolean
-): void {
-  const time = usePlaybackStore((state) => state.time)
-  const playing = usePlaybackStore((state) => state.playing)
-  const rate = usePlaybackStore((state) => state.rate)
-  const audios = useRef<Map<string, HTMLAudioElement>>(new Map())
-
-  const entries = useMemo<PreviewAudioEntry[]>(() => {
-    if (!project) return []
-    const list: PreviewAudioEntry[] = []
-    const push = (
-      track: Project['scenes'][number]['audio'][number],
-      absoluteStart: number
-    ): void => {
-      const asset = project.assets.find((candidate) => candidate.id === track.assetId)
-      if (!asset || asset.kind !== 'audio') return
-      const sourceDuration = asset.audio?.duration ?? 0
-      const outPoint = track.outPoint ?? sourceDuration
-      const duration = Math.max(0, outPoint - track.inPoint)
-      if (duration <= 0) return
-      list.push({
-        id: track.id,
-        url: assetUrl(token, asset.fileName),
-        start: absoluteStart,
-        duration,
-        inPoint: track.inPoint,
-        volume: clamp(track.volume, 0, 1),
-        fadeIn: track.fadeIn,
-        fadeOut: track.fadeOut
-      })
-    }
-
-    schedule.scenes.forEach((sceneSchedule, index) => {
-      const scene = project.scenes[index]
-      if (!scene) return
-      for (const track of scene.audio) push(track, sceneSchedule.start + track.startTime)
-    })
-    for (const track of project.audio) push(track, track.startTime)
-    return list
-  }, [project, schedule, token])
-
-  useEffect(() => {
-    const map = new Map<string, HTMLAudioElement>()
-    for (const entry of entries) {
-      const audio = new Audio(entry.url)
-      audio.preload = 'auto'
-      map.set(entry.id, audio)
-    }
-    audios.current = map
-    return () => {
-      for (const audio of map.values()) {
-        audio.pause()
-        audio.removeAttribute('src')
-        audio.load()
-      }
-      audios.current = new Map()
-    }
-  }, [entries])
-
-  useEffect(() => {
-    for (const entry of entries) {
-      const audio = audios.current.get(entry.id)
-      if (!audio) continue
-      audio.muted = muted
-      audio.playbackRate = clamp(rate, 0.25, 4)
-      if (!active) {
-        audio.pause()
-        continue
-      }
-      const local = time - entry.start
-      if (local < 0 || local >= entry.duration) {
-        audio.pause()
-        audio.currentTime = entry.inPoint
-        continue
-      }
-      const expected = entry.inPoint + local
-      let gain = entry.volume
-      if (entry.fadeIn > 0.01) gain *= clamp01(local / entry.fadeIn)
-      const remaining = entry.duration - local
-      if (entry.fadeOut > 0.01) gain *= clamp01(remaining / entry.fadeOut)
-      audio.volume = clamp01(gain)
-
-      if (playing) {
-        if (Math.abs(audio.currentTime - expected) > 0.35) audio.currentTime = expected
-        if (audio.paused) void audio.play().catch(() => {})
-      } else {
-        audio.pause()
-        if (Math.abs(audio.currentTime - expected) > 0.05) audio.currentTime = expected
-      }
-    }
-  }, [entries, time, playing, rate, active, muted])
 }

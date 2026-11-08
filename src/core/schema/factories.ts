@@ -186,7 +186,9 @@ export function createCamera(input: {
     center: input.center,
     viewWidth: Math.max(16, input.viewWidth),
     transition: { duration: 1.2, easing: 'easeInOut' },
-    startTime: input.startTime ?? 0
+    startTime: input.startTime ?? 0,
+    visible: true,
+    locked: false
   }
 }
 

@@ -1,6 +1,6 @@
 # Drawing Engine: Architecture and Gap Report
 
-This report records the state of the drawing system in OpenWhiteboard Studio and the engineering work started from the supplied drawing-engine brief. It separates observed project behavior from the planned implementation.
+This report records the state of the drawing system in Openscribe and the engineering work started from the supplied drawing-engine brief. It separates observed project behavior from the planned implementation.
 
 ## Current architecture
 

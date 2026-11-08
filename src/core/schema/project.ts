@@ -259,7 +259,11 @@ export const CameraSchema = z.object({
     easing: EasingSchema
   }),
   /** Scene-relative time at which this camera becomes active. */
-  startTime: z.number().min(0)
+  startTime: z.number().min(0),
+  /** Editor only: hides this camera's frame overlay. Playback is unaffected. */
+  visible: z.boolean().default(true),
+  /** Editor only: prevents accidental moves and resizes of the frame overlay. */
+  locked: z.boolean().default(false)
 })
 export type Camera = z.infer<typeof CameraSchema>
 

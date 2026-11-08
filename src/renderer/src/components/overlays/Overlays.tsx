@@ -1,5 +1,5 @@
 import type { JSX } from 'react'
-import { CircleCheck, Info, TriangleAlert } from 'lucide-react'
+import { CircleCheck, Info, TriangleAlert, X } from 'lucide-react'
 import { useUiStore } from '../../state/uiStore'
 
 export function Overlays(): JSX.Element {
@@ -24,12 +24,7 @@ export function Overlays(): JSX.Element {
       ) : null}
       <div className="toast-stack" aria-live="polite">
         {toasts.map((toast) => (
-          <button
-            key={toast.id}
-            className={`toast ${toast.kind}`}
-            onClick={() => dismissToast(toast.id)}
-            title="Dismiss"
-          >
+          <div key={toast.id} className={`toast ${toast.kind}`} role="status">
             <span className="toast-icon">
               {toast.kind === 'success' ? (
                 <CircleCheck size={15} />
@@ -39,8 +34,27 @@ export function Overlays(): JSX.Element {
                 <Info size={15} />
               )}
             </span>
-            {toast.message}
-          </button>
+            <span className="toast-message">{toast.message}</span>
+            {toast.action ? (
+              <button
+                className="toast-action"
+                onClick={() => {
+                  toast.action?.run()
+                  dismissToast(toast.id)
+                }}
+              >
+                {toast.action.label}
+              </button>
+            ) : null}
+            <button
+              className="toast-dismiss"
+              title="Dismiss"
+              aria-label="Dismiss notification"
+              onClick={() => dismissToast(toast.id)}
+            >
+              <X size={12} />
+            </button>
+          </div>
         ))}
       </div>
     </>

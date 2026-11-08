@@ -89,6 +89,76 @@
   line-height: 1.55;
 }
 
+/* Preferences ------------------------------------------------------------- */
+
+.preferences {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.pref-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pref-heading {
+  margin: 0;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--border);
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pref-hint {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.accent-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.accent-swatch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 9px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  text-align: left;
+}
+
+.accent-swatch:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.accent-swatch.selected {
+  border-color: var(--accent);
+  color: var(--text-bright);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.accent-chip {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
 /* Export ------------------------------------------------------------------ */
 
 .export-layout {

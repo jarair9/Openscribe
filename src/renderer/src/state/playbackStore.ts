@@ -5,18 +5,24 @@ interface PlaybackState {
   time: number
   playing: boolean
   rate: number
+  muted: boolean
+  loop: boolean
   setTime(time: number): void
   play(): void
   pause(): void
   toggle(): void
   stop(): void
   setRate(rate: number): void
+  toggleMuted(): void
+  toggleLoop(): void
 }
 
 export const usePlaybackStore = create<PlaybackState>((set) => ({
   time: 0,
   playing: false,
   rate: 1,
+  muted: false,
+  loop: false,
 
   setTime(time) {
     set({ time: Math.max(0, time) })
@@ -40,5 +46,13 @@ export const usePlaybackStore = create<PlaybackState>((set) => ({
 
   setRate(rate) {
     set({ rate: Math.max(0.1, Math.min(4, rate)) })
+  },
+
+  toggleMuted() {
+    set({ muted: !usePlaybackStore.getState().muted })
+  },
+
+  toggleLoop() {
+    set({ loop: !usePlaybackStore.getState().loop })
   }
 }))

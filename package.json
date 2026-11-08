@@ -1,9 +1,9 @@
 {
-  "name": "openwhiteboard-studio",
+  "name": "openscribe",
   "version": "0.1.0",
   "description": "Local-first, open-source whiteboard animation studio",
   "license": "MIT",
-  "author": "OpenWhiteboard Contributors",
+  "author": "Openscribe Contributors",
   "private": true,
   "main": "./out/main/index.js",
   "type": "module",

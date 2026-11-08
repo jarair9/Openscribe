@@ -752,7 +752,7 @@
 .voice-recorder {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .voice-record-btn {
@@ -763,15 +763,25 @@
   color: #ff7b86;
 }
 
-.voice-recorder-live {
+.voice-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 9px 10px 10px;
+  border: 1px solid var(--edge-control);
+  border-radius: 9px;
+  background: var(--surface-input);
+}
+
+.voice-card.live {
+  border-color: rgba(255, 107, 120, 0.34);
+  background: rgba(255, 107, 120, 0.06);
+}
+
+.voice-card-head {
   display: flex;
   align-items: center;
   gap: 7px;
-  height: 32px;
-  padding: 0 6px 0 9px;
-  border: 1px solid rgba(255, 107, 120, 0.34);
-  border-radius: 6px;
-  background: rgba(255, 107, 120, 0.07);
 }
 
 .voice-live-dot {
@@ -791,19 +801,40 @@
   color: #ff9aa2;
 }
 
+.voice-card:not(.live) .voice-live-label {
+  color: var(--text-secondary);
+}
+
+.voice-card:not(.live) .voice-spin {
+  color: var(--text-secondary);
+}
+
 .voice-timer {
+  margin-left: auto;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 11.5px;
   font-variant-numeric: tabular-nums;
   color: #f3f3f5;
 }
 
-.voice-recorder-spacer {
-  flex: 1;
+.voice-meter {
+  display: block;
+  width: 100%;
+  height: 34px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.voice-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .voice-stop {
-  height: 24px;
+  flex: 1;
+  justify-content: center;
+  height: 27px;
   border-color: rgba(255, 107, 120, 0.42);
   color: #ffd7da;
 }
@@ -813,14 +844,16 @@
   background: rgba(255, 107, 120, 0.14);
 }
 
-.voice-recorder-status {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  height: 32px;
-  padding: 0 4px;
+.voice-discard {
+  flex: none;
+  width: 27px;
+  height: 27px;
   color: var(--text-secondary);
-  font-size: 11.5px;
+}
+
+.voice-discard:hover:not(:disabled) {
+  color: #ff9aa2;
+  background: rgba(255, 107, 120, 0.12);
 }
 
 .voice-spin {
@@ -830,4 +863,16 @@
 .voice-hint {
   margin: 0;
   padding: 0 2px;
+}
+
+.track-remove {
+  justify-content: center;
+  gap: 7px;
+  border-color: rgba(255, 107, 120, 0.42);
+  color: #ffd7da;
+}
+
+.track-remove:hover:not(:disabled) {
+  border-color: rgba(255, 107, 120, 0.7);
+  background: rgba(255, 107, 120, 0.14);
 }

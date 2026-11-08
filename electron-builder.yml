@@ -1,5 +1,5 @@
-appId: studio.openwhiteboard.app
-productName: OpenWhiteboard Studio
+appId: studio.openscribe.app
+productName: Openscribe
 directories:
   output: release
 files:

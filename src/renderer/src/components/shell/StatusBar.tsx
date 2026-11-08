@@ -9,6 +9,9 @@ export function StatusBar(): JSX.Element {
   const project = useProjectStore((state) => state.project)
   const status = useProjectStore((state) => state.status)
   const dirty = useProjectStore((state) => state.dirty)
+  const saving = useProjectStore((state) => state.saving)
+  const saveError = useProjectStore((state) => state.saveError)
+  const lastAutoSaveAt = useProjectStore((state) => state.lastAutoSaveAt)
   const activeSceneId = useEditorStore((state) => state.activeSceneId)
   const selection = useEditorStore((state) => state.selection)
   const tool = useEditorStore((state) => state.tool)
@@ -42,7 +45,20 @@ export function StatusBar(): JSX.Element {
             {project.output.width}×{project.output.height} · {project.output.fps} fps
           </span>
           <span className="statusbar-item">Zoom {Math.round(viewport.zoom * 100)}%</span>
-          <span className="statusbar-item">{status ?? (dirty ? 'Modified' : 'Ready')}</span>
+          <span
+            className={`statusbar-item save-status ${saveError ? 'error' : ''}`}
+            title={status ?? undefined}
+          >
+            {saveError
+              ? `Save failed: ${saveError}`
+              : saving
+                ? 'Saving…'
+                : dirty
+                  ? 'Unsaved changes'
+                  : lastAutoSaveAt
+                    ? `Autosaved ${new Date(lastAutoSaveAt).toLocaleTimeString()}`
+                    : 'Saved'}
+          </span>
         </>
       ) : null}
       <span className="statusbar-item">Local-first · no network</span>

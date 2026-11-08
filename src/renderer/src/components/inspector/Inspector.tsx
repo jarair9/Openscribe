@@ -99,6 +99,7 @@ import { useFontStore } from '../../state/fontStore'
 import { usePlaybackStore } from '../../state/playbackStore'
 import { useProjectStore } from '../../state/projectStore'
 import { useUiStore } from '../../state/uiStore'
+import { AudioTrackInspector } from './AudioTrackInspector'
 import { FontPicker } from './FontPicker'
 import { HandTypePicker } from './HandTypePicker'
 import {
@@ -237,6 +238,7 @@ export function Inspector(): JSX.Element {
   const activeSceneId = useEditorStore((state) => state.activeSceneId)
   const selection = useEditorStore((state) => state.selection)
   const selectedCameraId = useEditorStore((state) => state.selectedCameraId)
+  const selectedAudioTrackId = useEditorStore((state) => state.selectedAudioTrackId)
   const time = usePlaybackStore((state) => state.time)
 
   const scene = project
@@ -257,10 +259,14 @@ export function Inspector(): JSX.Element {
     ? scene.elements.filter((element) => selection.includes(element.id))
     : []
   const selectedCamera = scene?.cameras.find((camera) => camera.id === selectedCameraId) ?? null
+  const selectedAudioTrack =
+    scene?.audio.find((track) => track.id === selectedAudioTrackId) ?? null
 
   return (
     <aside className="inspector">
-      {selectedCamera && scene ? (
+      {selectedAudioTrack && scene ? (
+        <AudioTrackInspector scene={scene} track={selectedAudioTrack} />
+      ) : selectedCamera && scene ? (
         <CameraInspector
           project={project}
           scene={scene}

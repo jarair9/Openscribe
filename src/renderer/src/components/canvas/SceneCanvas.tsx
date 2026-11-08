@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type {
+  DragEvent as ReactDragEvent,
   JSX,
   MouseEvent as ReactMouseEvent,
   PointerEvent as ReactPointerEvent
@@ -28,6 +29,8 @@ import { fitTextFrame } from './textMetrics'
 import { useEditorStore, type Tool } from '../../state/editorStore'
 import { usePlaybackStore } from '../../state/playbackStore'
 import { useProjectStore } from '../../state/projectStore'
+import { useUiStore } from '../../state/uiStore'
+import { importAssetPaths } from '../../services/importAssets'
 import {
   bringSelectionForward,
   copySelection,
@@ -163,8 +166,8 @@ export function SceneCanvas(): JSX.Element {
   const [guides, setGuides] = useState<{ x: number | null; y: number | null }>({ x: null, y: null })
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [editingTextId, setEditingTextId] = useState<string | null>(null)
-  const [cameraEditingId, setCameraEditingId] = useState<string | null>(null)
   const [panning, setPanning] = useState(false)
+  const [dropActive, setDropActive] = useState(false)
 
   const schedule = useMemo(() => (project ? buildSchedule(project) : null), [project])
   const sceneIndex = project ? project.scenes.findIndex((scene) => scene.id === activeSceneId) : -1
@@ -309,24 +312,6 @@ export function SceneCanvas(): JSX.Element {
     return () => window.removeEventListener('pointerdown', close)
   }, [contextMenu])
 
-  // Camera handles only exist while that camera is actively being edited.
-  useEffect(() => {
-    if (cameraEditingId && selectedCameraId !== cameraEditingId) setCameraEditingId(null)
-  }, [selectedCameraId, cameraEditingId])
-
-  useEffect(() => {
-    if (!cameraEditingId) return
-    const exit = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') setCameraEditingId(null)
-    }
-    window.addEventListener('keydown', exit)
-    return () => window.removeEventListener('keydown', exit)
-  }, [cameraEditingId])
-
-  useEffect(() => {
-    if (playing) setCameraEditingId(null)
-  }, [playing])
-
   const worldFromClient = useCallback((clientX: number, clientY: number): Vec2 => {
     const bounds = svgRef.current?.getBoundingClientRect()
     if (!bounds) return { x: 0, y: 0 }
@@ -344,7 +329,6 @@ export function SceneCanvas(): JSX.Element {
   const handleSvgPointerDown = (event: ReactPointerEvent<SVGSVGElement>): void => {
     if (!project || !scene) return
     setContextMenu(null)
-    setCameraEditingId(null)
     if (event.button === 1 || tool === 'pan') {
       event.preventDefault()
       svgRef.current?.setPointerCapture(event.pointerId)
@@ -396,7 +380,6 @@ export function SceneCanvas(): JSX.Element {
     if (!project || !scene || event.button !== 0 || tool !== 'select') return
     const element = scene.elements.find((candidate) => candidate.id === elementId)
     if (!element) return
-    setCameraEditingId(null)
 
     const additive = event.shiftKey || event.ctrlKey || event.metaKey
     const currentSelection = useEditorStore.getState().selection
@@ -648,6 +631,27 @@ export function SceneCanvas(): JSX.Element {
     setContextMenu({ x: event.clientX, y: event.clientY })
   }
 
+  const handleDragOver = (event: ReactDragEvent): void => {
+    if (!project || !Array.from(event.dataTransfer.types).includes('Files')) return
+    event.preventDefault()
+    event.dataTransfer.dropEffect = 'copy'
+    if (!dropActive) setDropActive(true)
+  }
+
+  const handleDrop = (event: ReactDragEvent): void => {
+    event.preventDefault()
+    setDropActive(false)
+    if (!project) return
+    const paths = Array.from(event.dataTransfer.files)
+      .map((file) => window.api.files.pathForFile(file))
+      .filter((path): path is string => Boolean(path))
+    if (paths.length === 0) {
+      useUiStore.getState().toast('Those files could not be read from disk.', 'error')
+      return
+    }
+    void importAssetPaths(paths)
+  }
+
   /* ---------------------------------------------------------------- */
   /* Render                                                            */
   /* ---------------------------------------------------------------- */
@@ -674,7 +678,16 @@ export function SceneCanvas(): JSX.Element {
   const zoomPercent = Math.round(viewport.zoom * 1000) / 10
 
   return (
-    <div ref={hostRef} className="canvas-host">
+    <div
+      ref={hostRef}
+      className={`canvas-host ${dropActive ? 'drop-active' : ''}`}
+      onDragOver={handleDragOver}
+      onDragLeave={(event) => {
+        if (event.currentTarget.contains(event.relatedTarget as Node | null)) return
+        setDropActive(false)
+      }}
+      onDrop={handleDrop}
+    >
       <svg
         ref={svgRef}
         className={[
@@ -722,10 +735,8 @@ export function SceneCanvas(): JSX.Element {
           scene={scene}
           activeCameraId={visual.camera.cameraId}
           selectedCameraId={selectedCamera?.id ?? null}
-          editingCameraId={cameraEditingId}
           zoom={viewport.zoom}
           onSelect={selectCamera}
-          onEdit={(cameraId) => setCameraEditingId(cameraId)}
           toWorld={worldFromClient}
           onMove={(cameraId, center) =>
             apply(
@@ -789,7 +800,7 @@ export function SceneCanvas(): JSX.Element {
             y={preview.y}
             width={preview.width}
             height={preview.height}
-            fill="rgba(255,63,208,0.10)"
+            fill="var(--accent-soft)"
             stroke="var(--selection)"
             strokeWidth={1.5 / viewport.zoom}
             strokeDasharray={`${6 / viewport.zoom} ${4 / viewport.zoom}`}
@@ -829,6 +840,48 @@ export function SceneCanvas(): JSX.Element {
         }
         onFit={fitView}
       />
+
+      {scene.elements.length === 0 ? (
+        <div className="canvas-empty" aria-hidden={dropActive}>
+          <span className="canvas-empty-title">This scene is a blank page.</span>
+          <span className="canvas-empty-hint">
+            Drop images, SVG or audio here, or start with a scene block.
+          </span>
+          <div className="canvas-empty-actions">
+            <button
+              className="btn btn-sm"
+              onClick={() => {
+                useEditorStore.getState().toggleSectionPanel('text')
+              }}
+            >
+              Add text
+            </button>
+            <button
+              className="btn btn-sm"
+              onClick={() => {
+                useEditorStore.getState().toggleSectionPanel('shapes')
+              }}
+            >
+              Add a shape
+            </button>
+            <button
+              className="btn btn-sm"
+              onClick={() => {
+                useEditorStore.getState().toggleSectionPanel('image')
+              }}
+            >
+              Import artwork
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {dropActive ? (
+        <div className="canvas-drop">
+          <span>Drop to import</span>
+          <span className="canvas-drop-hint">Images, SVG or audio land at the playhead.</span>
+        </div>
+      ) : null}
 
       {editingTextId ? (
         <InlineTextEditor
@@ -929,10 +982,8 @@ interface CameraChromeProps {
   scene: Scene
   activeCameraId: string
   selectedCameraId: string | null
-  editingCameraId: string | null
   zoom: number
   onSelect: (cameraId: string) => void
-  onEdit: (cameraId: string) => void
   toWorld: (clientX: number, clientY: number) => Vec2
   onMove: (cameraId: string, center: Vec2) => void
   onResize: (cameraId: string, viewWidth: number, center: Vec2) => void
@@ -943,10 +994,8 @@ function CameraChrome({
   scene,
   activeCameraId,
   selectedCameraId,
-  editingCameraId,
   zoom,
   onSelect,
-  onEdit,
   toWorld,
   onMove,
   onResize
@@ -980,32 +1029,51 @@ function CameraChrome({
     cameraId: string,
     startWidth: number,
     startCenter: Vec2,
-    direction: { x: 1 | -1; y: 1 | -1 }
+    direction: { x: -1 | 0 | 1; y: -1 | 0 | 1 }
   ): void => {
     event.stopPropagation()
     event.preventDefault()
     onSelect(cameraId)
+    const aspect = project.output.width / project.output.height
+    const startHeight = startWidth / aspect
     const move = (moveEvent: PointerEvent): void => {
       const world = toWorld(moveEvent.clientX, moveEvent.clientY)
-      const aspect = project.output.width / project.output.height
-      const fixed = {
-        x: startCenter.x - direction.x * startWidth / 2,
-        y: startCenter.y - direction.y * (startWidth / aspect) / 2
+      let width: number
+      let center: Vec2
+
+      if (direction.x !== 0 && direction.y !== 0) {
+        // Corner: project the pointer onto the locked-aspect diagonal so the
+        // opposite corner stays anchored.
+        const fixed = {
+          x: startCenter.x - direction.x * startWidth / 2,
+          y: startCenter.y - direction.y * startHeight / 2
+        }
+        const dx = world.x - fixed.x
+        const dy = world.y - fixed.y
+        const inverseAspect = 1 / aspect
+        width = Math.max(
+          32,
+          (dx * direction.x + dy * direction.y * inverseAspect) /
+            (1 + inverseAspect * inverseAspect)
+        )
+        center = {
+          x: fixed.x + direction.x * width / 2,
+          y: fixed.y + direction.y * width / aspect / 2
+        }
+      } else if (direction.x !== 0) {
+        // Side handle: the opposite edge stays anchored and the height follows
+        // the output aspect, so the frame expands and compresses evenly.
+        const fixedX = startCenter.x - direction.x * startWidth / 2
+        width = Math.max(32, Math.abs(world.x - fixedX))
+        center = { x: fixedX + direction.x * width / 2, y: startCenter.y }
+      } else {
+        // Top/bottom handle: same idea, driven by the vertical drag distance.
+        const fixedY = startCenter.y - direction.y * startHeight / 2
+        width = Math.max(32, Math.abs(world.y - fixedY) * aspect)
+        center = { x: startCenter.x, y: fixedY + direction.y * width / aspect / 2 }
       }
-      const dx = world.x - fixed.x
-      const dy = world.y - fixed.y
-      // Project the pointer onto the camera's locked-aspect diagonal. The
-      // opposite corner stays anchored, matching a conventional frame resize.
-      const inverseAspect = 1 / aspect
-      const width = Math.max(
-        32,
-        (dx * direction.x + dy * direction.y * inverseAspect) /
-          (1 + inverseAspect * inverseAspect)
-      )
-      onResize(cameraId, width, {
-        x: fixed.x + direction.x * width / 2,
-        y: fixed.y + direction.y * width / aspect / 2
-      })
+
+      onResize(cameraId, width, center)
     }
     const up = (): void => {
       window.removeEventListener('pointermove', move)
@@ -1018,42 +1086,99 @@ function CameraChrome({
   return (
     <g>
       {scene.cameras.map((camera) => {
+        // Hidden cameras are the only ones omitted: every visible frame stays
+        // on the canvas so the whole camera plan can be read at a glance.
+        // Older documents have no flag, so undefined means visible.
+        if (camera.visible === false) return null
         const frame = cameraFrame(camera, project.output)
         const active = camera.id === activeCameraId
         const selected = camera.id === selectedCameraId
-        if (!active && !selected) return null
-        const editing = selected && camera.id === editingCameraId
-        const handle = 6 / zoom
-        const chipWidth = Math.max(70, camera.name.length * 7.4 + 26) / zoom
+        // Other visible cameras are read-only: only the selected one can be
+        // moved or resized, so a stray drag never edits a second frame.
+        const movable = selected && !camera.locked
+        const showHandles = movable
+        const handle = 7 / zoom
+        const chipLabel = camera.locked ? `${camera.name} · locked` : camera.name
+        const chipWidth = Math.max(70, chipLabel.length * 7.4 + 26) / zoom
         const chipHeight = 23 / zoom
-        const corners: Array<{ x: number; y: number; direction: { x: 1 | -1; y: 1 | -1 } }> = [
-          { x: frame.x, y: frame.y, direction: { x: -1, y: -1 } },
-          { x: frame.x + frame.width, y: frame.y, direction: { x: 1, y: -1 } },
-          { x: frame.x, y: frame.y + frame.height, direction: { x: -1, y: 1 } },
-          { x: frame.x + frame.width, y: frame.y + frame.height, direction: { x: 1, y: 1 } }
+        const resizeHandles: Array<{
+          x: number
+          y: number
+          direction: { x: -1 | 0 | 1; y: -1 | 0 | 1 }
+          cursor: string
+        }> = [
+          { x: frame.x, y: frame.y, direction: { x: -1, y: -1 }, cursor: 'nwse-resize' },
+          {
+            x: frame.x + frame.width / 2,
+            y: frame.y,
+            direction: { x: 0, y: -1 },
+            cursor: 'ns-resize'
+          },
+          {
+            x: frame.x + frame.width,
+            y: frame.y,
+            direction: { x: 1, y: -1 },
+            cursor: 'nesw-resize'
+          },
+          {
+            x: frame.x + frame.width,
+            y: frame.y + frame.height / 2,
+            direction: { x: 1, y: 0 },
+            cursor: 'ew-resize'
+          },
+          {
+            x: frame.x + frame.width,
+            y: frame.y + frame.height,
+            direction: { x: 1, y: 1 },
+            cursor: 'nwse-resize'
+          },
+          {
+            x: frame.x + frame.width / 2,
+            y: frame.y + frame.height,
+            direction: { x: 0, y: 1 },
+            cursor: 'ns-resize'
+          },
+          {
+            x: frame.x,
+            y: frame.y + frame.height,
+            direction: { x: -1, y: 1 },
+            cursor: 'nesw-resize'
+          },
+          {
+            x: frame.x,
+            y: frame.y + frame.height / 2,
+            direction: { x: -1, y: 0 },
+            cursor: 'ew-resize'
+          }
         ]
 
         return (
-          <g key={camera.id}>
+          <g key={camera.id} opacity={selected ? 1 : active ? 0.9 : 0.62}>
             <rect
-              className={`camera-frame${editing ? ' editing' : ''}`}
+              className={[
+                'camera-frame',
+                selected ? 'selected' : '',
+                active ? 'active' : '',
+                camera.locked ? 'locked' : ''
+              ]
+                .filter(Boolean)
+                .join(' ')}
               x={frame.x}
               y={frame.y}
               width={frame.width}
               height={frame.height}
-              strokeWidth={editing ? 3 / zoom : 2 / zoom}
-              opacity={selected ? 1 : 0.8}
+              strokeWidth={(selected ? 2.6 : active ? 2 : 1.4) / zoom}
               fill="none"
               pointerEvents="none"
             />
-            <g pointerEvents="none" opacity={editing ? 0.85 : 0.55}>
+            <g pointerEvents="none" opacity={selected ? 0.8 : active ? 0.5 : 0.24}>
               <line
                 x1={frame.x}
                 y1={frame.y}
                 x2={frame.x + frame.width}
                 y2={frame.y + frame.height}
-                className={`camera-diagonal${editing ? ' editing' : ''}`}
-                strokeWidth={editing ? 2.2 / zoom : 1.5 / zoom}
+                className={`camera-diagonal${selected ? ' editing' : ''}`}
+                strokeWidth={selected ? 2 / zoom : 1.4 / zoom}
                 strokeDasharray={`${6 / zoom} ${5 / zoom}`}
               />
               <line
@@ -1061,8 +1186,8 @@ function CameraChrome({
                 y1={frame.y}
                 x2={frame.x}
                 y2={frame.y + frame.height}
-                className={`camera-diagonal${editing ? ' editing' : ''}`}
-                strokeWidth={editing ? 2.2 / zoom : 1.5 / zoom}
+                className={`camera-diagonal${selected ? ' editing' : ''}`}
+                strokeWidth={selected ? 2 / zoom : 1.4 / zoom}
                 strokeDasharray={`${6 / zoom} ${5 / zoom}`}
               />
             </g>
@@ -1075,75 +1200,86 @@ function CameraChrome({
               height={frame.height}
               fill="none"
               stroke="transparent"
-              strokeWidth={Math.max(10 / zoom, 8)}
+              strokeWidth={Math.max(12 / zoom, 9)}
               pointerEvents="stroke"
-              style={{ cursor: editing ? 'move' : 'default' }}
+              style={{ cursor: movable ? 'move' : camera.locked ? 'not-allowed' : 'pointer' }}
               onPointerDown={(event) => {
-                if (editing) dragCamera(event, camera.id, camera.center)
-                else {
-                  event.stopPropagation()
-                  onSelect(camera.id)
-                }
-              }}
-              onDoubleClick={(event) => {
                 event.stopPropagation()
-                event.preventDefault()
                 onSelect(camera.id)
-                onEdit(camera.id)
+                if (movable) dragCamera(event, camera.id, camera.center)
               }}
             >
-              <title>Double-click to move or resize this camera</title>
+              <title>
+                {camera.locked
+                  ? `${camera.name} is locked. Unlock it in the Camera panel to move it.`
+                  : selected
+                    ? 'Drag to move. Drag a corner or edge handle to resize.'
+                    : 'Click to select this camera.'}
+              </title>
             </rect>
 
-            {editing
-              ? corners.map((corner, index) => (
-                  <rect
-                    key={index}
-                    className="camera-handle"
-                    x={corner.x - handle / 2}
-                    y={corner.y - handle / 2}
-                    width={handle}
-                    height={handle}
-                    rx={1 / zoom}
-                    onPointerDown={(event) =>
-                      resizeCamera(
-                        event,
-                        camera.id,
-                        camera.viewWidth,
-                        camera.center,
-                        corner.direction
-                      )
-                    }
-                    style={{
-                      cursor:
-                        corner.direction.x === corner.direction.y
-                          ? 'nwse-resize'
-                          : 'nesw-resize'
-                    }}
-                  />
+            {showHandles
+              ? resizeHandles.map((resizeHandle, index) => (
+                  <g key={index}>
+                    <rect
+                      x={resizeHandle.x - 9 / zoom}
+                      y={resizeHandle.y - 9 / zoom}
+                      width={18 / zoom}
+                      height={18 / zoom}
+                      fill="transparent"
+                      pointerEvents="all"
+                      style={{ cursor: resizeHandle.cursor }}
+                      onPointerDown={(event) =>
+                        resizeCamera(
+                          event,
+                          camera.id,
+                          camera.viewWidth,
+                          camera.center,
+                          resizeHandle.direction
+                        )
+                      }
+                    >
+                      <title>Drag to expand or compress the camera frame.</title>
+                    </rect>
+                    <rect
+                      className="camera-handle"
+                      x={resizeHandle.x - handle / 2}
+                      y={resizeHandle.y - handle / 2}
+                      width={handle}
+                      height={handle}
+                      rx={1 / zoom}
+                      pointerEvents="none"
+                    />
+                  </g>
                 ))
               : null}
 
             <g
               transform={`translate(${frame.x + frame.width / 2 - chipWidth / 2} ${frame.y - chipHeight - 5 / zoom})`}
-              opacity={0.72}
-              onPointerDown={(event) => dragCamera(event, camera.id, camera.center)}
-              onDoubleClick={(event) => {
+              opacity={0.9}
+              onPointerDown={(event) => {
                 event.stopPropagation()
-                event.preventDefault()
                 onSelect(camera.id)
-                onEdit(camera.id)
+                if (movable) dragCamera(event, camera.id, camera.center)
               }}
-              style={{ cursor: 'move' }}
+              style={{ cursor: movable ? 'move' : camera.locked ? 'not-allowed' : 'pointer' }}
             >
-              <title>{`${camera.name} — double-click for corner handles`}</title>
+              <title>
+                {camera.locked
+                  ? `${camera.name} is locked`
+                  : selected
+                    ? `${camera.name} — drag to move, corner and edge handles resize`
+                    : `${camera.name} — click to select`}
+              </title>
               <rect
                 x={0}
                 y={0}
                 width={chipWidth}
                 height={chipHeight}
                 rx={4 / zoom}
-                className={`camera-chip${editing ? ' editing' : ''}`}
+                className={`camera-chip${selected ? ' editing' : ''}${
+                  camera.locked ? ' locked' : ''
+                }`}
               />
               <text
                 className="camera-label"
@@ -1152,7 +1288,7 @@ function CameraChrome({
                 fontSize={12.5 / zoom}
                 textAnchor="middle"
               >
-                {camera.name}
+                {chipLabel}
               </text>
             </g>
           </g>

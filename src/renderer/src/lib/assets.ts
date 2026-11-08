@@ -11,6 +11,26 @@ export function libraryAssetUrl(relativePath: string): string {
   return `ows-library://asset/${encoded}`
 }
 
+/**
+ * Raw asset bytes for in-memory playback: protocol fetch first, IPC base64
+ * fallback when the custom scheme is not fetchable in the current context.
+ */
+export async function readAssetBytes(token: string, fileName: string): Promise<ArrayBuffer> {
+  try {
+    const response = await fetch(assetUrl(token, fileName))
+    if (response.ok) return await response.arrayBuffer()
+  } catch {
+    // Fall through to the IPC read below.
+  }
+  const base64 = await window.api.assets.readBase64(token, fileName)
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index)
+  }
+  return bytes.buffer
+}
+
 let measureHost: SVGSVGElement | null = null
 
 function host(): SVGSVGElement {

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type JSX, type PointerEvent as ReactPointerEvent } from 'react'
 import { ChevronDown, ChevronUp, Minus, Plus } from 'lucide-react'
-import { formatSeconds } from '@core/math'
 import type { ProjectSchedule } from '@core/timeline/schedule'
 import { useEditorStore } from '../../state/editorStore'
 import { usePlaybackStore } from '../../state/playbackStore'
 import { SceneStrip } from './SceneStrip'
+import { Transport } from './Transport'
 import { Timeline } from '../timeline/Timeline'
 
 const SIMPLE_HEIGHT = 146
@@ -93,6 +93,8 @@ export function BottomDock({ schedule }: { schedule: ProjectSchedule }): JSX.Ele
 
         <span className="dock-header-spacer" />
 
+        <Transport duration={schedule.duration} />
+
         <select
           className="select-input dock-rate"
           value={String(rate)}
@@ -105,7 +107,6 @@ export function BottomDock({ schedule }: { schedule: ProjectSchedule }): JSX.Ele
           <option value="2">2×</option>
         </select>
 
-        <span className="dock-total">Project {formatSeconds(schedule.duration, true)}</span>
         <button
           className="icon-btn dock-collapse"
           title={collapsed ? 'Expand dock' : 'Collapse dock'}

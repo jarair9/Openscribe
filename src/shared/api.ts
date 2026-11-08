@@ -26,6 +26,10 @@ export interface StudioApi {
     info(): Promise<AppInfo>
     openLogsFolder(): Promise<void>
   }
+  files: {
+    /** Resolves the on-disk path of a dropped File (Electron webUtils). */
+    pathForFile(file: File): string
+  }
   window: {
     minimize(): void
     toggleMaximize(): void

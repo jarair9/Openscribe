@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type JSX } from 'rea
 import { CircleCheck, Film, FolderOpen, Images, Loader2, TriangleAlert } from 'lucide-react'
 import { formatSeconds } from '@core/math'
 import type { ExportEngineInfo, ExportFormat, ExportResult } from '@shared/ipc'
+import { usePreferencesStore } from '../../state/preferencesStore'
 import { useProjectStore } from '../../state/projectStore'
 import { useUiStore } from '../../state/uiStore'
 import { CheckField, SelectField } from '../inspector/controls'
@@ -42,12 +43,14 @@ export function ExportDialog({ onClose }: { onClose: () => void }): JSX.Element 
   const session = useProjectStore((state) => state.session)
   const token = session?.assetToken ?? ''
 
+  const preferences = usePreferencesStore()
+
   const [engine, setEngine] = useState<ExportEngineInfo | null>(null)
-  const [format, setFormat] = useState<ExportFormat>('mp4')
+  const [format, setFormat] = useState<ExportFormat>(preferences.exportFormat)
   const [fps, setFps] = useState(project?.output.fps ?? 30)
-  const [scale, setScale] = useState(100)
-  const [quality, setQuality] = useState<QualityKey>('standard')
-  const [keepFrames, setKeepFrames] = useState(false)
+  const [scale, setScale] = useState(preferences.exportScale)
+  const [quality, setQuality] = useState<QualityKey>(preferences.exportQuality)
+  const [keepFrames, setKeepFrames] = useState(preferences.keepFrames)
   const [dir, setDir] = useState(projectFolder(session?.filePath))
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState<ExportProgress | null>(null)
@@ -106,6 +109,11 @@ export function ExportDialog({ onClose }: { onClose: () => void }): JSX.Element 
 
   const start = async (): Promise<void> => {
     if (!project || running || !dir) return
+    // Remember the choices so the next export opens where this one left off.
+    preferences.setExportFormat(format)
+    preferences.setExportQuality(quality)
+    preferences.setExportScale(scale)
+    preferences.setKeepFrames(keepFrames)
     cancelled.current = false
     clock.current = performance.now()
     setRunning(true)

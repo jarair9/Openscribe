@@ -23,6 +23,11 @@ export function usePlaybackClock(duration: number): void {
       const next = store.time + ((now - last) / 1000) * store.rate
       last = now
       if (next >= duration) {
+        if (store.loop && duration > 0) {
+          store.setTime(next % duration)
+          frame = requestAnimationFrame(tick)
+          return
+        }
         store.setTime(duration)
         store.pause()
         return

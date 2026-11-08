@@ -54,6 +54,16 @@ export function useKeyboardShortcuts(): void {
         return
       }
 
+      if (ui.paletteOpen) {
+        if (event.key === 'Escape') {
+          ui.closePalette()
+        } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+          event.preventDefault()
+          ui.closePalette()
+        }
+        return
+      }
+
       if (event.key === 'Escape') {
         if (ui.confirm) {
           ui.resolveConfirm(false)
@@ -88,6 +98,14 @@ export function useKeyboardShortcuts(): void {
 
       if (mod) {
         switch (key) {
+          case 'k':
+            event.preventDefault()
+            ui.togglePalette()
+            return
+          case ',':
+            event.preventDefault()
+            ui.openDialog('preferences')
+            return
           case 's':
             event.preventDefault()
             void (event.shiftKey ? saveProjectAs() : saveProject())
@@ -151,7 +169,10 @@ export function useKeyboardShortcuts(): void {
 
       if (key === ' ') {
         event.preventDefault()
-        ui.openPreview()
+        const playback = usePlaybackStore.getState()
+        const duration = buildSchedule(project).duration
+        if (!playback.playing && playback.time >= duration - 0.01) playback.setTime(0)
+        playback.toggle()
         return
       }
       if (key === 'delete' || key === 'backspace') {

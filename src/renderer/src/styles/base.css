@@ -78,8 +78,38 @@ button:disabled {
 
 .app-body {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) var(--inspector-width);
+  grid-template-columns: auto 5px minmax(0, 1fr) 5px var(--inspector-width);
+  grid-template-rows: minmax(0, 1fr);
   min-height: 0;
+  overflow: hidden;
+}
+
+.panel-splitter {
+  position: relative;
+  z-index: 4;
+  background: var(--border);
+  cursor: col-resize;
+  transition: background var(--dur-fast) ease;
+}
+
+.panel-splitter::after {
+  content: "";
+  position: absolute;
+  inset: 0 -3px;
+}
+
+.panel-splitter:hover,
+body.resizing-panels .panel-splitter {
+  background: var(--accent);
+}
+
+body.resizing-panels {
+  cursor: col-resize;
+}
+
+body.resizing-panels * {
+  cursor: col-resize !important;
+  user-select: none !important;
 }
 
 .workspace {

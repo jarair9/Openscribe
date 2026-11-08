@@ -3,13 +3,13 @@
  * changed without touching UI code or build configuration.
  */
 export const PRODUCT = {
-  name: 'OpenWhiteboard Studio',
-  shortName: 'OpenWhiteboard',
-  slug: 'openwhiteboard-studio',
+  name: 'Openscribe',
+  shortName: 'Openscribe',
+  slug: 'openscribe',
   version: '0.1.0',
   license: 'MIT',
   projectExtension: 'owsproj',
-  projectFileFilterName: 'OpenWhiteboard Project',
+  projectFileFilterName: 'Openscribe Project',
   assetScheme: 'ows-asset',
   libraryScheme: 'ows-library'
 } as const

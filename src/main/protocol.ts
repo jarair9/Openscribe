@@ -71,6 +71,8 @@ export function registerAssetProtocol(): void {
         headers: {
           'content-type': assetMimeType(fileName),
           'content-length': String(data.byteLength),
+          // WebAudio GainNode playback of boosted tracks needs CORS-clean media.
+          'access-control-allow-origin': '*',
           'cache-control': 'public, max-age=31536000, immutable'
         }
       })
@@ -92,6 +94,7 @@ export function registerAssetProtocol(): void {
         headers: {
           'content-type': assetMimeType(fullPath),
           'content-length': String(data.byteLength),
+          'access-control-allow-origin': '*',
           'cache-control': 'public, max-age=86400'
         }
       })

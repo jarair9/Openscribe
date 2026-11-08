@@ -1,4 +1,5 @@
 import { createId } from '@core/ids'
+import { writeWav, peakLevel } from '@core/audio/wav'
 import { addAsset, addSceneAudioTrack } from '@core/project/operations'
 import { createAsset } from '@core/schema/factories'
 import type { AudioTrack } from '@core/schema/project'
@@ -12,6 +13,7 @@ export interface EncodedWav {
   buffer: Uint8Array
   duration: number
   sampleRate: number
+  peak: number
 }
 
 /**
@@ -23,50 +25,14 @@ export async function encodeWav(blob: Blob): Promise<EncodedWav> {
   const context = new AudioContext()
   try {
     const decoded = await context.decodeAudioData(await blob.arrayBuffer())
-    const channels = Math.min(2, Math.max(1, decoded.numberOfChannels))
-    const frames = decoded.length
-    const sampleRate = decoded.sampleRate
-    const bytesPerSample = 2
-    const dataSize = frames * channels * bytesPerSample
-    const buffer = new ArrayBuffer(44 + dataSize)
-    const view = new DataView(buffer)
-
-    const writeAscii = (offset: number, text: string): void => {
-      for (let index = 0; index < text.length; index += 1) {
-        view.setUint8(offset + index, text.charCodeAt(index))
-      }
-    }
-
-    writeAscii(0, 'RIFF')
-    view.setUint32(4, 36 + dataSize, true)
-    writeAscii(8, 'WAVE')
-    writeAscii(12, 'fmt ')
-    view.setUint32(16, 16, true)
-    view.setUint16(20, 1, true)
-    view.setUint16(22, channels, true)
-    view.setUint32(24, sampleRate, true)
-    view.setUint32(28, sampleRate * channels * bytesPerSample, true)
-    view.setUint16(32, channels * bytesPerSample, true)
-    view.setUint16(34, 16, true)
-    writeAscii(36, 'data')
-    view.setUint32(40, dataSize, true)
-
-    const sources = Array.from({ length: channels }, (_, channel) =>
+    const sources = Array.from({ length: decoded.numberOfChannels }, (_, channel) =>
       decoded.getChannelData(channel)
     )
-    let offset = 44
-    for (let frame = 0; frame < frames; frame += 1) {
-      for (let channel = 0; channel < channels; channel += 1) {
-        const sample = Math.max(-1, Math.min(1, sources[channel]![frame] ?? 0))
-        view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true)
-        offset += bytesPerSample
-      }
-    }
-
     return {
-      buffer: new Uint8Array(buffer),
+      buffer: writeWav(sources, decoded.sampleRate),
       duration: decoded.duration,
-      sampleRate
+      sampleRate: decoded.sampleRate,
+      peak: peakLevel(sources)
     }
   } finally {
     void context.close()
@@ -90,6 +56,13 @@ export async function saveVoiceover(blob: Blob): Promise<boolean> {
     const wav = await encodeWav(blob)
     if (wav.duration < 0.15) {
       ui.toast('The recording was too short to keep.', 'info')
+      return false
+    }
+    if (wav.peak < 0.002) {
+      ui.toast(
+        'The microphone recorded silence. Check your input device and its mute switch, then record again.',
+        'error'
+      )
       return false
     }
 

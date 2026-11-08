@@ -174,25 +174,37 @@ export async function renameProjectFile(filePath: string, name: string): Promise
   }
 }
 
-export async function saveProject(): Promise<boolean> {
-  const { project, session } = useProjectStore.getState()
+export async function saveProject(
+  options: { auto?: boolean } = {}
+): Promise<boolean> {
+  const { project, session, revision } = useProjectStore.getState()
   const ui = useUiStore.getState()
   if (!project || !session) return false
 
-  ui.setBusy('Saving project…')
+  const revisionAtSave = revision
+  useProjectStore.getState().markSaving()
+  if (!options.auto) ui.setBusy('Saving project…')
   try {
     const result = await window.api.project.save({
       filePath: session.filePath,
       document: project
     })
-    useProjectStore.getState().markSaved(result.savedAt)
+    useProjectStore.getState().markSaved(result.savedAt, undefined, revisionAtSave, options.auto)
     rememberProject(project.name, session.filePath)
     return true
   } catch (error) {
-    ui.toast(errorMessage(error), 'error')
+    const message = errorMessage(error)
+    useProjectStore.getState().markSaveFailed(message)
+    if (options.auto) {
+      ui.toast(`Autosave failed: ${message}`, 'error', {
+        action: { label: 'Retry', run: () => void saveProject({ auto: true }) }
+      })
+    } else {
+      ui.toast(message, 'error')
+    }
     return false
   } finally {
-    ui.setBusy(null)
+    if (!options.auto) ui.setBusy(null)
   }
 }
 
