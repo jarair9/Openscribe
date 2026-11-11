@@ -10,6 +10,8 @@ export interface InstrumentDefinition {
   /** Drawing tip position inside the instrument's normalized box (0..1). */
   tip: { x: number; y: number }
   tip2?: { x: number; y: number }
+  /** Palm/grip position used when the hand carries an element (0..1). */
+  grip?: { x: number; y: number }
   /** Instrument box height as a fraction of the camera view height. */
   heightFactor: number
   /** Width divided by height. */
@@ -69,6 +71,15 @@ export function handPositionForTip(
 
 const DRAW_STYLES: EntranceType[] = ['handDraw', 'penDraw']
 
+/**
+ * The catalog's non-tool poses — "move in hand" and "move in fingers" — are
+ * the open gesture photos; every other catalog hand is holding a pen, pencil,
+ * crayon or eraser and would read as drawing rather than carrying.
+ */
+export function isGestureHandName(name: string): boolean {
+  return /move[\s-]*in|gesture|open hand/i.test(name)
+}
+
 // VideoScribe's stored offsets for these presets are authoring-space
 // adjustments, not image-space nib coordinates, and place the visible nib well
 // away from the pixels they name. hand-tips-calibrated.json holds the real
@@ -77,6 +88,12 @@ const DRAW_STYLES: EntranceType[] = ['handDraw', 'penDraw']
 // the right, and paintbrush poses use the bristle block instead).
 const CALIBRATED_HAND_TIPS = calibratedHandTips as unknown as
   Record<string, { tip: [number, number]; tip2: [number, number] }>
+
+// The pencil preset and the library's “Rosie pencil” entry show the same photo,
+// so both read its nib from the shared table. A private copy here drifted from
+// the calibrated pose and made the pencil draw from the wrong point.
+const PENCIL_HAND_TIP: { tip: [number, number]; tip2: [number, number] } =
+  CALIBRATED_HAND_TIPS['4818'] ?? { tip: [0.0711, 0.0796], tip2: [0.0726, 0.0796] }
 
 const TOOL_PRESETS: InstrumentDefinition[] = [
   {
@@ -93,6 +110,7 @@ const TOOL_PRESETS: InstrumentDefinition[] = [
     description: 'Photographic open hand from the supplied tool set.',
     tip: { x: 0.43, y: 0.045 }, heightFactor: 0.31, aspect: 581 / 1200,
     handRotation: 0, scaleRelativeToStageWidth: 0.4,
+    grip: { x: 0.45, y: 0.31 },
     assetPath: 'hand-and-pen-tools/default-drag.png',
     group: 'Supplied tool hands · Gestures', supportedStyles: DRAW_STYLES
   },
@@ -138,10 +156,8 @@ export const INSTRUMENTS: InstrumentDefinition[] = [
     name: 'Pencil hand',
     kind: 'hand',
     description: 'A real photographed hand holding a pencil.',
-    // The Rosie marker photo is reused by nothing else: this is the pencil
-    // frame, with its nib measured off the same transparent canvas.
-    tip: { x: 0.0757, y: 0.0833 },
-    tip2: { x: 0.0726, y: 0.1308 },
+    tip: { x: PENCIL_HAND_TIP.tip[0], y: PENCIL_HAND_TIP.tip[1] },
+    tip2: { x: PENCIL_HAND_TIP.tip2[0], y: PENCIL_HAND_TIP.tip2[1] },
     heightFactor: 0.33,
     aspect: 0.5391666666666667,
     handRotation: 0,
@@ -154,6 +170,7 @@ export const INSTRUMENTS: InstrumentDefinition[] = [
   },
   ...handLibrary.map((hand) => {
     const isPen = hand.group === 'pens'
+    const isGesture = isGestureHandName(hand.name)
     const calibratedTip = CALIBRATED_HAND_TIPS[String(hand.id)]
     // Preserve these native left-hand photo sets even when loading a project
     // whose generated catalog predates the per-pose source-orientation fields.
@@ -167,6 +184,8 @@ export const INSTRUMENTS: InstrumentDefinition[] = [
       description: `${hand.name} · ${hand.group} preset`,
       tip: calibratedTip ? { x: calibratedTip.tip[0], y: calibratedTip.tip[1] } : { x: hand.tipX, y: hand.tipY },
       tip2: calibratedTip ? { x: calibratedTip.tip2[0], y: calibratedTip.tip2[1] } : { x: hand.tip2X, y: hand.tip2Y },
+      // Gesture photos have no measured palm, so they share a rough centre.
+      grip: isGesture ? { x: 0.5, y: 0.28 } : undefined,
       heightFactor: isPen ? 0.15 : 0.31,
       aspect: hand.aspect,
       handRotation: 0 as const,
@@ -219,7 +238,39 @@ export function isEraserInstrument(instrument: InstrumentDefinition): boolean {
 /** The subset offered by the eraser picker. */
 export const ERASER_INSTRUMENTS: InstrumentDefinition[] = INSTRUMENTS.filter(isEraserInstrument)
 
+/** The open hand used by the drag-in entrance when no other pose is chosen. */
+export const DEFAULT_DRAG_INSTRUMENT_ID = 'tool-open-hand'
+
+/**
+ * Hands that can carry an element in. Erasers are excluded — board cleaning has
+ * its own exit effect — and so are the pen/pencil grips: a hand holding a
+ * marker would look like it is about to draw, not deliver the artwork. Only
+ * open gesture poses remain.
+ */
+export function isDragInstrument(instrument: InstrumentDefinition): boolean {
+  if (instrument.kind !== 'hand') return false
+  if (isEraserInstrument(instrument)) return false
+  return instrument.id === DEFAULT_DRAG_INSTRUMENT_ID || isGestureHandName(instrument.name)
+}
+
+export const DRAG_INSTRUMENTS: InstrumentDefinition[] = INSTRUMENTS.filter(isDragInstrument).sort(
+  (a, b) => {
+    if (a.id === DEFAULT_DRAG_INSTRUMENT_ID) return -1
+    if (b.id === DEFAULT_DRAG_INSTRUMENT_ID) return 1
+    return 0
+  }
+)
+
+export function getDragInstrument(id: string | null | undefined): InstrumentDefinition {
+  return (
+    DRAG_INSTRUMENTS.find((instrument) => instrument.id === id) ??
+    DRAG_INSTRUMENTS.find((instrument) => instrument.id === DEFAULT_DRAG_INSTRUMENT_ID) ??
+    INSTRUMENTS[0]!
+  )
+}
+
 export function instrumentForStyle(style: EntranceType, requestedId: string | null): InstrumentDefinition {
+  if (style === 'handDrag') return getDragInstrument(requestedId)
   const requested = INSTRUMENTS.find((instrument) => instrument.id === requestedId)
   if (requested && requested.supportedStyles.includes(style)) return requested
   if (style === 'penDraw') return getInstrument('tool-marker')

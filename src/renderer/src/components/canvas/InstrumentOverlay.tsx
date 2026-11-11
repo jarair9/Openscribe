@@ -1,7 +1,8 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useId, useLayoutEffect, useRef, useState } from 'react'
 import type { JSX, MouseEvent as ReactMouseEvent, RefObject } from 'react'
 import { clamp01 } from '@core/math'
 import { scribbleTip } from '@core/animation/scribble'
+import { dragVector } from '@core/animation/evaluate'
 import { getInstrument, handPositionForTip, handScaleForStage } from '@core/instruments'
 import type { Direction, Rect } from '@core/schema/primitives'
 import type { ViewportState } from '../../state/editorStore'
@@ -24,6 +25,14 @@ export interface ActiveInstrument {
   wipeCursor?: { x: number; y: number; angle: number } | null
   /** Exact ink position for stroke-font handwriting. */
   strokeCursor?: { x: number; y: number; angle: number; pose: number } | null
+  /** Set while a handDrag carries the element; the box is already translated. */
+  dragFrame?: Rect | null
+  /** Clock hour the drag comes from, so the palm grips the leading edge. */
+  dragHour?: number | null
+  /** 0..1 hand withdrawal after the element lands. */
+  dragRelease?: number | null
+  /** World distance the hand retreats when it lets go. */
+  dragTravel?: number | null
   /** Hand pose frame derived from distance travelled, frozen while idle. */
   pose?: number | null
 }
@@ -47,6 +56,15 @@ interface TipState {
 
 export function drawablePathKey(elementId: string, drawableId: string): string {
   return `${elementId}::${drawableId}`
+}
+
+/** Point on the carried element the palm holds, on the side it came from. */
+function dragGripPoint(frame: Rect, hour: number): { x: number; y: number } {
+  const vector = dragVector(hour)
+  return {
+    x: frame.x + frame.width / 2 + (vector.x * frame.width * 0.42),
+    y: frame.y + frame.height / 2 + (vector.y * frame.height * 0.42)
+  }
 }
 
 /**
@@ -92,6 +110,9 @@ export function InstrumentOverlay({
   const [tip, setTip] = useState<TipState | null>(null)
   const [pickedAnchor, setPickedAnchor] = useState<{ id: string; x: number; y: number } | null>(null)
   const previous = useRef<TipState | null>(null)
+  const maskKey = useId().replace(/[^a-zA-Z0-9_-]/g, '')
+  const dragMaskId = `ows-drag-mask-${maskKey}`
+  const dragFadeId = `ows-drag-fade-${maskKey}`
 
   useLayoutEffect(() => {
     const svg = svgRef.current
@@ -116,6 +137,17 @@ export function InstrumentOverlay({
         previous.current = null
         setTip(null)
       }
+      return
+    }
+
+    // Drag-in: the palm rides the element it is carrying, then slides back
+    // out the way it came once the element is released.
+    if (active.dragFrame) {
+      const hour = active.dragHour ?? 9
+      const grip = dragGripPoint(active.dragFrame, hour)
+      const vector = dragVector(hour)
+      const retreat = (active.dragTravel ?? 0) * 0.85 * clamp01(active.dragRelease ?? 0)
+      commit({ x: grip.x + vector.x * retreat, y: grip.y + vector.y * retreat }, 0)
       return
     }
 
@@ -211,11 +243,18 @@ export function InstrumentOverlay({
   // out in an aspect-wide box and pinned to their measured nib. Only the
   // vector fallback pen lives in a 100×100 box and turns with the stroke.
   const isPhotographic = Boolean(instrument.assetPath)
+  const isDrag = Boolean(active.dragFrame)
   const boxWidth = instrument.kind === 'hand' || isPhotographic ? instrument.aspect * 100 : 100
   const pose = active.pose ?? Math.floor(active.progress * 4)
-  const secondPose = Boolean(instrument.assetPath2 && instrument.tip2 && pose % 2 === 1)
-  const defaultTip = secondPose ? instrument.tip2! : instrument.tip
-  const drawingTip = pickedAnchor?.id === instrument.id ? pickedAnchor : defaultTip
+  const secondPose =
+    !isDrag && Boolean(instrument.assetPath2 && instrument.tip2 && pose % 2 === 1)
+  // A carried element is held at the palm, not the drawing nib.
+  const defaultTip = isDrag
+    ? instrument.grip ?? instrument.tip
+    : secondPose
+      ? instrument.tip2!
+      : instrument.tip
+  const drawingTip = !isDrag && pickedAnchor?.id === instrument.id ? pickedAnchor : defaultTip
   const tipX = drawingTip.x * boxWidth
   const tipY = drawingTip.y * 100
   const rotation = instrument.kind === 'hand' || isPhotographic
@@ -225,10 +264,16 @@ export function InstrumentOverlay({
   const stageWidth = cameraWidth || stage?.width || cameraHeight * 16 / 9
   // Keep the authored lower cut edge below the stage even on taller formats.
   // This constraint is relaxed only when the asset itself has a nonstandard anchor.
+  // A carrying hand is framed by its own width so the whole palm stays visible.
   const handScale = instrument.kind === 'hand'
-    ? handScaleForStage(stageWidth, cameraHeight, boxWidth, tipY, instrument.scaleRelativeToStageWidth, instrument.cuffEdgeY)
+    ? isDrag
+      ? Math.max(24, stageWidth * (instrument.scaleRelativeToStageWidth ?? 0.4)) / boxWidth
+      : handScaleForStage(stageWidth, cameraHeight, boxWidth, tipY, instrument.scaleRelativeToStageWidth, instrument.cuffEdgeY)
     : Math.max(24, cameraHeight * instrument.heightFactor) / 100
   const scale = handScale
+  // The hand only fades late in its retreat, so the movement reads as pulling
+  // away rather than blinking out of existence.
+  const handOpacity = isDrag ? clamp01((1 - (active.dragRelease ?? 0)) / 0.4) : 1
   const debugHand = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('debugHand') === '1'
   const requestedHandedness = active.handedness ?? 'right'
   const sourceHandedness = secondPose
@@ -246,6 +291,13 @@ export function InstrumentOverlay({
   const handX = handPlacement.x
   const handY = handPlacement.y
 
+  // A carrying hand turns so its wrist points back out the way it came in.
+  // This keeps the photographed cuff — and therefore its hard cut edge — off
+  // the stage instead of dragging a sliced forearm across the artwork.
+  const dragHour = active.dragHour ?? 9
+  const dragUnit = dragVector(dragHour)
+  const dragAngle = (Math.atan2(-dragUnit.x, dragUnit.y) * 180) / Math.PI
+
   const pickAnchor = (event: ReactMouseEvent<SVGImageElement>): void => {
     const matrix = event.currentTarget.getScreenCTM()
     if (!matrix) return
@@ -257,16 +309,55 @@ export function InstrumentOverlay({
 
   return (
     <>
+      {isDrag ? (
+        <defs>
+          {/* Dissolve the photographed cuff so a hard cut can never show. */}
+          <linearGradient
+            id={dragFadeId}
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="100"
+          >
+            <stop offset="0.78" stopColor="#ffffff" />
+            <stop offset="1" stopColor="#000000" />
+          </linearGradient>
+          <mask
+            id={dragMaskId}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
+            width={boxWidth}
+            height="100"
+          >
+            <rect x="0" y="0" width={boxWidth} height="100" fill={`url(#${dragFadeId})`} />
+          </mask>
+        </defs>
+      ) : null}
       <g
         transform={instrument.kind === 'hand' || isPhotographic
-          ? `translate(${handX} ${handY}) scale(${handPlacement.scaleX} ${scale})`
+          ? isDrag
+            ? `translate(${tip.x} ${tip.y}) rotate(${dragAngle}) scale(${handPlacement.scaleX} ${scale}) translate(${-tipX} ${-tipY})`
+            : `translate(${handX} ${handY}) scale(${handPlacement.scaleX} ${scale})`
           : `translate(${tip.x} ${tip.y}) rotate(${rotation}) scale(${scale}) translate(${-tipX} ${-tipY})`}
         pointerEvents={debugHand ? 'auto' : 'none'}
+        opacity={handOpacity}
         aria-hidden="true"
       >
-        {instrument.kind === 'hand' || isPhotographic
-          ? <HandInstrumentArt instrument={instrument} secondPose={secondPose} onImageClick={debugHand ? pickAnchor : undefined} />
-          : <PenArt />}
+        {instrument.kind === 'hand' || isPhotographic ? (
+          isDrag ? (
+            <g mask={`url(#${dragMaskId})`}>
+              <HandInstrumentArt
+                instrument={instrument}
+                secondPose={secondPose}
+                onImageClick={debugHand ? pickAnchor : undefined}
+              />
+            </g>
+          ) : (
+            <HandInstrumentArt instrument={instrument} secondPose={secondPose} onImageClick={debugHand ? pickAnchor : undefined} />
+          )
+        ) : <PenArt />}
       </g>
       {debugHand ? <g pointerEvents="none" aria-hidden="true">
         <rect x={handPlacement.scaleX < 0 ? handX - boxWidth * scale : handX} y={handY} width={boxWidth * scale} height={100 * scale} fill="none" stroke="#ff3030" strokeWidth={Math.max(1, cameraHeight / 700)} />

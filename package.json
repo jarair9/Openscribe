@@ -12,6 +12,7 @@
   },
   "scripts": {
     "generate:hand-catalog": "node scripts/generate-hand-catalog.mjs",
+    "generate:stroke-font": "node scripts/generate-stroke-font.mjs",
     "predev": "npm run generate:hand-catalog",
     "dev": "electron-vite dev",
     "prebuild": "npm run generate:hand-catalog",

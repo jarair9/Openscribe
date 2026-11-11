@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { buildSchedule } from '@core/timeline/schedule'
+import { scheduleFor } from '@core/timeline/scheduleCache'
 import {
   copySelection,
   cutSelection,
@@ -48,6 +48,10 @@ export function useKeyboardShortcuts(): void {
   useEffect(() => {
     const handler = (event: KeyboardEvent): void => {
       const ui = useUiStore.getState()
+
+      // The loading scrim is blocking: no shortcut should reach the editor
+      // behind it while a project is being read or written.
+      if (ui.loading) return
 
       if (ui.previewOpen) {
         if (event.key === 'Escape') ui.closePreview()
@@ -170,7 +174,7 @@ export function useKeyboardShortcuts(): void {
       if (key === ' ') {
         event.preventDefault()
         const playback = usePlaybackStore.getState()
-        const duration = buildSchedule(project).duration
+        const duration = scheduleFor(project).duration
         if (!playback.playing && playback.time >= duration - 0.01) playback.setTime(0)
         playback.toggle()
         return
@@ -187,7 +191,7 @@ export function useKeyboardShortcuts(): void {
       }
       if (key === 'end') {
         event.preventDefault()
-        usePlaybackStore.getState().setTime(buildSchedule(project).duration)
+        usePlaybackStore.getState().setTime(scheduleFor(project).duration)
         return
       }
       if (key === 'arrowleft' || key === 'arrowright' || key === 'arrowup' || key === 'arrowdown') {

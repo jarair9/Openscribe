@@ -12,6 +12,8 @@ export const IPC = {
   windowMinimize: 'window:minimize',
   windowToggleMaximize: 'window:toggle-maximize',
   windowClose: 'window:close',
+  windowCloseRequested: 'window:close-requested',
+  windowCloseAcknowledged: 'window:close-acknowledged',
   windowStateChanged: 'window:state-changed',
 
   dialogPickParentDir: 'dialog:pick-parent-dir',
@@ -31,6 +33,8 @@ export const IPC = {
   projectCreate: 'project:create',
   projectOpen: 'project:open',
   projectPeek: 'project:peek',
+  projectRename: 'project:rename',
+  projectExists: 'project:exists',
   projectSave: 'project:save',
   projectSaveAs: 'project:save-as',
 
@@ -80,6 +84,10 @@ export interface CreateProjectRequest {
   parentDir: string
   name: string
   document: Project
+}
+
+export interface RenameProjectResult {
+  name: string
 }
 
 export interface SaveProjectRequest {

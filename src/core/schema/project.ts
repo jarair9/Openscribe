@@ -3,6 +3,9 @@ import { ColorSchema, DirectionSchema, EasingSchema, RectSchema, Vec2Schema } fr
 
 export const SCHEMA_VERSION = 1
 
+/** Upper bound for a project name, kept in one place so UI and schema agree. */
+export const PROJECT_NAME_MAX = 200
+
 /* ------------------------------------------------------------------ */
 /* Animation                                                          */
 /* ------------------------------------------------------------------ */
@@ -12,6 +15,7 @@ export const EntranceTypeSchema = z.enum([
   'draw',
   'handDraw',
   'penDraw',
+  'handDrag',
   'fadeIn',
   'moveIn',
   'popIn',
@@ -30,10 +34,16 @@ export const EntranceSchema = z.object({
   duration: z.number().min(0).max(600),
   easing: EasingSchema,
   direction: DirectionSchema,
-  /** Instrument used by handDraw / penDraw. */
+  /** Instrument used by handDraw / penDraw / handDrag. */
   instrumentId: z.string().nullable(),
   /** Mirror the fixed-angle hand art when drawing left-handed. */
-  handedness: z.enum(['right', 'left']).default('right')
+  handedness: z.enum(['right', 'left']).default('right'),
+  /**
+   * Where a handDrag enters from, as a clock hour (12 = top, 3 = right,
+   * 6 = bottom, 9 = left). The twelve positions give three entry angles per
+   * side, matching VideoScribe's drag-in ring.
+   */
+  dragFrom: z.number().int().min(1).max(12).default(9)
 })
 export type Entrance = z.infer<typeof EntranceSchema>
 
@@ -319,7 +329,7 @@ export type ProjectSettings = z.infer<typeof ProjectSettingsSchema>
 export const ProjectSchema = z.object({
   schemaVersion: z.literal(SCHEMA_VERSION),
   id: z.string(),
-  name: z.string().min(1).max(200),
+  name: z.string().min(1).max(PROJECT_NAME_MAX),
   createdAt: z.string(),
   updatedAt: z.string(),
   output: OutputSettingsSchema,

@@ -1,6 +1,6 @@
 import { useMemo, type JSX } from 'react'
 import { formatSeconds } from '@core/math'
-import { buildSchedule } from '@core/timeline/schedule'
+import { scheduleFor } from '@core/timeline/scheduleCache'
 import { useEditorStore } from '../../state/editorStore'
 import { usePlaybackStore } from '../../state/playbackStore'
 import { useProjectStore } from '../../state/projectStore'
@@ -17,7 +17,7 @@ export function StatusBar(): JSX.Element {
   const tool = useEditorStore((state) => state.tool)
   const viewport = useEditorStore((state) => state.viewport)
   const time = usePlaybackStore((state) => state.time)
-  const schedule = useMemo(() => (project ? buildSchedule(project) : null), [project])
+  const schedule = useMemo(() => (project ? scheduleFor(project) : null), [project])
   const scene = project?.scenes.find((candidate) => candidate.id === activeSceneId)
 
   return (

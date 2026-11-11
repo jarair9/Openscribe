@@ -6,6 +6,31 @@ import { log } from './logger'
 
 let mainWindow: BrowserWindow | null = null
 
+/** Windows whose renderer has already answered the unsaved-changes prompt. */
+const approvedCloses = new WeakSet<BrowserWindow>()
+
+/** Set when the renderer process died and can no longer answer a prompt. */
+const rendererGone = new WeakSet<BrowserWindow>()
+
+/** Pending "the renderer never acknowledged the close request" guards. */
+const closeGuards = new WeakMap<BrowserWindow, ReturnType<typeof setTimeout>>()
+
+const CLOSE_ACK_TIMEOUT_MS = 4000
+
+export function approveWindowClose(window: BrowserWindow): void {
+  const guard = closeGuards.get(window)
+  if (guard) clearTimeout(guard)
+  closeGuards.delete(window)
+  approvedCloses.add(window)
+}
+
+/** The renderer received the request and is showing (or skipping) the prompt. */
+export function acknowledgeWindowClose(window: BrowserWindow): void {
+  const guard = closeGuards.get(window)
+  if (guard) clearTimeout(guard)
+  closeGuards.delete(window)
+}
+
 export function getMainWindow(): BrowserWindow | null {
   return mainWindow
 }
@@ -28,8 +53,8 @@ export function createMainWindow(): BrowserWindow {
     show: false,
     frame: false,
     icon: app.isPackaged
-      ? join(process.resourcesPath, 'Openscribe.png')
-      : join(app.getAppPath(), 'src/assets/Openscribe.png'),
+      ? join(process.resourcesPath, 'openscribe-256.png')
+      : join(app.getAppPath(), 'src/assets/openscribe-256.png'),
     title: PRODUCT.name,
     backgroundColor: '#0e1014',
     webPreferences: {
@@ -66,11 +91,49 @@ export function createMainWindow(): BrowserWindow {
   })
   window.webContents.on('render-process-gone', (_event, details) => {
     log('error', 'Renderer process gone', details)
+    rendererGone.add(window)
   })
   setTimeout(() => reveal('startup timeout'), 6000)
 
   window.on('closed', () => {
     if (mainWindow === window) mainWindow = null
+  })
+
+  // Alt+F4, the taskbar and the system shutdown menu all land here. Ask the
+  // renderer first so unsaved work is never discarded silently; the renderer
+  // answers by calling the approve-then-close IPC.
+  window.on('close', (event) => {
+    if (approvedCloses.has(window)) {
+      approvedCloses.delete(window)
+      return
+    }
+    // A window still loading has no project to lose and would never answer.
+    // A crashed renderer cannot answer either, so do not trap the user.
+    if (
+      rendererGone.has(window) ||
+      window.webContents.isDestroyed() ||
+      window.webContents.isLoadingMainFrame()
+    ) {
+      return
+    }
+    event.preventDefault()
+    window.webContents.send(IPC.windowCloseRequested)
+
+    // If React never mounted (or the renderer is wedged) nobody acknowledges
+    // the request. Let the second chance through rather than blocking Alt+F4
+    // forever; a live renderer acknowledges immediately.
+    const existing = closeGuards.get(window)
+    if (existing) clearTimeout(existing)
+    closeGuards.set(
+      window,
+      setTimeout(() => {
+        closeGuards.delete(window)
+        if (window.isDestroyed()) return
+        log('warn', 'Close request was not acknowledged; closing the window')
+        approvedCloses.add(window)
+        window.close()
+      }, CLOSE_ACK_TIMEOUT_MS)
+    )
   })
 
   window.on('maximize', () => broadcastState(window))

@@ -13,6 +13,7 @@ import {
   type IngestAssetsResult,
   type OpenedProject,
   type PeekedProject,
+  type RenameProjectResult,
   type SaveProjectAsRequest,
   type SaveProjectRequest,
   type SaveProjectResult,
@@ -42,7 +43,12 @@ const api: StudioApi = {
   window: {
     minimize: () => ipcRenderer.send(IPC.windowMinimize),
     toggleMaximize: () => ipcRenderer.send(IPC.windowToggleMaximize),
-    close: () => ipcRenderer.send(IPC.windowClose),
+    confirmClose: () => ipcRenderer.send(IPC.windowClose),
+    onCloseRequested: (listener) => {
+      const handler = (): void => listener()
+      ipcRenderer.on(IPC.windowCloseRequested, handler)
+      return () => ipcRenderer.removeListener(IPC.windowCloseRequested, handler)
+    },
     onStateChanged: (listener) => {
       const handler = (_event: Electron.IpcRendererEvent, state: WindowState): void => listener(state)
       ipcRenderer.on(IPC.windowStateChanged, handler)
@@ -69,6 +75,9 @@ const api: StudioApi = {
     create: (request: CreateProjectRequest) => invoke<OpenedProject>('project:create', request),
     open: (filePath: string) => invoke<OpenedProject>('project:open', filePath),
     peek: (filePath: string) => invoke<PeekedProject>('project:peek', filePath),
+    exists: (filePath: string) => invoke<boolean>('project:exists', filePath),
+    rename: (filePath: string, name: string) =>
+      invoke<RenameProjectResult>('project:rename', { filePath, name }),
     save: (request: SaveProjectRequest) => invoke<SaveProjectResult>('project:save', request),
     saveAs: (request: SaveProjectAsRequest) => invoke<SessionInfo>('project:save-as', request)
   },

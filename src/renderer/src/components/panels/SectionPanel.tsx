@@ -48,7 +48,7 @@ import {
 } from '@core/project/operations'
 import { createCamera, createShapeElement, createTextElement, nextElementName } from '@core/schema/factories'
 import type { ShapeKind } from '@core/schema/project'
-import { buildSchedule } from '@core/timeline/schedule'
+import { scheduleFor } from '@core/timeline/scheduleCache'
 import { assetUrl } from '../../lib/assets'
 import { seekToScene } from '../../hooks/usePlaybackClock'
 import { importAssetsFromDialog } from '../../services/importAssets'
@@ -107,7 +107,7 @@ function ScenesPanel(): JSX.Element | null {
   const activeSceneId = useEditorStore((state) => state.activeSceneId)
   const setActiveScene = useEditorStore((state) => state.setActiveScene)
   const askConfirm = useUiStore((state) => state.askConfirm)
-  const schedule = useMemo(() => (project ? buildSchedule(project) : null), [project])
+  const schedule = useMemo(() => (project ? scheduleFor(project) : null), [project])
 
   if (!project || !schedule) return null
 
@@ -577,16 +577,19 @@ function CameraPanel(): JSX.Element | null {
 
   const add = (): void => {
     const localTime = sceneLocalTime(project, scene)
-    const sceneSchedule = buildSchedule(project).scenes[project.scenes.indexOf(scene)]
+    const sceneSchedule = scheduleFor(project).scenes[project.scenes.indexOf(scene)]
     const duration = sceneSchedule?.duration ?? 1
     const base = scene.cameras.find((camera) => camera.startTime <= localTime) ?? scene.cameras[0]
     const frame = base ? cameraFrame(base, project.output) : null
+    const names = new Set(scene.cameras.map((camera) => camera.name))
+    let index = scene.cameras.length + 1
+    while (names.has(`Camera ${index}`)) index += 1
     const camera = createCamera({
       center: frame
         ? { x: frame.x + frame.width / 2, y: frame.y + frame.height / 2 }
         : { x: 0, y: 0 },
       viewWidth: frame ? frame.width * 0.75 : project.output.width,
-      name: `Camera ${scene.cameras.length + 1}`,
+      name: `Camera ${index}`,
       startTime: Math.max(0.1, Math.min(localTime, Math.max(0.1, duration - 0.1)))
     })
     apply('Add camera', (current) => addCamera(current, scene.id, camera), { coalesce: false })
@@ -640,40 +643,36 @@ function CameraPanel(): JSX.Element | null {
         {scene.cameras.map((camera) => (
           <div
             key={camera.id}
-            role="button"
-            tabIndex={0}
+            role="listitem"
             className={`panel-row camera-row ${camera.id === selectedCameraId ? 'active' : ''} ${
               camera.visible === false ? 'camera-row-hidden' : ''
             }`}
-            onClick={() => selectCamera(camera.id)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault()
-                selectCamera(camera.id)
-              }
-            }}
           >
-            <span className="panel-row-icon">
-              <CameraIcon size={15} />
-            </span>
-            <span className="panel-row-text">
-              <span className="panel-row-title">{camera.name}</span>
-              <span className="panel-row-sub">
-                {camera.visible === false ? 'Hidden · ' : ''}Starts at{' '}
-                {formatSeconds(camera.startTime)}
+            <button
+              className="camera-main"
+              title={`Select ${camera.name}`}
+              aria-pressed={camera.id === selectedCameraId}
+              onClick={() => selectCamera(camera.id)}
+            >
+              <span className="panel-row-icon">
+                <CameraIcon size={15} />
               </span>
-            </span>
-            <span className="panel-row-meta">{Math.round(camera.viewWidth)} px</span>
+              <span className="panel-row-text">
+                <span className="panel-row-title">{camera.name}</span>
+                <span className="panel-row-sub">
+                  {camera.visible === false ? 'Hidden · ' : ''}Starts at{' '}
+                  {formatSeconds(camera.startTime)}
+                </span>
+              </span>
+              <span className="panel-row-meta">{Math.round(camera.viewWidth)} px</span>
+            </button>
             <span className="camera-row-actions">
               <button
                 className="icon-btn"
                 title={camera.visible === false ? 'Show frame' : 'Hide frame'}
                 aria-label={camera.visible === false ? 'Show camera frame' : 'Hide camera frame'}
                 aria-pressed={camera.visible === false}
-                onClick={(event) => {
-                  event.stopPropagation()
-                  setCameraFlag(camera.id, { visible: camera.visible === false })
-                }}
+                onClick={() => setCameraFlag(camera.id, { visible: camera.visible === false })}
               >
                 {camera.visible === false ? <EyeOff size={12} /> : <Eye size={12} />}
               </button>
@@ -682,10 +681,7 @@ function CameraPanel(): JSX.Element | null {
                 title={camera.locked ? 'Unlock camera' : 'Lock camera'}
                 aria-label={camera.locked ? 'Unlock camera' : 'Lock camera'}
                 aria-pressed={camera.locked}
-                onClick={(event) => {
-                  event.stopPropagation()
-                  setCameraFlag(camera.id, { locked: !camera.locked })
-                }}
+                onClick={() => setCameraFlag(camera.id, { locked: !camera.locked })}
               >
                 {camera.locked ? <Lock size={12} /> : <LockOpen size={12} />}
               </button>

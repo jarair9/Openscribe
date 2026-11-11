@@ -19,6 +19,7 @@ import {
   Eye,
   EyeOff,
   FlipHorizontal,
+  Grab,
   Hand,
   HeartPulse,
   Image as ImageIcon,
@@ -59,7 +60,7 @@ import {
   updateCamera,
   updateElements
 } from '@core/project/operations'
-import { createCamera } from '@core/schema/factories'
+import { createCamera, DEFAULT_DURATION_BY_ENTRANCE } from '@core/schema/factories'
 import type {
   Camera as CameraSettings,
   Element,
@@ -72,8 +73,8 @@ import type {
   ShapeKind,
   TextElement
 } from '@core/schema/project'
-import { buildSchedule } from '@core/timeline/schedule'
-import { DEFAULT_ERASER_INSTRUMENT_ID, INSTRUMENTS } from '@core/instruments'
+import { scheduleFor } from '@core/timeline/scheduleCache'
+import { DEFAULT_ERASER_INSTRUMENT_ID, DEFAULT_DRAG_INSTRUMENT_ID, DRAG_INSTRUMENTS, INSTRUMENTS } from '@core/instruments'
 import {
   DEFAULT_STROKE_FONT_ID,
   STROKE_FONTS,
@@ -102,6 +103,7 @@ import { useUiStore } from '../../state/uiStore'
 import { AudioTrackInspector } from './AudioTrackInspector'
 import { FontPicker } from './FontPicker'
 import { HandTypePicker } from './HandTypePicker'
+import { DragDirectionPicker } from './DragDirectionPicker'
 import {
   ColorField,
   IconToggleRow,
@@ -123,6 +125,7 @@ import {
 const ENTRANCE_TILES: TileOption<EntranceType>[] = [
   { value: 'none', label: 'None', icon: <Ban size={17} />, title: 'No animation — appears instantly' },
   { value: 'handDraw', label: 'Hand', icon: <Hand size={17} />, title: 'Written by a hand holding the pen' },
+  { value: 'handDrag', label: 'Drag in', icon: <Grab size={17} />, title: 'An open hand carries the element in from outside the stage' },
   { value: 'penDraw', label: 'Pen', icon: <PenTool size={17} />, title: 'Drawn by a pen tip' },
   { value: 'draw', label: 'Draw', icon: <Pencil size={17} />, title: 'Ink appears with no instrument' },
   { value: 'fadeIn', label: 'Fade', icon: <Sun size={17} />, title: 'Fades in place' },
@@ -245,7 +248,7 @@ export function Inspector(): JSX.Element {
     ? project.scenes.find((candidate) => candidate.id === activeSceneId) ?? project.scenes[0] ?? null
     : null
   const sceneIndex = project && scene ? project.scenes.indexOf(scene) : -1
-  const schedule = useMemo(() => (project ? buildSchedule(project) : null), [project])
+  const schedule = useMemo(() => (project ? scheduleFor(project) : null), [project])
   const sceneSchedule = schedule && sceneIndex >= 0 ? schedule.scenes[sceneIndex] : undefined
   const localTime = sceneSchedule
     ? clamp(time - sceneSchedule.start, 0, sceneSchedule.duration)
@@ -724,7 +727,8 @@ function TextSection({
       </div>
       <p className="hint">
         Fonts draw real pen strokes. Add a Tegaki bundle (select its bundle.ts and glyphData.json)
-        or a saved stroke-font JSON.
+        or a saved stroke-font JSON. For an installed face like Arial, run
+        <code>npm run generate:stroke-font</code> and import the JSON it writes.
       </p>
       {uncovered.length > 0 ? (
         <p className="hint font-warning">
@@ -851,12 +855,35 @@ function EntranceSection({
   update: (label: string, updater: (element: Element) => Element) => void
 }): JSX.Element {
   const entrance = element.animation.entrance
+  const isDrag = entrance.type === 'handDrag'
   const drawStyle = entrance.type === 'handDraw' || entrance.type === 'penDraw'
+  const dragInstrumentId = DRAG_INSTRUMENTS.some(
+    (instrument) => instrument.id === entrance.instrumentId
+  )
+    ? entrance.instrumentId!
+    : DEFAULT_DRAG_INSTRUMENT_ID
   const patch = (value: Partial<Element['animation']['entrance']>): void => {
     update('Change entrance', (item) => ({
       ...item,
       animation: { ...item.animation, entrance: { ...item.animation.entrance, ...value } }
     }))
+  }
+  const chooseType = (type: EntranceType): void => {
+    if (type === 'none') {
+      patch({ type, duration: 0 })
+      return
+    }
+    if (type === 'handDrag') {
+      // Drag-in has its own pacing: the element is carried, not drawn.
+      patch({
+        type,
+        duration: DEFAULT_DURATION_BY_ENTRANCE.handDrag,
+        easing: 'easeOut',
+        instrumentId: dragInstrumentId
+      })
+      return
+    }
+    patch({ type })
   }
   return (
     <Section title="Entrance animation" hint="How the element arrives on the stage.">
@@ -865,9 +892,17 @@ function EntranceSection({
         value={entrance.type}
         options={ENTRANCE_TILES}
         columns={4}
-        onChange={(type) => patch(type === 'none' ? { type, duration: 0 } : { type })}
+        onChange={chooseType}
       />
-      {drawStyle ? (
+      {isDrag ? (
+        <HandTypePicker
+          label="Carrying hand"
+          subtitle="Pick the hand that carries this element onto the stage."
+          scope="drag"
+          value={dragInstrumentId}
+          onChange={(instrumentId) => patch({ instrumentId })}
+        />
+      ) : drawStyle ? (
         <HandTypePicker
           label={entrance.type === 'handDraw' ? 'Hand type' : 'Pen type'}
           value={entrance.instrumentId ?? INSTRUMENTS[0]!.id}
@@ -892,7 +927,12 @@ function EntranceSection({
         />
       </div>
       ) : null}
-      {drawStyle ? (
+      {isDrag ? (
+        <DragDirectionPicker
+          value={entrance.dragFrom}
+          onChange={(dragFrom) => patch({ dragFrom })}
+        />
+      ) : drawStyle ? (
         element.kind === 'image' || element.kind === 'shape' ? (
           <SelectField
             label="Reveal direction"

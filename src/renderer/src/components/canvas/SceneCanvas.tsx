@@ -22,9 +22,9 @@ import {
   type ResizeHandle
 } from '@core/geometry'
 import { updateCamera, updateElements } from '@core/project/operations'
-import type { Element as DocElement, Project, Scene } from '@core/schema/project'
+import type { Element as DocElement, Camera, Project, Scene } from '@core/schema/project'
 import type { Rect, Vec2 } from '@core/schema/primitives'
-import { buildSchedule } from '@core/timeline/schedule'
+import { scheduleFor } from '@core/timeline/scheduleCache'
 import { fitTextFrame } from './textMetrics'
 import { useEditorStore, type Tool } from '../../state/editorStore'
 import { usePlaybackStore } from '../../state/playbackStore'
@@ -169,7 +169,7 @@ export function SceneCanvas(): JSX.Element {
   const [panning, setPanning] = useState(false)
   const [dropActive, setDropActive] = useState(false)
 
-  const schedule = useMemo(() => (project ? buildSchedule(project) : null), [project])
+  const schedule = useMemo(() => (project ? scheduleFor(project) : null), [project])
   const sceneIndex = project ? project.scenes.findIndex((scene) => scene.id === activeSceneId) : -1
   const scene = project && sceneIndex >= 0 ? project.scenes[sceneIndex]! : null
   const sceneSchedule = schedule && sceneIndex >= 0 ? schedule.scenes[sceneIndex] : undefined
@@ -218,6 +218,7 @@ export function SceneCanvas(): JSX.Element {
         scribble: null,
         strokeDraw: state.strokeDraw === null ? null : 1,
         wipe: null,
+        drag: null,
         handStyle: null,
         instrumentId: null,
         erasing: false
@@ -841,41 +842,6 @@ export function SceneCanvas(): JSX.Element {
         onFit={fitView}
       />
 
-      {scene.elements.length === 0 ? (
-        <div className="canvas-empty" aria-hidden={dropActive}>
-          <span className="canvas-empty-title">This scene is a blank page.</span>
-          <span className="canvas-empty-hint">
-            Drop images, SVG or audio here, or start with a scene block.
-          </span>
-          <div className="canvas-empty-actions">
-            <button
-              className="btn btn-sm"
-              onClick={() => {
-                useEditorStore.getState().toggleSectionPanel('text')
-              }}
-            >
-              Add text
-            </button>
-            <button
-              className="btn btn-sm"
-              onClick={() => {
-                useEditorStore.getState().toggleSectionPanel('shapes')
-              }}
-            >
-              Add a shape
-            </button>
-            <button
-              className="btn btn-sm"
-              onClick={() => {
-                useEditorStore.getState().toggleSectionPanel('image')
-              }}
-            >
-              Import artwork
-            </button>
-          </div>
-        </div>
-      ) : null}
-
       {dropActive ? (
         <div className="canvas-drop">
           <span>Drop to import</span>
@@ -1000,28 +966,76 @@ function CameraChrome({
   onMove,
   onResize
 }: CameraChromeProps): JSX.Element {
+  const cleanupRef = useRef<(() => void) | null>(null)
+  const page = pageFrameOf(project.output)
+  const aspect = project.output.width / project.output.height
+
+  useEffect(
+    () => () => {
+      cleanupRef.current?.()
+      cleanupRef.current = null
+    },
+    []
+  )
+
+  const clampCameraCenter = (center: Vec2, viewWidth: number): Vec2 => {
+    const halfWidth = viewWidth / 2
+    const halfHeight = halfWidth / aspect
+    const minX = page.x + halfWidth
+    const maxX = page.x + page.width - halfWidth
+    const minY = page.y + halfHeight
+    const maxY = page.y + page.height - halfHeight
+    return {
+      x: minX > maxX ? page.x + page.width / 2 : clamp(center.x, minX, maxX),
+      y: minY > maxY ? page.y + page.height / 2 : clamp(center.y, minY, maxY)
+    }
+  }
+
+  const beginDrag = (
+    event: ReactPointerEvent,
+    target: Element,
+    move: (moveEvent: PointerEvent) => void
+  ): void => {
+    cleanupRef.current?.()
+    target.setPointerCapture?.(event.pointerId)
+    const cleanup = (): void => {
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', cleanup)
+      window.removeEventListener('pointercancel', cleanup)
+      if (target.hasPointerCapture?.(event.pointerId)) {
+        target.releasePointerCapture(event.pointerId)
+      }
+      if (cleanupRef.current === cleanup) cleanupRef.current = null
+    }
+    cleanupRef.current = cleanup
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', cleanup)
+    window.addEventListener('pointercancel', cleanup)
+  }
+
   const dragCamera = (
     event: ReactPointerEvent,
-    cameraId: string,
+    camera: Camera,
     startCenter: Vec2
   ): void => {
     event.stopPropagation()
     event.preventDefault()
-    onSelect(cameraId)
+    onSelect(camera.id)
     const start = toWorld(event.clientX, event.clientY)
     const move = (moveEvent: PointerEvent): void => {
       const world = toWorld(moveEvent.clientX, moveEvent.clientY)
-      onMove(cameraId, {
-        x: startCenter.x + (world.x - start.x),
-        y: startCenter.y + (world.y - start.y)
-      })
+      onMove(
+        camera.id,
+        clampCameraCenter(
+          {
+            x: startCenter.x + (world.x - start.x),
+            y: startCenter.y + (world.y - start.y)
+          },
+          camera.viewWidth
+        )
+      )
     }
-    const up = (): void => {
-      window.removeEventListener('pointermove', move)
-      window.removeEventListener('pointerup', up)
-    }
-    window.addEventListener('pointermove', move)
-    window.addEventListener('pointerup', up)
+    beginDrag(event, event.currentTarget, move)
   }
 
   const resizeCamera = (
@@ -1034,7 +1048,6 @@ function CameraChrome({
     event.stopPropagation()
     event.preventDefault()
     onSelect(cameraId)
-    const aspect = project.output.width / project.output.height
     const startHeight = startWidth / aspect
     const move = (moveEvent: PointerEvent): void => {
       const world = toWorld(moveEvent.clientX, moveEvent.clientY)
@@ -1061,26 +1074,21 @@ function CameraChrome({
           y: fixed.y + direction.y * width / aspect / 2
         }
       } else if (direction.x !== 0) {
-        // Side handle: the opposite edge stays anchored and the height follows
-        // the output aspect, so the frame expands and compresses evenly.
+        // Side handle: the opposite edge stays anchored. Clamp the signed
+        // distance so dragging past the anchor cannot flip the frame.
         const fixedX = startCenter.x - direction.x * startWidth / 2
-        width = Math.max(32, Math.abs(world.x - fixedX))
+        width = Math.max(32, (world.x - fixedX) * direction.x)
         center = { x: fixedX + direction.x * width / 2, y: startCenter.y }
       } else {
         // Top/bottom handle: same idea, driven by the vertical drag distance.
         const fixedY = startCenter.y - direction.y * startHeight / 2
-        width = Math.max(32, Math.abs(world.y - fixedY) * aspect)
+        width = Math.max(32, (world.y - fixedY) * direction.y * aspect)
         center = { x: startCenter.x, y: fixedY + direction.y * width / aspect / 2 }
       }
 
       onResize(cameraId, width, center)
     }
-    const up = (): void => {
-      window.removeEventListener('pointermove', move)
-      window.removeEventListener('pointerup', up)
-    }
-    window.addEventListener('pointermove', move)
-    window.addEventListener('pointerup', up)
+    beginDrag(event, event.currentTarget, move)
   }
 
   return (
@@ -1200,13 +1208,13 @@ function CameraChrome({
               height={frame.height}
               fill="none"
               stroke="transparent"
-              strokeWidth={Math.max(12 / zoom, 9)}
+              strokeWidth={12 / zoom}
               pointerEvents="stroke"
               style={{ cursor: movable ? 'move' : camera.locked ? 'not-allowed' : 'pointer' }}
               onPointerDown={(event) => {
                 event.stopPropagation()
                 onSelect(camera.id)
-                if (movable) dragCamera(event, camera.id, camera.center)
+                if (movable) dragCamera(event, camera, camera.center)
               }}
             >
               <title>
@@ -1260,7 +1268,7 @@ function CameraChrome({
               onPointerDown={(event) => {
                 event.stopPropagation()
                 onSelect(camera.id)
-                if (movable) dragCamera(event, camera.id, camera.center)
+                if (movable) dragCamera(event, camera, camera.center)
               }}
               style={{ cursor: movable ? 'move' : camera.locked ? 'not-allowed' : 'pointer' }}
             >

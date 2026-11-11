@@ -1,6 +1,6 @@
 import { useMemo, useState, type JSX } from 'react'
 import { Check, ChevronDown } from 'lucide-react'
-import { ERASER_INSTRUMENTS, INSTRUMENTS, getInstrument, type InstrumentDefinition } from '@core/instruments'
+import { DRAG_INSTRUMENTS, ERASER_INSTRUMENTS, INSTRUMENTS, getDragInstrument, getInstrument, type InstrumentDefinition } from '@core/instruments'
 import { libraryAssetUrl } from '../../lib/assets'
 import { Dialog } from '../dialogs/Dialog'
 
@@ -38,8 +38,9 @@ export function HandTypePicker({
   label?: string
   /** The picker is shared by the writer and the eraser, and they are not the same question. */
   subtitle?: string
-  /** 'erasers' narrows the library to the hands that clean the board. */
-  scope?: 'all' | 'erasers'
+  /** 'erasers' narrows the library to the hands that clean the board; 'drag'
+   *  narrows it to the hands that can carry an element in. */
+  scope?: 'all' | 'erasers' | 'drag'
   value: string
   onChange: (id: string) => void
 }): JSX.Element {
@@ -47,8 +48,13 @@ export function HandTypePicker({
   const [group, setGroup] = useState('All')
   const [query, setQuery] = useState('')
 
-  const catalog = scope === 'erasers' ? ERASER_INSTRUMENTS : INSTRUMENTS
-  const selected = getInstrument(value)
+  const catalog =
+    scope === 'erasers'
+      ? ERASER_INSTRUMENTS
+      : scope === 'drag'
+        ? DRAG_INSTRUMENTS
+        : INSTRUMENTS
+  const selected = scope === 'drag' ? getDragInstrument(value) : getInstrument(value)
   const groups = useMemo(() => {
     const names = [...new Set(catalog.map(groupOf))].sort((a, b) => a.localeCompare(b))
     return ['All', ...names.filter((name) => name !== 'All')]
@@ -117,7 +123,13 @@ export function HandTypePicker({
           <div className="asset-toolbar">
             <input
               className="text-input"
-              placeholder={scope === 'erasers' ? 'Search erasers and wipers' : 'Search hands and pens'}
+              placeholder={
+                scope === 'erasers'
+                  ? 'Search erasers and wipers'
+                  : scope === 'drag'
+                    ? 'Search carrying hands'
+                    : 'Search hands and pens'
+              }
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
@@ -138,7 +150,11 @@ export function HandTypePicker({
 
           {visible.length === 0 ? (
             <div className="recent-empty">
-              {scope === 'erasers' ? 'No eraser matches this search.' : 'No hand or pen matches this search.'}
+              {scope === 'erasers'
+                ? 'No eraser matches this search.'
+                : scope === 'drag'
+                  ? 'No carrying hand matches this search.'
+                  : 'No hand or pen matches this search.'}
             </div>
           ) : (
             <div className="hand-picker-grid">

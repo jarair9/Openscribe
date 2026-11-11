@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type JSX, type RefObject } from 'react'
 import { evaluateScene } from '@core/animation/scene'
 import type { Project } from '@core/schema/project'
-import { buildSchedule, sceneAt, type ProjectSchedule } from '@core/timeline/schedule'
+import { sceneAt, type ProjectSchedule } from '@core/timeline/schedule'
+import { scheduleFor } from '@core/timeline/scheduleCache'
 import { drawablePathKey, InstrumentOverlay } from '../canvas/InstrumentOverlay'
 import { findActiveInstrument } from '../canvas/instrumentState'
 import { SceneArtwork } from '../canvas/SceneArtwork'
@@ -25,7 +26,7 @@ export function useExportStage(
   renderFrame(time: number): Promise<void>
   svgRef: RefObject<SVGSVGElement | null>
 } {
-  const schedule = useMemo(() => (project ? buildSchedule(project) : EMPTY_SCHEDULE), [project])
+  const schedule = useMemo(() => (project ? scheduleFor(project) : EMPTY_SCHEDULE), [project])
   const [tick, setTick] = useState({ time: 0, seq: 0 })
   const svgRef = useRef<SVGSVGElement | null>(null)
   const pathRefs = useRef<Map<string, SVGPathElement>>(new Map())

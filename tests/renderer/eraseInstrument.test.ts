@@ -28,7 +28,8 @@ function instrumented(localTime: number, instrumentId: string | null) {
         easing: 'linear',
         direction: 'right',
         instrumentId: null,
-        handedness: 'right'
+        handedness: 'right',
+        dragFrom: 9
       },
       emphasis: { type: 'none', duration: 0, loops: 1, intensity: 0, delay: 0 },
       exit: {

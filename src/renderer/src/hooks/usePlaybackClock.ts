@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { buildSchedule } from '@core/timeline/schedule'
+import { scheduleFor } from '@core/timeline/scheduleCache'
 import { usePlaybackStore } from '../state/playbackStore'
 import { useProjectStore } from '../state/projectStore'
 
@@ -52,7 +52,7 @@ export function togglePlayback(duration: number): void {
 export function seekToScene(sceneId: string): void {
   const project = useProjectStore.getState().project
   if (!project) return
-  const schedule = buildSchedule(project)
+  const schedule = scheduleFor(project)
   const scene = schedule.scenes.find((entry) => entry.sceneId === sceneId)
   if (!scene) return
   usePlaybackStore.getState().pause()

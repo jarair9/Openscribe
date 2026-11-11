@@ -24,6 +24,8 @@ interface ProjectStoreState {
   saving: boolean
   saveError: string | null
   revision: number
+  /** Bumped on every open/close so stale async saves cannot touch a new project. */
+  openGeneration: number
   history: HistoryState
   status: string | null
   transaction: string | null
@@ -36,8 +38,14 @@ interface ProjectStoreState {
   undo(): void
   redo(): void
   markSaving(): void
-  markSaved(savedAt: string, session?: SessionInfo, revisionAtSave?: number, auto?: boolean): void
-  markSaveFailed(message: string): void
+  markSaved(
+    savedAt: string,
+    session?: SessionInfo,
+    revisionAtSave?: number,
+    auto?: boolean,
+    generationAtSave?: number
+  ): void
+  markSaveFailed(message: string, generationAtSave?: number): void
   updateSession(session: SessionInfo): void
   setStatus(status: string | null): void
 }
@@ -53,6 +61,7 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
   saving: false,
   saveError: null,
   revision: 0,
+  openGeneration: 0,
   history: createHistory(150),
   status: null,
   transaction: null,
@@ -72,6 +81,7 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
       saving: false,
       saveError: null,
       revision: 0,
+      openGeneration: get().openGeneration + 1,
       history: createHistory(150),
       status: null,
       transaction: null
@@ -90,6 +100,7 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
       saving: false,
       saveError: null,
       revision: 0,
+      openGeneration: get().openGeneration + 1,
       history: createHistory(150),
       status: null,
       transaction: null
@@ -171,19 +182,22 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
     set({ saving: true, saveError: null })
   },
 
-  markSaved(savedAt, session, revisionAtSave, auto = false) {
-    const stale = revisionAtSave !== undefined && revisionAtSave !== get().revision
+  markSaved(savedAt, session, revisionAtSave, auto = false, generationAtSave) {
+    const current = get()
+    if (generationAtSave !== undefined && generationAtSave !== current.openGeneration) return
+    const stale = revisionAtSave !== undefined && revisionAtSave !== current.revision
     set({
       dirty: stale,
       savedAt,
-      lastAutoSaveAt: auto ? savedAt : get().lastAutoSaveAt,
+      lastAutoSaveAt: auto ? savedAt : current.lastAutoSaveAt,
       saving: false,
       saveError: null,
-      session: session ?? get().session
+      session: session ?? current.session
     })
   },
 
-  markSaveFailed(message) {
+  markSaveFailed(message, generationAtSave) {
+    if (generationAtSave !== undefined && generationAtSave !== get().openGeneration) return
     set({ saving: false, saveError: message })
   },
 

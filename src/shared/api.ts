@@ -13,6 +13,7 @@ import type {
   LibraryItem,
   OpenedProject,
   PeekedProject,
+  RenameProjectResult,
   SaveProjectAsRequest,
   SaveProjectRequest,
   SaveProjectResult,
@@ -33,7 +34,9 @@ export interface StudioApi {
   window: {
     minimize(): void
     toggleMaximize(): void
-    close(): void
+    /** Close after the renderer has already confirmed. */
+    confirmClose(): void
+    onCloseRequested(listener: () => void): () => void
     onStateChanged(listener: (state: WindowState) => void): () => void
   }
   dialogs: {
@@ -56,6 +59,8 @@ export interface StudioApi {
     create(request: CreateProjectRequest): Promise<OpenedProject>
     open(filePath: string): Promise<OpenedProject>
     peek(filePath: string): Promise<PeekedProject>
+    exists(filePath: string): Promise<boolean>
+    rename(filePath: string, name: string): Promise<RenameProjectResult>
     save(request: SaveProjectRequest): Promise<SaveProjectResult>
     saveAs(request: SaveProjectAsRequest): Promise<SessionInfo>
   }

@@ -81,6 +81,7 @@ export function createAnimation(overrides: AnimationOverrides = {}): Animation {
       direction: 'right',
       instrumentId: DEFAULT_INSTRUMENT_ID,
       handedness: 'right',
+      dragFrom: 9,
       ...overrides.entrance
     },
     emphasis: {
@@ -112,11 +113,12 @@ const DEFAULT_ENTRANCE_BY_KIND: Record<AssetKindName | 'text' | 'shape', Entranc
   shape: 'handDraw'
 }
 
-const DEFAULT_DURATION_BY_ENTRANCE: Record<EntranceType, number> = {
+export const DEFAULT_DURATION_BY_ENTRANCE: Record<EntranceType, number> = {
   none: 0,
   draw: 2.2,
   handDraw: 2.4,
   penDraw: 2.4,
+  handDrag: 1.2,
   fadeIn: 0.8,
   moveIn: 0.8,
   popIn: 0.6,

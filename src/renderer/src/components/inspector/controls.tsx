@@ -205,13 +205,15 @@ export function TextField({
   value,
   onChange,
   placeholder,
-  disabled
+  disabled,
+  maxLength
 }: {
   label: string
   value: string
   onChange: (value: string) => void
   placeholder?: string
   disabled?: boolean
+  maxLength?: number
 }): JSX.Element {
   return (
     <label className="field">
@@ -221,7 +223,10 @@ export function TextField({
         value={value}
         placeholder={placeholder}
         disabled={disabled}
-        onChange={(event) => onChange(event.target.value)}
+        maxLength={maxLength}
+        onChange={(event) =>
+          onChange(maxLength ? event.target.value.slice(0, maxLength) : event.target.value)
+        }
       />
     </label>
   )

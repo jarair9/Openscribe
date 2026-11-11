@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { canRedo, canUndo } from '@core/project/history'
 import { renameProject } from '@core/project/operations'
+import { PROJECT_NAME_MAX } from '@core/schema/project'
 import { PRODUCT } from '@shared/product'
 import { useWindowState } from '../../hooks/useWindowState'
 import {
@@ -34,7 +35,7 @@ import {
 import { useEditorStore } from '../../state/editorStore'
 import { useProjectStore } from '../../state/projectStore'
 import { useUiStore } from '../../state/uiStore'
-import brandLogo from '../../../../assets/Openscribe.png'
+import brandLogo from '../../../../assets/openscribe-128.png'
 
 type CloseMenu = () => void
 
@@ -65,7 +66,7 @@ export function TitleBar(): JSX.Element {
 
   const commitName = (): void => {
     if (!project) return
-    const trimmed = name.trim()
+    const trimmed = name.trim().slice(0, PROJECT_NAME_MAX)
     if (!trimmed || trimmed === project.name) {
       setName(project.name)
       return
@@ -88,9 +89,9 @@ export function TitleBar(): JSX.Element {
         {project ? (
           <button
             className="brand-button"
-            title="Double-click to back to projects (Ctrl+Shift+H)"
+            title="Back to projects (Ctrl+Shift+H)"
             aria-label="Back to projects"
-            onDoubleClick={() => void returnToProjects()}
+            onClick={() => void returnToProjects()}
           >
             {brandInner}
           </button>
@@ -300,7 +301,8 @@ export function TitleBar(): JSX.Element {
             className="titlebar-title"
             value={name}
             aria-label="Project name"
-            onChange={(event) => setName(event.target.value)}
+            maxLength={PROJECT_NAME_MAX}
+            onChange={(event) => setName(event.target.value.slice(0, PROJECT_NAME_MAX))}
             onBlur={commitName}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {

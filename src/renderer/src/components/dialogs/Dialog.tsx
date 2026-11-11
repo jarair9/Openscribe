@@ -13,6 +13,10 @@ interface DialogProps {
 const FOCUSABLE =
   'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
 
+/** Only the topmost dialog may react to Escape or trap Tab. */
+const dialogStack: number[] = []
+let nextDialogId = 1
+
 export function Dialog({
   title,
   subtitle,
@@ -22,6 +26,17 @@ export function Dialog({
   onClose
 }: DialogProps): JSX.Element {
   const surfaceRef = useRef<HTMLDivElement | null>(null)
+  const instanceId = useRef(0)
+  if (instanceId.current === 0) instanceId.current = nextDialogId++
+
+  useEffect(() => {
+    const id = instanceId.current
+    dialogStack.push(id)
+    return () => {
+      const index = dialogStack.indexOf(id)
+      if (index !== -1) dialogStack.splice(index, 1)
+    }
+  }, [])
 
   useEffect(() => {
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
@@ -32,12 +47,13 @@ export function Dialog({
     ;(first ?? surface)?.focus()
 
     return () => {
-      previous?.focus()
+      if (previous?.isConnected) previous.focus()
     }
   }, [])
 
   useEffect(() => {
     const handler = (event: KeyboardEvent): void => {
+      if (dialogStack[dialogStack.length - 1] !== instanceId.current) return
       if (event.key === 'Escape') {
         event.stopPropagation()
         onClose()

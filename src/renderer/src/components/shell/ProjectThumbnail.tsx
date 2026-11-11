@@ -1,6 +1,6 @@
-import { useEffect, useState, type JSX } from 'react'
+import { useEffect, useMemo, useState, type JSX } from 'react'
 import type { PeekedProject } from '@shared/ipc'
-import { buildSchedule } from '@core/timeline/schedule'
+import { scheduleFor } from '@core/timeline/scheduleCache'
 import { scenePreview } from '../../lib/scenePreview'
 import { SceneArtwork } from '../canvas/SceneArtwork'
 
@@ -35,35 +35,52 @@ export function ProjectThumbnail({
     }
   }, [filePath])
 
+  const preview = useMemo(() => {
+    if (!peeked) return null
+    const scene = peeked.document.scenes[0]
+    if (!scene) return null
+    try {
+      return {
+        scene,
+        visual: scenePreview(peeked.document, scene, 0, scheduleFor(peeked.document))
+      }
+    } catch {
+      return null
+    }
+  }, [peeked])
+
   if (failed) return <div className="project-thumb project-thumb-fallback" aria-hidden="true" />
   if (!peeked) return <div className="project-thumb project-thumb-loading" aria-hidden="true" />
 
-  const scene = peeked.document.scenes[0]
-  let visual = null
-  if (scene) {
-    try {
-      visual = scenePreview(peeked.document, scene, 0, buildSchedule(peeked.document))
-    } catch {
-      visual = null
-    }
-  }
+  const scene = preview?.scene
+  const visual = preview?.visual
   if (!scene || !visual) return <div className="project-thumb project-thumb-fallback" aria-hidden="true" />
 
   const frame = visual.camera.frame
+  // An empty scene renders as a blank page, which is easy to confuse with a
+  // broken project. Label it so the card still says something.
+  const empty = scene.elements.length === 0
   return (
-    <svg
-      className="project-thumb"
-      viewBox={`${frame.x} ${frame.y} ${frame.width} ${frame.height}`}
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-    >
-      <SceneArtwork
-        project={peeked.document}
-        scene={scene}
-        visual={visual}
-        token={peeked.assetToken}
-        idPrefix={idPrefix}
-      />
-    </svg>
+    <>
+      <svg
+        className="project-thumb"
+        viewBox={`${frame.x} ${frame.y} ${frame.width} ${frame.height}`}
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <SceneArtwork
+          project={peeked.document}
+          scene={scene}
+          visual={visual}
+          token={peeked.assetToken}
+          idPrefix={idPrefix}
+        />
+      </svg>
+      {empty ? (
+        <span className="project-thumb-empty" aria-hidden="true">
+          Empty scene
+        </span>
+      ) : null}
+    </>
   )
 }

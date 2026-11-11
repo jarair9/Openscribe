@@ -8,7 +8,7 @@ describe('text write reveal', () => {
       name: 'Writing test',
       frame: { x: 10, y: 20, width: 400, height: 140 },
       animation: {
-        entrance: { type: 'handDraw', duration: 2, easing: 'linear', direction: 'right', instrumentId: null, handedness: 'right' },
+        entrance: { type: 'handDraw', duration: 2, easing: 'linear', direction: 'right', instrumentId: null, handedness: 'right', dragFrom: 9 },
         emphasis: { type: 'none', duration: 0.8, loops: 1, intensity: 0, delay: 0 },
         exit: { type: 'none', duration: 0, easing: 'linear', direction: 'right', delay: 0, instrumentId: null },
         pauseAfter: 0
@@ -30,7 +30,7 @@ describe('text write reveal', () => {
       name: 'Erase test',
       frame: { x: 10, y: 20, width: 400, height: 140 },
       animation: {
-        entrance: { type: 'handDraw', duration: 2, easing: 'linear', direction: 'right', instrumentId: null, handedness: 'right' },
+        entrance: { type: 'handDraw', duration: 2, easing: 'linear', direction: 'right', instrumentId: null, handedness: 'right', dragFrom: 9 },
         emphasis: { type: 'none', duration: 0.8, loops: 1, intensity: 0, delay: 0 },
         exit: { type: 'erase', duration: 1, easing: 'linear', direction: 'down', delay: 0, instrumentId: null },
         pauseAfter: 0

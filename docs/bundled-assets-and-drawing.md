@@ -10,6 +10,28 @@ Hand instrument presets are generated from `open-assets/hands/hands-metadata.jso
 
 The source metadata identifies the hand catalog author as Sparkol. The catalog files are user-supplied assets; this project does not claim authorship of them. Review their provenance and redistribution terms before publishing an installer containing the full library. The current packaging configuration copies the supplied folders as-is (about 325 MB across the requested categories).
 
+## Extracting strokes from an installed font
+
+The stroke faces in `fonts/bundles` are the only ones the app ships. Any other
+font already installed on the machine — Arial, Calibri, Cambria, Georgia,
+Segoe UI, Times New Roman, Verdana — can be turned into a stroke face locally
+with the vendored Tegaki generator:
+
+```bash
+npm run generate:stroke-font -- --font "C:/Windows/Fonts/arial.ttf" --family Arial
+```
+
+The command traces the font outline with Tegaki's geometry pipeline, writes
+`out/stroke-fonts/arial.json`, and prints the glyph count. Import that JSON in
+the editor with **Text → Add custom font**; the face is registered for this
+machine and remembered in local storage. `--chars` narrows the character set,
+`--pipeline raster` skeletonizes a bitmap instead, and `--debug` keeps Tegaki's
+per-glyph intermediates.
+
+`out/` is gitignored deliberately: stroke data derived from a proprietary face
+is fine to use locally but must not be committed or redistributed. Arial is
+therefore not converted into `fonts/bundles/`, unlike the OFL faces.
+
 ## Drawing and erasing behavior
 
 - SVG hand and pen entrances share deterministic path sampling with the artwork reveal. The supplied hand PNGs are only displayed by the playback instrument overlay.

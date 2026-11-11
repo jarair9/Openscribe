@@ -1,5 +1,9 @@
 import { clamp, clamp01, ease, lerp } from '../math'
-import { getEraserInstrument, instrumentHandedness } from '../instruments'
+import {
+  getDragInstrument,
+  getEraserInstrument,
+  instrumentHandedness
+} from '../instruments'
 import { mapRect } from './scribble'
 import { strokeFontForElement } from '../text/strokeFont'
 import type { Drawable, Element } from '../schema/project'
@@ -17,6 +21,18 @@ export interface DrawableState {
 export interface WipeState {
   progress: number
   direction: Direction
+}
+
+/** A hand carrying the element in from outside the stage. */
+export interface DragState {
+  /** Clock hour the element is carried in from (12 top, 3 right, 6 bottom, 9 left). */
+  from: number
+  /** 0..1 eased element travel: off-stage at 0, landed at 1. */
+  progress: number
+  /** 0..1 hand withdrawal after the element lands. */
+  release: number
+  /** World distance the hand retreats along the entry vector. */
+  travel: number
 }
 
 export interface ElementVisualState {
@@ -40,6 +56,8 @@ export interface ElementVisualState {
   strokeDraw: number | null
   /** Present for directional reveal entrances. */
   wipe: WipeState | null
+  /** Present while a handDrag carries the element onto the stage. */
+  drag: DragState | null
   handStyle: 'handDraw' | 'penDraw' | null
   instrumentId: string | null
   /** Which hand the instrument artwork is, as photographed. */
@@ -64,6 +82,7 @@ export function hiddenElementState(elementId: string): ElementVisualState {
     scribble: null,
     strokeDraw: null,
     wipe: null,
+    drag: null,
     handStyle: null,
     instrumentId: null,
     handedness: 'right',
@@ -87,6 +106,42 @@ function directionVector(direction: Direction): Vec2 {
   }
 }
 
+/** Unit vector pointing at the clock position the element enters from. */
+export function dragVector(hour: number): Vec2 {
+  const radians = (hour * Math.PI) / 6
+  const x = Math.sin(radians)
+  const y = -Math.cos(radians)
+  // Keep the cardinal hours exactly axis-aligned; sin(π) is not quite zero.
+  return {
+    x: Math.abs(x) < 1e-9 ? 0 : x,
+    y: Math.abs(y) < 1e-9 ? 0 : y
+  }
+}
+
+/**
+ * How far along `vector` the frame has to travel to be fully off-camera.
+ * Clearing either axis is enough, so the shortest of the two is used — a
+ * diagonal entry then hugs the corner instead of starting miles away.
+ */
+function dragTravel(frame: Rect, cameraFrame: Rect, vector: Vec2, margin: number): number {
+  const distances: number[] = []
+  if (vector.x > 1e-6) {
+    // Entering from the right: the element's left edge must clear the camera.
+    distances.push((cameraFrame.x + cameraFrame.width - frame.x + margin) / vector.x)
+  } else if (vector.x < -1e-6) {
+    // From the left: its right edge must clear the camera.
+    distances.push((frame.x + frame.width - cameraFrame.x + margin) / -vector.x)
+  }
+  if (vector.y > 1e-6) {
+    // From below: its top edge must clear the camera.
+    distances.push((cameraFrame.y + cameraFrame.height - frame.y + margin) / vector.y)
+  } else if (vector.y < -1e-6) {
+    // From above: its bottom edge must clear the camera.
+    distances.push((frame.y + frame.height - cameraFrame.y + margin) / -vector.y)
+  }
+  return Math.max(160, Math.min(...distances))
+}
+
 export interface DrawProgress {
   states: DrawableState[]
   activeId: string | null
@@ -96,6 +151,9 @@ export interface DrawProgress {
 
 /** Share of a drawable's window spent outlining before the coloring pass. */
 const STROKE_SHARE = 0.6
+
+/** Share of a drag-in spent carrying; the rest is the hand pulling away. */
+const DRAG_CARRY_SHARE = 0.72
 
 /**
  * Distribute a single entrance progress across drawables by weight.
@@ -187,6 +245,7 @@ export function evaluateElement(
   let scribble: { progress: number } | null = null
   let strokeDraw: number | null = null
   let wipe: WipeState | null = null
+  let drag: DragState | null = null
   let handStyle: 'handDraw' | 'penDraw' | null = null
   let instrumentId: string | null = null
   let handedness: 'right' | 'left' = entrance.handedness
@@ -274,6 +333,42 @@ export function evaluateElement(
         scale = lerp(0.82, 1, eased)
         opacity = element.opacity * eased
         break
+      case 'handDrag': {
+        // The element stays whole and simply rides in with the hand, exactly
+        // as VideoScribe's drag-in reads: no wipe, no partial ink.
+        const vector = dragVector(entrance.dragFrom)
+        // A rotated frame needs its rotated bounds cleared, not the raw box.
+        const radians = (element.rotation * Math.PI) / 180
+        const cos = Math.abs(Math.cos(radians))
+        const sin = Math.abs(Math.sin(radians))
+        const bounds: Rect = {
+          x: frame.x + (frame.width - (frame.width * cos + frame.height * sin)) / 2,
+          y: frame.y + (frame.height - (frame.width * sin + frame.height * cos)) / 2,
+          width: frame.width * cos + frame.height * sin,
+          height: frame.width * sin + frame.height * cos
+        }
+        const distance = dragTravel(bounds, cameraFrame, vector, 48)
+        // The element is released before the entrance ends, leaving the hand a
+        // beat to withdraw along the path it came in on.
+        const carry = clamp01(entranceProgress / DRAG_CARRY_SHARE)
+        const carried = ease(entrance.easing, carry)
+        translate = {
+          x: vector.x * distance * (1 - carried),
+          y: vector.y * distance * (1 - carried)
+        }
+        handStyle = 'handDraw'
+        // Old projects may name a pen here; only carrying hands may render.
+        instrumentId = getDragInstrument(entrance.instrumentId).id
+        // A hand reaching in from the left is mirrored so the palm leads.
+        handedness = vector.x < -0.25 ? 'left' : 'right'
+        drag = {
+          from: entrance.dragFrom,
+          progress: carried,
+          release: clamp01((entranceProgress - DRAG_CARRY_SHARE) / (1 - DRAG_CARRY_SHARE)),
+          travel: distance
+        }
+        break
+      }
       case 'reveal':
         wipe = { progress: eased, direction: entrance.direction }
         break
@@ -366,6 +461,7 @@ export function evaluateElement(
     scribble,
     strokeDraw,
     wipe,
+    drag,
     handStyle,
     instrumentId,
     handedness,

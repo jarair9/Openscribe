@@ -1,6 +1,7 @@
 import { useState, type JSX } from 'react'
 import { FolderOpen } from 'lucide-react'
 import { OUTPUT_PRESETS, OUTPUT_RESOLUTIONS, type AspectPreset } from '@core/schema/factories'
+import { PROJECT_NAME_MAX } from '@core/schema/project'
 import { createNewProject } from '../../services/projectFiles'
 import { useProjectStore } from '../../state/projectStore'
 import { useUiStore } from '../../state/uiStore'
@@ -11,6 +12,7 @@ export function NewProjectDialog({ onClose }: { onClose: () => void }): JSX.Elem
   const dirty = useProjectStore((state) => state.dirty)
   const hasProject = useProjectStore((state) => Boolean(state.project))
   const askConfirm = useUiStore((state) => state.askConfirm)
+  const toast = useUiStore((state) => state.toast)
 
   const [name, setName] = useState('Untitled project')
   const [parentDir, setParentDir] = useState('')
@@ -64,7 +66,12 @@ export function NewProjectDialog({ onClose }: { onClose: () => void }): JSX.Elem
         </>
       }
     >
-      <TextField label="Project name" value={name} onChange={setName} />
+      <TextField
+        label="Project name"
+        value={name}
+        onChange={setName}
+        maxLength={PROJECT_NAME_MAX}
+      />
 
       <div className="field">
         <span className="field-label">Location</span>
@@ -79,9 +86,14 @@ export function NewProjectDialog({ onClose }: { onClose: () => void }): JSX.Elem
             className="btn"
             style={{ flex: 'none' }}
             onClick={() => {
-              void window.api.dialogs.pickParentDir().then((dir) => {
-                if (dir) setParentDir(dir)
-              })
+              void window.api.dialogs
+                .pickParentDir()
+                .then((dir) => {
+                  if (dir) setParentDir(dir)
+                })
+                .catch((error: unknown) => {
+                  toast(error instanceof Error ? error.message : 'Could not open that folder.', 'error')
+                })
             }}
           >
             <FolderOpen size={13} /> Browse

@@ -11,12 +11,21 @@ import {
 } from 'node:fs'
 import { basename, dirname, extname, join, normalize, resolve } from 'node:path'
 import { migrateProject, validateProject } from '@core/project/validate'
-import { parseProject, type Project } from '@core/schema/project'
+import { PROJECT_NAME_MAX, parseProject, type Project } from '@core/schema/project'
 import { PRODUCT } from '@shared/product'
 import { registerSession, type ProjectSession } from './sessions'
 
 const MAX_PROJECT_BYTES = 64 * 1024 * 1024
 const WINDOWS_RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i
+const PEEK_CACHE_LIMIT = 32
+
+interface PeekCacheEntry {
+  key: string
+  document: Project
+}
+
+/** Parsed preview documents, keyed by path and invalidated by mtime + size. */
+const peekCache = new Map<string, PeekCacheEntry>()
 
 export class ProjectStoreError extends Error {}
 
@@ -129,16 +138,17 @@ export interface OpenedProjectFile {
   migrated: boolean
 }
 
-export function openProject(filePath: string): OpenedProjectFile {
-  if (typeof filePath !== 'string' || !filePath) fail('No project file path was provided.')
-  const full = resolve(filePath)
+function checkProjectFile(full: string): { size: number; mtimeMs: number } {
   const info = statSync(full, { throwIfNoEntry: false })
   if (!info || !info.isFile()) fail('The project file could not be found.')
   if (info.size > MAX_PROJECT_BYTES) fail('The project file is too large to open.')
   if (extname(full).toLowerCase() !== `.${PRODUCT.projectExtension}`) {
     fail(`“${basename(full)}” is not an ${PRODUCT.projectExtension} project.`)
   }
+  return { size: info.size, mtimeMs: info.mtimeMs }
+}
 
+function readProjectDocument(full: string): { document: Project; migrated: boolean } {
   let raw: unknown
   try {
     raw = JSON.parse(readFileSync(full, 'utf8').replace(/^\uFEFF/, ''))
@@ -161,12 +171,61 @@ export function openProject(filePath: string): OpenedProjectFile {
     fail(`The project is structurally invalid. ${summary}`)
   }
 
+  return { document: parsed.project, migrated: migration.migrated }
+}
+
+export function openProject(filePath: string): OpenedProjectFile {
+  if (typeof filePath !== 'string' || !filePath) fail('No project file path was provided.')
+  const full = resolve(filePath)
+  checkProjectFile(full)
+  const { document, migrated } = readProjectDocument(full)
   ensureAssetsDir(full)
   return {
     session: registerSession(full),
-    document: parsed.project,
-    migrated: migration.migrated
+    document,
+    migrated
   }
+}
+
+/**
+ * Read-only preview used by the welcome screen. Reuses the parsed document when
+ * the file has not changed, so re-entering the picker does not re-validate
+ * every recent project on the main thread.
+ */
+export function peekProject(filePath: string): { session: ProjectSession; document: Project } {
+  if (typeof filePath !== 'string' || !filePath) fail('No project file path was provided.')
+  const full = resolve(filePath)
+  const info = checkProjectFile(full)
+  const key = `${info.mtimeMs}:${info.size}`
+
+  const cached = peekCache.get(full)
+  if (cached && cached.key === key) {
+    peekCache.delete(full)
+    peekCache.set(full, cached)
+    return { session: registerSession(full), document: cached.document }
+  }
+
+  const { document } = readProjectDocument(full)
+  peekCache.set(full, { key, document })
+  if (peekCache.size > PEEK_CACHE_LIMIT) {
+    const oldest = peekCache.keys().next().value
+    if (oldest !== undefined) peekCache.delete(oldest)
+  }
+  return { session: registerSession(full), document }
+}
+
+/** Rename in one read-modify-write so an external edit cannot slip in between. */
+export function renameProject(filePath: string, name: string): { name: string } {
+  const full = normalizeProjectPath(filePath)
+  const opened = openProject(full)
+  const trimmed = name.trim().slice(0, PROJECT_NAME_MAX)
+  if (!trimmed) fail('A project name is required.')
+  if (trimmed === opened.document.name) return { name: trimmed }
+
+  const next: Project = { ...opened.document, name: trimmed }
+  assertSavable(next)
+  writeAtomically(full, serialize(next, new Date().toISOString()))
+  return { name: trimmed }
 }
 
 export function saveProject(filePath: string, document: Project): { savedAt: string } {

@@ -1,5 +1,7 @@
 import type { JSX } from 'react'
 import { CircleCheck, Info, TriangleAlert, X } from 'lucide-react'
+import { PRODUCT } from '@shared/product'
+import brandLogo from '../../../../assets/openscribe-128.png'
 import { useUiStore } from '../../state/uiStore'
 
 export function Overlays(): JSX.Element {
@@ -14,6 +16,12 @@ export function Overlays(): JSX.Element {
       {loading ? (
         <div className="loading-scrim" role="status" aria-live="polite" aria-busy="true">
           <div className="loading-card">
+            <div className="loading-brand">
+              <span className="loading-logo">
+                <img src={brandLogo} alt="" />
+              </span>
+              <span className="loading-brand-name">{PRODUCT.name}</span>
+            </div>
             <span className="loading-label">{loading.title}</span>
             <div className="loading-track" aria-hidden="true">
               <div className="loading-bar" />

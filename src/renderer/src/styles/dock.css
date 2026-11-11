@@ -105,15 +105,15 @@
   box-shadow: 0 0 0 1px var(--accent);
 }
 
-/* The thumbnail stops above the label rail so the name never has to fight the artwork. */
+/* The scene fills the card; its name sits on a light caption inside the paper
+   so the card reads as one whiteboard tile instead of a black label rail. */
 .scene-card-thumb {
   position: absolute;
-  inset: 0 0 19px 0;
+  inset: 0;
   display: grid;
   place-items: center;
   overflow: hidden;
   background: var(--asset-paper);
-  border-bottom: 1px solid var(--edge-hairline);
 }
 
 .scene-card-thumb svg {
@@ -126,27 +126,20 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 19px;
+  height: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 4px;
   padding: 0 6px;
-  background: var(--surface-panel);
-  color: var(--text);
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.97) 55%, rgba(255, 255, 255, 0));
+  color: #2a2a30;
   font-size: var(--text-2xs);
+  pointer-events: none;
 }
 
 .scene-card-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.scene-card-duration {
-  flex: none;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-muted);
 }
 
 .scene-card-index {
@@ -157,8 +150,9 @@
   height: 18px;
   padding: 0 4px;
   border-radius: 3px;
-  background: rgba(10, 10, 11, 0.75);
-  color: var(--text-bright);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(10, 10, 11, 0.12);
+  color: #2a2a30;
   font-size: 9px;
   font-weight: 600;
   display: grid;
@@ -507,8 +501,9 @@
   display: grid;
   place-items: center;
   border-radius: 4px;
-  background: rgba(10, 10, 11, 0.72);
-  color: var(--text-bright);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(10, 10, 11, 0.12);
+  color: #3a3a40;
   opacity: 0;
   transition: opacity 120ms ease, background 120ms ease;
 }
@@ -521,6 +516,8 @@
 
 .scene-card-delete:hover:not(:disabled) {
   background: #d23b3b;
+  border-color: #d23b3b;
+  color: #ffffff;
 }
 
 .scene-card-delete:disabled {

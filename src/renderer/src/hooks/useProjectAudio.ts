@@ -2,9 +2,12 @@ import { useEffect, useMemo, useRef } from 'react'
 import { clamp, clamp01 } from '@core/math'
 import type { Project } from '@core/schema/project'
 import type { ProjectSchedule } from '@core/timeline/schedule'
-import { readAssetBytes } from '../lib/assets'
+import { readAssetBytes, assetUrl } from '../lib/assets'
 import { usePlaybackStore } from '../state/playbackStore'
 import { useUiStore } from '../state/uiStore'
+
+/** Blob fallback ceiling; the protocol path streams instead of buffering. */
+const MAX_BLOB_BYTES = 128 * 1024 * 1024
 
 interface ProjectAudioEntry {
   id: string
@@ -104,10 +107,32 @@ export function useProjectAudio(
     }
     const map = new Map<string, HTMLAudioElement>()
     const gains = new Map<string, GainNode>()
+    const blobFallbacks = new Set<string>()
+    const loadBlob = (entry: ProjectAudioEntry, audio: HTMLAudioElement): void => {
+      if (blobFallbacks.has(entry.id)) {
+        report(entry)
+        return
+      }
+      blobFallbacks.add(entry.id)
+      void readAssetBytes(token, entry.fileName, MAX_BLOB_BYTES)
+        .then((bytes) => {
+          if (cancelled) return
+          const url = URL.createObjectURL(new Blob([bytes], { type: entry.mime }))
+          urls.push(url)
+          audio.src = url
+          if (usePlaybackStore.getState().playing) {
+            void audio.play().catch((error: unknown) => {
+              if (error instanceof DOMException && error.name === 'NotSupportedError') report(entry)
+            })
+          }
+        })
+        .catch(() => {
+          if (!cancelled) report(entry)
+        })
+    }
     for (const entry of list) {
       const audio = new Audio()
       audio.preload = 'auto'
-      audio.onerror = () => report(entry)
       map.set(entry.id, audio)
       if (context && entry.volume > 1) {
         try {
@@ -120,19 +145,16 @@ export function useProjectAudio(
           // Stay on the direct element output with capped volume.
         }
       }
-      void readAssetBytes(token, entry.fileName)
-        .then((bytes) => {
-          if (cancelled) return
-          const url = URL.createObjectURL(new Blob([bytes], { type: entry.mime }))
-          urls.push(url)
-          audio.src = url
-          if (usePlaybackStore.getState().playing) {
-            void audio.play().catch((error: unknown) => {
-              if (error instanceof DOMException && error.name === 'NotSupportedError') report(entry)
-            })
-          }
-        })
-        .catch(() => report(entry))
+      // Stream from the protocol handler so long tracks are range-requested
+      // rather than copied into a blob. If this Chromium build cannot seek the
+      // custom scheme, fall back to an in-memory blob for that track.
+      audio.src = assetUrl(token, entry.fileName)
+      audio.onloadedmetadata = () => {
+        if (!cancelled && audio.seekable.length === 0) loadBlob(entry, audio)
+      }
+      audio.onerror = () => {
+        if (!cancelled) loadBlob(entry, audio)
+      }
     }
     audios.current = map
     gainsRef.current = gains
@@ -142,6 +164,7 @@ export function useProjectAudio(
       for (const gain of gains.values()) gain.disconnect()
       for (const audio of map.values()) {
         audio.onerror = null
+        audio.onloadedmetadata = null
         audio.pause()
         audio.removeAttribute('src')
         audio.load()

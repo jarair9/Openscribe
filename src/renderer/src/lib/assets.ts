@@ -14,15 +14,36 @@ export function libraryAssetUrl(relativePath: string): string {
 /**
  * Raw asset bytes for in-memory playback: protocol fetch first, IPC base64
  * fallback when the custom scheme is not fetchable in the current context.
+ * `maxBytes` keeps a pathological file from exhausting renderer memory; the
+ * streamed protocol path covers the common case.
  */
-export async function readAssetBytes(token: string, fileName: string): Promise<ArrayBuffer> {
+export async function readAssetBytes(
+  token: string,
+  fileName: string,
+  maxBytes = Number.POSITIVE_INFINITY
+): Promise<ArrayBuffer> {
   try {
     const response = await fetch(assetUrl(token, fileName))
-    if (response.ok) return await response.arrayBuffer()
-  } catch {
+    if (response.ok) {
+      const declared = Number(response.headers.get('content-length') ?? Number.NaN)
+      if (Number.isFinite(declared) && declared > maxBytes) {
+        throw new Error('The audio file is too large to load into memory.')
+      }
+      const buffer = await response.arrayBuffer()
+      if (buffer.byteLength > maxBytes) {
+        throw new Error('The audio file is too large to load into memory.')
+      }
+      return buffer
+    }
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('too large')) throw error
     // Fall through to the IPC read below.
   }
   const base64 = await window.api.assets.readBase64(token, fileName)
+  // Base64 is four characters per three bytes.
+  if ((base64.length * 3) / 4 > maxBytes) {
+    throw new Error('The audio file is too large to load into memory.')
+  }
   const binary = atob(base64)
   const bytes = new Uint8Array(binary.length)
   for (let index = 0; index < binary.length; index += 1) {

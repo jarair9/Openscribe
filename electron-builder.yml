@@ -8,8 +8,10 @@ files:
 extraResources:
   - from: open-assets
     to: open-assets
-  - from: src/assets/Openscribe.png
-    to: Openscribe.png
+  # Window, taskbar and installer imagery, bundled at a sane size rather than
+  # the 1.3 MB design source.
+  - from: src/assets/openscribe-256.png
+    to: openscribe-256.png
   # Video export needs an encoder on every machine, not only on the ones that
   # happen to have ffmpeg installed.
   - from: resources/ffmpeg/ffmpeg.exe
@@ -17,6 +19,7 @@ extraResources:
   - from: resources/ffmpeg/FFMPEG-LICENSE.txt
     to: ffmpeg/FFMPEG-LICENSE.txt
 win:
+  icon: build/icon.ico
   target: nsis
 nsis:
   oneClick: false

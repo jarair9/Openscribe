@@ -1,6 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { existsSync } from 'node:fs'
-import { extname, join } from 'node:path'
+import { extname, join, resolve } from 'node:path'
 import type { Project } from '@core/schema/project'
 import { PRODUCT } from '@shared/product'
 import {
@@ -22,8 +22,8 @@ import { ingestAssets, readAssetBase64, readAssetText, saveAudioBytes } from './
 import { encodeExport, finishExport, prepareExport, writeExportFrame } from './export'
 import { ffmpegEngine } from './ffmpeg'
 import { log, logsDir } from './logger'
-import { createProject, openProject, saveProject, saveProjectAs, safeProjectName } from './projectStore'
-import { getMainWindow } from './window'
+import { createProject, openProject, peekProject, renameProject, saveProject, saveProjectAs, safeProjectName } from './projectStore'
+import { approveWindowClose, getMainWindow } from './window'
 import { libraryItemById, listLibraryItems } from './library'
 
 function dialogParent(event: Electron.IpcMainInvokeEvent | Electron.IpcMainEvent): BrowserWindow {
@@ -67,7 +67,10 @@ export function registerIpc(): void {
     else window.maximize()
   })
   ipcMain.on(IPC.windowClose, (event) => {
-    BrowserWindow.fromWebContents(event.sender)?.close()
+    const window = BrowserWindow.fromWebContents(event.sender)
+    if (!window) return
+    approveWindowClose(window)
+    window.close()
   })
 
   handle(IPC.appInfo, (): AppInfo => ({
@@ -210,12 +213,24 @@ export function registerIpc(): void {
   })
 
   handle(IPC.projectPeek, (_event, filePath: unknown) => {
-    const opened = openProject(assertString(filePath, 'Project path'))
+    const opened = peekProject(assertString(filePath, 'Project path'))
     return {
       filePath: opened.session.filePath,
       assetToken: opened.session.token,
       document: opened.document
     }
+  })
+
+  handle(IPC.projectExists, (_event, filePath: unknown) => {
+    const path = assertString(filePath, 'Project path')
+    return existsSync(resolve(path))
+  })
+
+  handle(IPC.projectRename, (_event, request: unknown) => {
+    const input = (request ?? {}) as { filePath?: unknown; name?: unknown }
+    const path = assertString(input.filePath, 'Project path')
+    const name = assertString(input.name, 'Project name')
+    return renameProject(path, name)
   })
 
   handle(IPC.projectSave, (_event, request: unknown) => {

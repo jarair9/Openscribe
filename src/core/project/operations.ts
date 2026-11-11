@@ -1,5 +1,6 @@
 import { createId, nowIso } from '../ids'
 import { createScene } from '../schema/factories'
+import { PROJECT_NAME_MAX } from '../schema/project'
 import type {
   Asset,
   AudioTrack,
@@ -37,7 +38,7 @@ export function updateScene(
 }
 
 export function renameProject(project: Project, name: string): Project {
-  const trimmed = name.trim()
+  const trimmed = name.trim().slice(0, PROJECT_NAME_MAX)
   if (!trimmed) return project
   return touch({ ...project, name: trimmed })
 }

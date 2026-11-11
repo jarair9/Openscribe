@@ -148,9 +148,6 @@ export function SceneStrip({ schedule }: { schedule: ProjectSchedule }): JSX.Ele
             </button>
             <div className="scene-card-footer">
               <span className="scene-card-name">{scene.name}</span>
-              <span className="scene-card-duration">
-                {formatSeconds(sceneSchedule?.duration ?? 0)}
-              </span>
             </div>
           </div>
         )

@@ -68,7 +68,11 @@ export function findActiveInstrument(
     const state = visual.elements[element.id]
     return Boolean(
       state?.handStyle &&
-        (state.activeDrawableId || state.wipe || state.scribble || state.strokeDraw !== null)
+        (state.drag ||
+          state.activeDrawableId ||
+          state.wipe ||
+          state.scribble ||
+          state.strokeDraw !== null)
     )
   })
   // Manual timings can overlap. The animation that started latest is the one
@@ -78,6 +82,29 @@ export function findActiveInstrument(
   if (!element) return null
   const state = visual.elements[element.id]!
   if (!state.handStyle) return null
+
+  // Drag-in: the hand carries the whole element. The frame is already
+  // translated, so the overlay only has to pick a grip point on it.
+  if (state.drag) {
+    return {
+      elementId: element.id,
+      drawableId: null,
+      progress: state.drag.progress,
+      style: state.handStyle,
+      instrumentId: state.instrumentId,
+      handedness: state.handedness,
+      dragFrame: {
+        x: element.frame.x + state.translate.x,
+        y: element.frame.y + state.translate.y,
+        width: element.frame.width,
+        height: element.frame.height
+      },
+      dragHour: state.drag.from,
+      dragRelease: state.drag.release,
+      dragTravel: state.drag.travel,
+      pose: null
+    }
+  }
 
   if (state.activeDrawableId) {
     const drawableIndex = state.drawables?.findIndex(

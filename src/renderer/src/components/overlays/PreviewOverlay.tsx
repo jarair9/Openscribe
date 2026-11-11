@@ -11,10 +11,10 @@ import { evaluateScene } from '@core/animation/scene'
 import { clamp, clamp01, formatSeconds } from '@core/math'
 import type { Rect } from '@core/schema/primitives'
 import {
-  buildSchedule,
   sceneAt,
   type ProjectSchedule
 } from '@core/timeline/schedule'
+import { scheduleFor } from '@core/timeline/scheduleCache'
 import { togglePlayback } from '../../hooks/usePlaybackClock'
 import { usePlaybackStore } from '../../state/playbackStore'
 import { useProjectStore } from '../../state/projectStore'
@@ -59,7 +59,7 @@ export function PreviewOverlay(): JSX.Element | null {
   const svgRef = useRef<SVGSVGElement | null>(null)
   const pathRefs = useRef<Map<string, SVGPathElement>>(new Map())
 
-  const schedule = useMemo(() => (project ? buildSchedule(project) : EMPTY_SCHEDULE), [project])
+  const schedule = useMemo(() => (project ? scheduleFor(project) : EMPTY_SCHEDULE), [project])
 
   const current = useMemo(() => {
     if (!project || schedule.scenes.length === 0) return null
