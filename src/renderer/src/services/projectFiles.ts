@@ -39,8 +39,8 @@ async function warmUpFonts(): Promise<void> {
 }
 
 /** The label the loader can show before the document has been read off disk. */
-function projectName(filePath: string): string {
-  const known = listRecentProjects().find((entry) => entry.filePath === filePath)
+async function projectName(filePath: string): Promise<string> {
+  const known = (await listRecentProjects()).find((entry) => entry.filePath === filePath)
   if (known) return known.name
   const parts = filePath.split(/[\\/]/).filter(Boolean)
   return parts[parts.length - 1] ?? 'Project'
@@ -80,7 +80,7 @@ export async function createNewProject(options: NewProjectOptions): Promise<bool
     void warmUpFonts()
     usePlaybackStore.getState().stop()
     useProjectStore.getState().open(opened)
-    rememberProject(opened.document.name, opened.filePath)
+    void rememberProject(opened.document.name, opened.filePath)
     ui.toast(`Created “${opened.document.name}”`, 'success')
     return true
   } catch (error) {
@@ -109,7 +109,7 @@ export async function openProjectAt(filePath: string): Promise<boolean> {
       if (!discard) return false
     }
 
-    const name = projectName(filePath)
+    const name = await projectName(filePath)
     ui.startLoading({
       title: `Opening “${name}”`,
       detail: 'Reading the project and preparing the workspace'
@@ -119,7 +119,7 @@ export async function openProjectAt(filePath: string): Promise<boolean> {
     void warmUpFonts()
     usePlaybackStore.getState().stop()
     useProjectStore.getState().open(opened)
-    rememberProject(opened.document.name, opened.filePath)
+    void rememberProject(opened.document.name, opened.filePath)
     ui.toast(`Opened “${opened.document.name}”`, 'success')
     return true
   } catch (error) {
@@ -174,7 +174,7 @@ export async function renameProjectFile(filePath: string, name: string): Promise
   ui.setBusy('Renaming project…')
   try {
     const result = await window.api.project.rename(filePath, trimmed)
-    renameRecentProject(filePath, result.name)
+    void renameRecentProject(filePath, result.name)
     ui.toast(`Renamed to “${result.name}”`, 'success')
     return true
   } catch (error) {
@@ -201,7 +201,7 @@ export async function saveProject(options: { auto?: boolean } = {}): Promise<boo
     useProjectStore
       .getState()
       .markSaved(result.savedAt, undefined, revisionAtSave, options.auto, openGeneration)
-    rememberProject(project.name, session.filePath)
+    void rememberProject(project.name, session.filePath)
     return true
   } catch (error) {
     const message = errorMessage(error)
@@ -248,7 +248,7 @@ export async function saveProjectAs(): Promise<boolean> {
     useProjectStore
       .getState()
       .markSaved(new Date().toISOString(), nextSession, revisionAtSave, false, openGeneration)
-    rememberProject(project.name, nextSession.filePath)
+    void rememberProject(project.name, nextSession.filePath)
     ui.toast('Project saved to a new location.', 'success')
     return true
   } catch (error) {

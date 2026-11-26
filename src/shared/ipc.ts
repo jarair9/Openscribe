@@ -38,6 +38,11 @@ export const IPC = {
   projectSave: 'project:save',
   projectSaveAs: 'project:save-as',
 
+  recentList: 'recent:list',
+  recentRemember: 'recent:remember',
+  recentForget: 'recent:forget',
+  recentRename: 'recent:rename',
+
   assetIngest: 'asset:ingest',
   assetReadText: 'asset:read-text',
   assetReadBase64: 'asset:read-base64',
@@ -88,6 +93,13 @@ export interface CreateProjectRequest {
 
 export interface RenameProjectResult {
   name: string
+}
+
+/** One row of the welcome screen's recent projects list. */
+export interface RecentProject {
+  name: string
+  filePath: string
+  openedAt: string
 }
 
 export interface SaveProjectRequest {

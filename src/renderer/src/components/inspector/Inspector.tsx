@@ -332,8 +332,6 @@ function ElementInspector({
       ? project.assets.find((candidate) => candidate.id === element.assetId)
       : undefined
 
-  const appearanceSection = <AppearanceSection element={element} update={update} />
-
   return (
     <>
       <header className="inspector-header">
@@ -367,19 +365,32 @@ function ElementInspector({
 
       <div className="inspector-scroll">
         {tab === 'edit' ? (
-          <>
-            {/* Colour is the first thing people want after typing a word, so text leads with
-                Appearance; every other kind still opens on where it sits and how big it is. */}
-            {element.kind === 'text' ? appearanceSection : null}
-            <TransformSection element={element} update={update} updateFrame={updateFrame} />
-            <AlignmentSection />
-            {element.kind === 'text' ? <TextSection element={element} update={update} /> : null}
-            {element.kind === 'shape' ? <ShapeSection element={element} update={update} /> : null}
-            {element.kind === 'svg' || element.kind === 'image' ? (
-              <SourceSection asset={asset} element={element} update={update} />
-            ) : null}
-            {element.kind === 'text' ? null : appearanceSection}
-          </>
+          element.kind === 'text' ? (
+            <>
+              {/* Text leads with its editor: the ink colour stays at the top,
+                  the writing tools come second, and the placement groups start
+                  folded so the content field is reachable without scrolling. */}
+              <AppearanceSection element={element} update={update} defaultOpen={false} />
+              <TextSection element={element} update={update} />
+              <TransformSection
+                element={element}
+                update={update}
+                updateFrame={updateFrame}
+                defaultOpen={false}
+              />
+              <AlignmentSection defaultOpen={false} />
+            </>
+          ) : (
+            <>
+              <TransformSection element={element} update={update} updateFrame={updateFrame} />
+              <AlignmentSection />
+              {element.kind === 'shape' ? <ShapeSection element={element} update={update} /> : null}
+              {element.kind === 'svg' || element.kind === 'image' ? (
+                <SourceSection asset={asset} element={element} update={update} />
+              ) : null}
+              <AppearanceSection element={element} update={update} />
+            </>
+          )
         ) : null}
 
         {tab === 'animation' ? (
@@ -404,16 +415,19 @@ type UpdateElements = (label: string, updater: (element: Element) => Element) =>
 function TransformSection({
   element,
   update,
-  updateFrame
+  updateFrame,
+  defaultOpen = true
 }: {
   element: Element
   update: UpdateElements
   updateFrame: (patch: Partial<Element['frame']>) => void
+  defaultOpen?: boolean
 }): JSX.Element {
   return (
     <Section
       title="Transform"
       hint="Where the element sits, how big it is, and whether the canvas lets you touch it."
+      defaultOpen={defaultOpen}
     >
       <IconToggleRow
         label="Element"
@@ -500,11 +514,12 @@ function TransformSection({
   )
 }
 
-function AlignmentSection(): JSX.Element {
+function AlignmentSection({ defaultOpen = true }: { defaultOpen?: boolean } = {}): JSX.Element {
   return (
     <Section
       title="Alignment"
       hint="Places the selection against the visible stage. Distributing needs three or more elements."
+      defaultOpen={defaultOpen}
     >
       <IconToggleRow
         label="Align"
@@ -577,17 +592,23 @@ function SourceSection({
 
 function AppearanceSection({
   element,
-  update
+  update,
+  defaultOpen = true
 }: {
   element: Element
   update: UpdateElements
+  defaultOpen?: boolean
 }): JSX.Element {
   const customColors = useColorStore((state) => state.customColors)
   const addColor = useColorStore((state) => state.addColor)
   const removeColor = useColorStore((state) => state.removeColor)
 
   return (
-    <Section title="Appearance" hint="Colour and transparency of the artwork itself.">
+    <Section
+      title="Appearance"
+      hint="Colour and transparency of the artwork itself."
+      defaultOpen={defaultOpen}
+    >
       {element.kind === 'text' ? (
         <SwatchField
           label="Ink colour"
@@ -1056,7 +1077,7 @@ function ExitSection({
             <HandTypePicker
               label="Eraser"
               scope="erasers"
-              subtitle="Pick the hand that clears the board. Every eraser sweeps left to right, cutting the lines on a diagonal from the top."
+              subtitle="Pick the hand that clears the board. Every eraser scrubs back and forth down the block, the way a hand wipes a whiteboard."
               value={exit.instrumentId ?? DEFAULT_ERASER_INSTRUMENT_ID}
               onChange={(instrumentId) => patch({ instrumentId })}
             />
@@ -1079,14 +1100,13 @@ function ExitSection({
               onChange={(delay) => patch({ delay })}
             />
           </div>
-          {/* An eraser sweeps one way, so there is nothing to choose here. */}
+          {/* An eraser scrubs its own zig-zag at a steady pace, so there is no
+              easing to pick and no direction to choose. */}
           {exit.type === 'erase' ? (
-            <SelectField
-              label="Easing"
-              value={exit.easing}
-              options={EASING_OPTIONS}
-              onChange={(value) => patch({ easing: value })}
-            />
+            <p className="hint">
+              The eraser wipes at a steady pace. Shorten or lengthen the exit to make the
+              sweep faster or slower.
+            </p>
           ) : (
             <div className="field-row cols-2">
               <SelectField

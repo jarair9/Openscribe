@@ -431,12 +431,17 @@ export function evaluateElement(
         scale *= Math.max(0, 1 - eased)
         break
       case 'erase': {
-        // Board cleaning, not a fade. The eraser always travels left to right
-        // whatever hand holds it — the renderer leans the front so the top of
-        // the block clears ahead of the bottom. The Direction field is
-        // deliberately ignored: an eraser has one correct direction.
+        // Board cleaning, not a fade. The eraser scrubs back and forth down
+        // the block the way a hand wipes a whiteboard — the renderer alternates
+        // the pass direction and leans the leading edge. The Direction field is
+        // deliberately ignored: an eraser chooses its own path.
+        //
+        // The scrub runs on raw time rather than the exit easing. A hand wiping
+        // a board moves at a steady pace; curving the progress (the default
+        // ease-in is cubic) left the board almost untouched until the last
+        // moment and then made it vanish in a rush.
         const eraser = getEraserInstrument(exit.instrumentId)
-        wipe = { progress: 1 - eased, direction: 'left' }
+        wipe = { progress: 1 - u, direction: 'left' }
         handStyle = eraser.kind === 'hand' ? 'handDraw' : 'penDraw'
         instrumentId = eraser.id
         handedness = instrumentHandedness(eraser)

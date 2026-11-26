@@ -1,13 +1,13 @@
 import type { JSX, PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import type { SceneVisual } from '@core/animation/scene'
 import type { WipeState } from '@core/animation/evaluate'
-import { scribbleRects } from '@core/animation/scribble'
+import { scrubCoveredPolygons } from '@core/animation/scrub'
 import type { Rect } from '@core/schema/primitives'
 import type { Element, Project, Scene } from '@core/schema/project'
 import { strokeWritingBounds } from '@core/text/strokeWriting'
 import { assetUrl } from '../../lib/assets'
 import { ElementNode } from './ElementNode'
-import { erasePolygon, revealPolygon } from './renderUtils'
+import { erasePolygons, polygonPoints, revealPolygon } from './renderUtils'
 import { revealBounds, textEraseRects, textRevealRects } from './textMetrics'
 
 interface SceneArtworkProps {
@@ -73,8 +73,8 @@ export function SceneArtwork({
           if (!state?.scribble) return null
           return (
             <clipPath id={`${idPrefix}-scribble-${element.id}`} key={`scribble-${element.id}`}>
-              {scribbleRects(element.frame, state.scribble.progress).map((band, index) => (
-                <rect key={index} x={band.x} y={band.y} width={band.width} height={band.height} />
+              {scrubCoveredPolygons(element.frame, state.scribble.progress).map((points, index) => (
+                <polygon key={index} points={polygonPoints(points)} />
               ))}
             </clipPath>
           )
@@ -141,8 +141,9 @@ export function SceneArtwork({
 }
 
 /**
- * Children of an element's wipe clip path. An erase leans its front so the top
- * of a block clears ahead of the bottom; a reveal just grows along its edge.
+ * Children of an element's wipe clip path. An erase scrubs the block band by
+ * band, clearing alternate passes in opposite directions; a reveal just grows
+ * along its edge.
  */
 function wipeClipChildren(element: Element, wipe: WipeState, erasing: boolean): JSX.Element {
   if (element.kind === 'text') {
@@ -162,23 +163,28 @@ function wipeClipChildren(element: Element, wipe: WipeState, erasing: boolean): 
       )
     }
     return (
-      <polygon
-        points={
-          erasing
-            ? erasePolygon(strokeBounds, wipe.progress)
-            : revealPolygon(strokeBounds, wipe.direction, wipe.progress)
-        }
-      />
+      <>
+        {wipePolygons(strokeBounds, wipe, erasing).map((points, index) => (
+          <polygon key={index} points={points} />
+        ))}
+      </>
     )
   }
   const bounds = revealBounds(element)
   return (
-    <polygon
-      points={
-        erasing ? erasePolygon(bounds, wipe.progress) : revealPolygon(bounds, wipe.direction, wipe.progress)
-      }
-    />
+    <>
+      {wipePolygons(bounds, wipe, erasing).map((points, index) => (
+        <polygon key={index} points={points} />
+      ))}
+    </>
   )
+}
+
+/** Clip polygons for a block: one scrub band per pass when erasing, else one. */
+function wipePolygons(bounds: Rect, wipe: WipeState, erasing: boolean): string[] {
+  return erasing
+    ? erasePolygons(bounds, wipe.progress)
+    : [revealPolygon(bounds, wipe.direction, wipe.progress)]
 }
 
 interface BackgroundImageProps {

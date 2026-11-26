@@ -14,6 +14,7 @@ import {
   type ExportPrepareRequest,
   type IngestAssetsRequest,
   type ReadAssetRequest,
+  type RecentProject,
   type SaveAudioRequest,
   type SaveProjectAsRequest,
   type SaveProjectRequest
@@ -23,6 +24,7 @@ import { encodeExport, finishExport, prepareExport, writeExportFrame } from './e
 import { ffmpegEngine } from './ffmpeg'
 import { log, logsDir } from './logger'
 import { createProject, openProject, peekProject, renameProject, saveProject, saveProjectAs, safeProjectName } from './projectStore'
+import { forgetRecent, listRecent, rememberRecent, renameRecent } from './recent'
 import { approveWindowClose, getMainWindow } from './window'
 import { libraryItemById, listLibraryItems } from './library'
 
@@ -224,6 +226,30 @@ export function registerIpc(): void {
   handle(IPC.projectExists, (_event, filePath: unknown) => {
     const path = assertString(filePath, 'Project path')
     return existsSync(resolve(path))
+  })
+
+  handle(IPC.recentList, () => listRecent())
+
+  handle(IPC.recentRemember, (_event, entry: unknown) => {
+    if (!entry || typeof entry !== 'object') throw new Error('A project entry is required.')
+    const input = entry as Partial<RecentProject>
+    return rememberRecent({
+      name: assertString(input.name, 'Project name'),
+      filePath: assertString(input.filePath, 'Project path'),
+      openedAt: typeof input.openedAt === 'string' ? input.openedAt : new Date().toISOString()
+    })
+  })
+
+  handle(IPC.recentForget, (_event, filePath: unknown) =>
+    forgetRecent(assertString(filePath, 'Project path'))
+  )
+
+  handle(IPC.recentRename, (_event, request: unknown) => {
+    const input = (request ?? {}) as { filePath?: unknown; name?: unknown }
+    return renameRecent(
+      assertString(input.filePath, 'Project path'),
+      assertString(input.name, 'Project name')
+    )
   })
 
   handle(IPC.projectRename, (_event, request: unknown) => {

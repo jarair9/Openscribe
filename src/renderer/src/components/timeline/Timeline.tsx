@@ -104,6 +104,36 @@ export function Timeline({ schedule }: { schedule: ProjectSchedule }): JSX.Eleme
     )
   }
 
+  const updateExitDuration = (elementId: string, duration: number): void => {
+    apply(
+      'Resize exit',
+      (current) =>
+        updateElement(current, scene.id, elementId, (element) => ({
+          ...element,
+          animation: {
+            ...element.animation,
+            exit: { ...element.animation.exit, duration: Math.max(0.1, roundTo(duration, 2)) }
+          }
+        })),
+      { coalesce: false }
+    )
+  }
+
+  const updateExitDelay = (elementId: string, delay: number): void => {
+    apply(
+      'Move exit',
+      (current) =>
+        updateElement(current, scene.id, elementId, (element) => ({
+          ...element,
+          animation: {
+            ...element.animation,
+            exit: { ...element.animation.exit, delay: Math.max(0, roundTo(delay, 2)) }
+          }
+        })),
+      { coalesce: false }
+    )
+  }
+
   const updateAudioStart = (trackId: string, start: number): void => {
     apply(
       'Move audio',
@@ -292,6 +322,8 @@ export function Timeline({ schedule }: { schedule: ProjectSchedule }): JSX.Eleme
               onSelect={() => select([element.id])}
               updateTiming={updateTiming}
               updateEntranceDuration={updateEntranceDuration}
+              updateExitDuration={updateExitDuration}
+              updateExitDelay={updateExitDelay}
               beginDrag={startDrag}
             />
           ))}
@@ -395,6 +427,8 @@ interface ElementTrackProps {
   onSelect: () => void
   updateTiming: (elementId: string, start: number) => void
   updateEntranceDuration: (elementId: string, duration: number) => void
+  updateExitDuration: (elementId: string, duration: number) => void
+  updateExitDelay: (elementId: string, delay: number) => void
   beginDrag: (
     event: ReactPointerEvent,
     label: string,
@@ -410,6 +444,8 @@ function ElementTrack({
   onSelect,
   updateTiming,
   updateEntranceDuration,
+  updateExitDuration,
+  updateExitDelay,
   beginDrag
 }: ElementTrackProps): JSX.Element {
   const timing = sceneSchedule.elements[element.id]
@@ -422,6 +458,7 @@ function ElementTrack({
   const emphasisDuration = timing.emphasisEnd - timing.emphasisStart
   const exitStart = timing.exitStart
   const exitDuration = timing.exitEnd - timing.exitStart
+  const exitDelay = element.animation.exit.delay
 
   return (
     <div className={`timeline-track ${selected ? 'selected' : ''}`} onClick={onSelect}>
@@ -462,9 +499,21 @@ function ElementTrack({
           <div
             className="timeline-bar exit"
             style={{ left: exitStart * pps, width: Math.max(4, exitDuration * pps) }}
-            title={`Exit — ${timecode(exitStart)} to ${timecode(timing.exitEnd)}`}
+            title={`Exit — ${timecode(exitStart)} to ${timecode(timing.exitEnd)} (drag to move, drag the edge to resize)`}
+            onPointerDown={(event) =>
+              beginDrag(event, 'Move exit', (delta) => updateExitDelay(element.id, exitDelay + delta))
+            }
           >
             <span className="timeline-bar-label">Exit</span>
+            <span
+              className="timeline-bar-handle right"
+              title="Drag to lengthen or shorten the exit"
+              onPointerDown={(event) =>
+                beginDrag(event, 'Resize exit', (delta) =>
+                  updateExitDuration(element.id, exitDuration + delta)
+                )
+              }
+            />
           </div>
         ) : null}
       </div>

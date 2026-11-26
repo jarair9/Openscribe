@@ -13,6 +13,7 @@ import {
   type IngestAssetsResult,
   type OpenedProject,
   type PeekedProject,
+  type RecentProject,
   type RenameProjectResult,
   type SaveProjectAsRequest,
   type SaveProjectRequest,
@@ -80,6 +81,13 @@ const api: StudioApi = {
       invoke<RenameProjectResult>('project:rename', { filePath, name }),
     save: (request: SaveProjectRequest) => invoke<SaveProjectResult>('project:save', request),
     saveAs: (request: SaveProjectAsRequest) => invoke<SessionInfo>('project:save-as', request)
+  },
+  recent: {
+    list: () => invoke<RecentProject[]>('recent:list'),
+    remember: (entry: RecentProject) => invoke<RecentProject[]>('recent:remember', entry),
+    forget: (filePath: string) => invoke<RecentProject[]>('recent:forget', filePath),
+    rename: (filePath: string, name: string) =>
+      invoke<RecentProject[]>('recent:rename', { filePath, name })
   },
   assets: {
     ingest: (assetToken: string, paths: string[]) =>

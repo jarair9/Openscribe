@@ -1,4 +1,5 @@
 import { clamp01 } from '@core/math'
+import { scrubRemainingPolygons, scrubTip } from '@core/animation/scrub'
 import type { Direction } from '@core/schema/primitives'
 import type { Rect } from '@core/schema/primitives'
 import type { ShapeElement, ShapeKind } from '@core/schema/project'
@@ -132,46 +133,27 @@ export function wipeEdgePoint(
   }
 }
 
-/** How far ahead the head of the erase front runs at the top of the block. */
-function eraseSlant(frame: Rect): number {
-  return Math.min(frame.width * 0.4, frame.height * 0.3)
+/** Formats scrub geometry as an SVG `points` attribute. */
+export function polygonPoints(points: Array<{ x: number; y: number }>): string {
+  return points.map((point) => `${point.x},${point.y}`).join(' ')
 }
 
 /**
- * The diagonal erase front, as the x it cuts row `rowT` (0 = top of the block)
- * at. Ink to the left of it is gone. The front leans so the first row of a
- * block is always cleared further than the last, the way a broad eraser held at
- * an angle drags down the page — and it travels left to right whichever hand
- * holds it, because people read that way. `visible` is wipe progress: 1 while
- * the ink stands, 0 once the board is clean.
+ * Clip polygons for the erase: the ink still standing, one polygon per pass.
+ * The eraser scrubs across the block and back rather than sweeping it once, so
+ * the survivors come back band by band instead of as a single front. `visible`
+ * is wipe progress: 1 while the ink stands, 0 once the board is clean.
  */
-export function eraseEdgeX(frame: Rect, visible: number, rowT: number): number {
-  const slant = eraseSlant(frame)
-  const swept = (1 - clamp01(visible)) * (frame.width + slant)
-  return frame.x - slant + swept + slant * (1 - clamp01(rowT))
+export function erasePolygons(frame: Rect, visible: number): string[] {
+  return scrubRemainingPolygons(frame, 1 - clamp01(visible)).map(polygonPoints)
 }
 
-/** Clip polygon for the erase: everything right of the leaning front. */
-export function erasePolygon(frame: Rect, visible: number): string {
-  const top = eraseEdgeX(frame, visible, 0)
-  const bottom = eraseEdgeX(frame, visible, 1)
-  const height = Math.max(1e-6, frame.height)
-  return sidePolygon(
-    frame,
-    (point) => point.x - (top + ((bottom - top) * (point.y - frame.y)) / height)
-  )
-}
-
-/** Where the eraser rides: the middle of the front, travelling rightwards. */
+/** Where the eraser rides: the middle of the pass it is currently crossing. */
 export function eraseEdgePoint(
   frame: Rect,
   visible: number
-): { x: number; y: number; angle: number } {
-  return {
-    x: eraseEdgeX(frame, visible, 0.5),
-    y: frame.y + frame.height * 0.5,
-    angle: 0
-  }
+): { x: number; y: number; angle: number; pass: number } {
+  return scrubTip(frame, 1 - clamp01(visible))
 }
 
 export interface ArrowGeometry {

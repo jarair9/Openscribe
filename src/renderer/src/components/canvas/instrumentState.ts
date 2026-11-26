@@ -45,10 +45,13 @@ function strokeCursorToWorld(
 }
 
 /**
- * The eraser rides the middle of the diagonal front, so it crosses the block
- * left to right whichever hand is holding it.
+ * The eraser rides the middle of the pass it is crossing, so it walks back and
+ * forth down the block whichever hand is holding it.
  */
-function eraseCursor(element: Element, progress: number): { x: number; y: number; angle: number } {
+function eraseCursor(
+  element: Element,
+  progress: number
+): { x: number; y: number; angle: number; pass: number } {
   if (element.kind === 'text') {
     // Stroke fonts are laid out by their own metrics, not the system face.
     const strokeBounds = strokeWritingBounds(element)
@@ -165,10 +168,8 @@ export function findActiveInstrument(
     }
   }
   if (!state.wipe) return null
-  // An eraser scrubs as it travels, so the pose alternates far more often than
-  // the four grips a pen uses across a whole stroke.
-  const pose = state.erasing ? Math.floor(state.wipe.progress * 10) : null
   if (state.erasing) {
+    const cursor = eraseCursor(element, state.wipe.progress)
     return {
       elementId: element.id,
       drawableId: null,
@@ -176,10 +177,12 @@ export function findActiveInstrument(
       style: state.handStyle,
       instrumentId: state.instrumentId,
       handedness: state.handedness,
-      wipeCursor: eraseCursor(element, state.wipe.progress),
-      pose
+      wipeCursor: cursor,
+      // The grip flips once per pass, which is what a hand scrubbing a board does.
+      pose: cursor.pass
     }
   }
+  const pose = null
   if (element.kind === 'text') {
     // Stroke fonts are not laid out with the system face, so the instrument has
     // to ride the ink block instead of a measured baseline.

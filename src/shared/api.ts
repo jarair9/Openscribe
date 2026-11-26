@@ -13,6 +13,7 @@ import type {
   LibraryItem,
   OpenedProject,
   PeekedProject,
+  RecentProject,
   RenameProjectResult,
   SaveProjectAsRequest,
   SaveProjectRequest,
@@ -63,6 +64,12 @@ export interface StudioApi {
     rename(filePath: string, name: string): Promise<RenameProjectResult>
     save(request: SaveProjectRequest): Promise<SaveProjectResult>
     saveAs(request: SaveProjectAsRequest): Promise<SessionInfo>
+  }
+  recent: {
+    list(): Promise<RecentProject[]>
+    remember(entry: RecentProject): Promise<RecentProject[]>
+    forget(filePath: string): Promise<RecentProject[]>
+    rename(filePath: string, name: string): Promise<RecentProject[]>
   }
   assets: {
     ingest(assetToken: string, paths: string[]): Promise<IngestAssetsResult>

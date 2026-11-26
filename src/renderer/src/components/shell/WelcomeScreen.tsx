@@ -1,21 +1,11 @@
 import { useEffect, useRef, useState, type JSX } from 'react'
-import {
-  ArrowRight,
-  Check,
-  FilePlus2,
-  Film,
-  FolderOpen,
-  HardDrive,
-  Music2,
-  PenLine,
-  Play,
-  X
-} from 'lucide-react'
+import { ArrowRight, Check, FilePlus2, FolderOpen, PenLine, Play, X } from 'lucide-react'
 import { PRODUCT } from '@shared/product'
 import { PROJECT_NAME_MAX } from '@core/schema/project'
 import { forgetProject, listRecentProjects, type RecentProject } from '../../lib/recent'
 import { openProjectAt, openProjectFromDialog, renameProjectFile } from '../../services/projectFiles'
 import { useUiStore } from '../../state/uiStore'
+import brandLogo from '../../../../assets/openscribe-128.png'
 import { ProjectThumbnail } from './ProjectThumbnail'
 
 function containingFolder(filePath: string): string {
@@ -39,11 +29,20 @@ function relativeTime(iso: string, now: number): string {
 
 export function WelcomeScreen(): JSX.Element {
   const openDialog = useUiStore((state) => state.openDialog)
-  const [recent, setRecent] = useState(listRecentProjects)
+  const [recent, setRecent] = useState<RecentProject[]>([])
+  const [loaded, setLoaded] = useState(false)
   const [now, setNow] = useState(() => Date.now())
 
-  const dismiss = (filePath: string): void => setRecent(forgetProject(filePath))
-  const refresh = (): void => setRecent(listRecentProjects())
+  const dismiss = (filePath: string): void => {
+    setRecent((entries) => entries.filter((entry) => entry.filePath !== filePath))
+    void forgetProject(filePath).catch(() => undefined)
+  }
+
+  const refresh = (): void => {
+    void listRecentProjects()
+      .then(setRecent)
+      .catch(() => undefined)
+  }
 
   // Keep "2 min ago" honest while the picker stays open.
   useEffect(() => {
@@ -51,20 +50,29 @@ export function WelcomeScreen(): JSX.Element {
     return () => window.clearInterval(timer)
   }, [])
 
-  // Drop entries whose file has been moved or deleted instead of showing a
-  // card that fails only when clicked.
+  // Load the list, then drop entries whose file has been moved or deleted
+  // instead of showing a card that fails only when clicked.
   useEffect(() => {
     let cancelled = false
-    const entries = listRecentProjects()
-    void Promise.all(
-      entries.map((entry) => window.api.project.exists(entry.filePath).catch(() => true))
-    ).then((exists) => {
+    void (async () => {
+      const entries = await listRecentProjects().catch(() => [] as RecentProject[])
+      if (cancelled) return
+      setRecent(entries)
+      setLoaded(true)
+
+      const exists = await Promise.all(
+        entries.map((entry) => window.api.project.exists(entry.filePath).catch(() => true))
+      )
       if (cancelled) return
       const missing = entries.filter((_, index) => !exists[index])
       if (missing.length === 0) return
-      for (const entry of missing) forgetProject(entry.filePath)
-      setRecent(listRecentProjects())
-    })
+
+      let next = entries
+      for (const entry of missing) {
+        next = await forgetProject(entry.filePath).catch(() => next)
+      }
+      if (!cancelled) setRecent(next)
+    })()
     return () => {
       cancelled = true
     }
@@ -72,172 +80,102 @@ export function WelcomeScreen(): JSX.Element {
 
   return (
     <main className="welcome home">
-      <div className="home-backdrop" aria-hidden="true" />
+      <div className="home-backdrop" aria-hidden="true">
+        <span className="home-glow home-glow-a" />
+        <span className="home-glow home-glow-b" />
+        <span className="home-glow home-glow-c" />
+      </div>
+
       <div className="home-inner">
-        <section className="home-hero">
-          <div className="home-hero-copy">
-            <div className="home-kicker-row">
-              <p className="home-eyebrow">No cloud. No account. Just your ideas.</p>
-              <span className="home-pill">
-                <HardDrive size={11} />
-                Local-first
-              </span>
+        <header className="home-top">
+          <div className="home-brand">
+            <img className="home-brand-mark" src={brandLogo} alt="" />
+            <div className="home-brand-copy">
+              <span className="home-brand-name">{PRODUCT.name}</span>
+              <span className="home-brand-sub">{PRODUCT.tagline}</span>
             </div>
-            <h1 className="home-headline">
-              Draw it. Animate it.
-              <span className="home-headline-accent">Publish it.</span>
-            </h1>
-            <p className="home-tagline">
-              Build hand-drawn explainer videos on an open canvas, then preview and export them
-              offline. Every project stays on this computer, in a folder you own.
-            </p>
-
-            <div className="home-cta">
-              <button className="home-primary" onClick={() => openDialog('newProject')}>
-                <FilePlus2 size={17} />
-                <span>New project</span>
-                <kbd>Ctrl N</kbd>
-              </button>
-              <button className="home-ghost" onClick={() => void openProjectFromDialog()}>
-                <FolderOpen size={17} />
-                <span>Open project</span>
-                <kbd>Ctrl O</kbd>
-              </button>
-            </div>
-
-            <ul className="home-points">
-              <li>
-                <PenLine size={13} />
-                <span>Hand-drawn animation</span>
-              </li>
-              <li>
-                <Music2 size={13} />
-                <span>Voiceover &amp; audio</span>
-              </li>
-              <li>
-                <Film size={13} />
-                <span>Offline MP4 &amp; GIF export</span>
-              </li>
-            </ul>
           </div>
+          <span className="home-version">v{PRODUCT.version}</span>
+        </header>
 
-          <div className="home-hero-art" aria-hidden="true">
-            <div className="home-art-glow" />
-            <div className="home-art-card">
-              <svg className="home-art-sketch" viewBox="0 0 480 320" role="presentation">
-                <defs>
-                  <pattern id="home-art-dots" width="18" height="18" patternUnits="userSpaceOnUse">
-                    <circle cx="2" cy="2" r="1.2" fill="#dedbd2" />
-                  </pattern>
-                </defs>
-                <rect x="24" y="20" width="432" height="280" rx="16" fill="url(#home-art-dots)" />
+        <section className="home-intro">
+          <h1 className="home-headline">
+            Whiteboard animation,
+            <span className="home-headline-muted">without the cloud.</span>
+          </h1>
+          <p className="home-tagline">
+            Build hand-drawn explainer videos on an open canvas, then preview and export
+            them offline. Every project stays in a folder you own.
+          </p>
 
-                <g className="home-art-camera">
-                  <rect x="62" y="64" width="356" height="188" rx="12" />
-                  <path d="M62 96 V78 A16 16 0 0 1 78 62 H96" />
-                  <path d="M384 62 H402 A16 16 0 0 1 418 78 V96" />
-                  <path d="M62 220 V238 A16 16 0 0 0 78 254 H96" />
-                  <path d="M384 254 H402 A16 16 0 0 0 418 238 V220" />
-                </g>
-
-                <g className="home-art-ink">
-                  <path d="M92 206 C 112 138, 156 100, 198 124 C 238 146, 212 198, 180 184 C 152 172, 176 136, 216 142 C 256 148, 262 196, 232 212" />
-                  <path d="M266 168 C 292 136, 328 124, 358 138" />
-                  <path d="M348 122 L 364 138 L 344 150" />
-                  <path d="M286 216 C 302 208, 320 208, 336 216" />
-                </g>
-
-                <g className="home-art-accent">
-                  <path d="M112 156 C 130 132, 150 124, 170 130" />
-                  <path d="M360 194 C 372 184, 386 184, 398 194" />
-                </g>
-
-                <g className="home-art-timeline">
-                  <rect x="84" y="272" width="312" height="8" rx="4" />
-                  <rect x="84" y="272" width="146" height="8" rx="4" className="home-art-progress" />
-                  <circle cx="230" cy="276" r="8" className="home-art-playhead" />
-                </g>
-              </svg>
-            </div>
-            <div className="home-art-foot">
-              <span className="home-art-dot" />
-              <span>Saved as a plain folder you own</span>
-            </div>
+          <div className="home-cta">
+            <button className="home-primary" onClick={() => openDialog('newProject')}>
+              <FilePlus2 size={16} />
+              <span>New project</span>
+              <kbd>Ctrl N</kbd>
+            </button>
+            <button className="home-ghost" onClick={() => void openProjectFromDialog()}>
+              <FolderOpen size={16} />
+              <span>Open project</span>
+              <kbd>Ctrl O</kbd>
+            </button>
           </div>
         </section>
 
         <section className="home-projects" aria-label="Recent projects">
           <header className="home-projects-head">
-            <div className="home-projects-title">
-              <h2>Recent projects</h2>
-              {recent.length > 0 ? <span className="home-count">{recent.length}</span> : null}
-            </div>
+            <h2>Recent projects</h2>
             <button className="home-link-btn" onClick={() => void openProjectFromDialog()}>
               Browse files
               <ArrowRight size={13} />
             </button>
           </header>
 
-          {recent.length === 0 ? (
-            <div className="home-empty">
-              <div className="home-empty-art" aria-hidden="true">
-                <span className="home-empty-frame" />
-                <FilePlus2 size={22} />
-              </div>
-              <div className="home-empty-copy">
-                <h3 className="home-empty-title">Start your first project</h3>
-                <p className="home-empty-body">
-                  Everything you make is saved as a portable project folder on disk. Create one now
-                  and it will be waiting here next time.
-                </p>
-                <div className="home-empty-actions">
-                  <button className="home-empty-action" onClick={() => openDialog('newProject')}>
-                    <FilePlus2 size={14} />
-                    Create a project
-                  </button>
-                  <button
-                    className="home-empty-secondary"
-                    onClick={() => void openProjectFromDialog()}
-                  >
-                    <FolderOpen size={14} />
-                    Open an existing one
-                  </button>
+          {!loaded ? (
+            <div className="home-skeleton-grid" aria-hidden="true">
+              {[0, 1, 2].map((index) => (
+                <div className="home-skeleton" key={index}>
+                  <span className="home-skeleton-thumb" />
+                  <span className="home-skeleton-line" />
+                  <span className="home-skeleton-line short" />
                 </div>
+              ))}
+            </div>
+          ) : recent.length === 0 ? (
+            <div className="home-empty">
+              <span className="home-empty-icon">
+                <FolderOpen size={16} />
+              </span>
+              <div>
+                <p className="home-empty-title">No projects yet</p>
+                <p className="home-empty-body">
+                  Projects you create will appear here, ready to reopen.
+                </p>
               </div>
             </div>
           ) : (
-            <>
-              <ul className="home-grid">
-                {recent.map((entry, index) => (
-                  <ProjectCard
-                    key={entry.filePath}
-                    entry={entry}
-                    thumbId={`proj-${index}`}
-                    now={now}
-                    onDismiss={dismiss}
-                    onRenamed={refresh}
-                  />
-                ))}
-              </ul>
-              <p className="home-projects-hint">
-                Press F2 or use the pencil on a card to rename · removing a project here only
-                clears the list, your files stay on disk.
-              </p>
-            </>
+            <ul className="home-grid">
+              {recent.map((entry, index) => (
+                <ProjectCard
+                  key={entry.filePath}
+                  entry={entry}
+                  thumbId={`proj-${index}`}
+                  now={now}
+                  onDismiss={dismiss}
+                  onRenamed={refresh}
+                />
+              ))}
+            </ul>
           )}
         </section>
 
         <footer className="home-footer">
           <span className="home-footer-item">
             <span className="home-footer-dot" />
-            {PRODUCT.name} {PRODUCT.version}
+            Local-first · {PRODUCT.license} licensed
           </span>
           <span className="home-footer-item">
-            {PRODUCT.license} license · Projects are folders containing an{' '}
-            <code>.{PRODUCT.projectExtension}</code> document
-          </span>
-          <span className="home-footer-item home-footer-tip">
-            Press <kbd>Ctrl K</kbd> anywhere for commands
+            Press <kbd>Ctrl K</kbd> for commands
           </span>
         </footer>
       </div>
@@ -351,9 +289,8 @@ function ProjectCard({
         onKeyDown={renameShortcut}
       >
         <ProjectThumbnail filePath={entry.filePath} idPrefix={thumbId} />
-        <span className="home-project-open">
-          <Play size={12} />
-          Open
+        <span className="home-project-open" aria-hidden="true">
+          <Play size={13} />
         </span>
       </button>
 
@@ -379,9 +316,12 @@ function ProjectCard({
           <span className="home-project-name">{entry.name}</span>
           <span className="home-project-meta">
             <span>{relativeTime(entry.openedAt, now)}</span>
+            <span className="home-project-sep" aria-hidden="true">
+              ·
+            </span>
             <span className="home-project-path">
               <FolderOpen size={10} />
-              {containingFolder(entry.filePath) || entry.filePath}
+              {containingFolder(entry.filePath) || 'On this computer'}
             </span>
           </span>
         </button>

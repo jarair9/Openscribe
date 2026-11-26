@@ -10,7 +10,10 @@ import {
 } from '../../../src/core/instruments'
 import type { Element } from '../../../src/core/schema/project'
 
-function eraseElement(instrumentId: string | null): Element {
+function eraseElement(
+  instrumentId: string | null,
+  easing: Element['animation']['exit']['easing'] = 'linear'
+): Element {
   return {
     id: 'txt-test',
     kind: 'text',
@@ -30,7 +33,7 @@ function eraseElement(instrumentId: string | null): Element {
       exit: {
         type: 'erase',
         duration: 1,
-        easing: 'linear',
+        easing,
         direction: 'down',
         delay: 0,
         instrumentId
@@ -61,6 +64,17 @@ describe('directional erase exit', () => {
     expect(first.opacity).toBe(1)
     expect(first.wipe?.progress).toBeCloseTo(0.75)
     expect(later.wipe?.progress).toBeCloseTo(0.25)
+  })
+
+  it('wipes at a steady pace however the exit easing is configured', () => {
+    // The default exit easing is cubic ease-in, which used to hold the board
+    // almost intact and then clear it in a rush at the very end. The eraser
+    // scrub runs on raw time, so half the duration clears half the board.
+    const element = eraseElement(null, 'easeIn')
+
+    expect(evaluateElement(element, timing, 2.25).wipe?.progress).toBeCloseTo(0.75)
+    expect(evaluateElement(element, timing, 2.5).wipe?.progress).toBeCloseTo(0.5)
+    expect(evaluateElement(element, timing, 2.75).wipe?.progress).toBeCloseTo(0.25)
   })
 
   it('falls back to the supplied eraser hand and shows it on the wipe edge', () => {

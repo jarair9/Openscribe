@@ -68,17 +68,37 @@ describe('eraser instrument during the exit', () => {
     expect(instrument!.pose).toBeTypeOf('number')
   })
 
-  it('rides the front rightwards as the erase advances', () => {
+  it('walks down the block as the erase advances', () => {
     const early = instrumented(2.25, DEFAULT_ERASER_INSTRUMENT_ID).instrument!
     const late = instrumented(2.75, DEFAULT_ERASER_INSTRUMENT_ID).instrument!
-    expect(early.wipeCursor!.x).toBeLessThan(late.wipeCursor!.x)
+    expect(early.wipeCursor!.y).toBeLessThan(late.wipeCursor!.y)
   })
 
-  it('rides the same way for a left-handed eraser', () => {
+  it('scrubs back and forth rather than sweeping one way', () => {
+    // The block is scrubbed in several passes, so the heading has to flip as
+    // the eraser works its way down rather than staying one way throughout.
+    const angles = new Set<number>()
+    for (let step = 1; step < 10; step += 1) {
+      const at = 2 + step / 10
+      const instrument = instrumented(at, DEFAULT_ERASER_INSTRUMENT_ID).instrument
+      expect(instrument).not.toBeNull()
+      angles.add(instrument!.wipeCursor!.angle)
+    }
+    expect([...angles].sort((a, b) => a - b)).toEqual([0, 180])
+  })
+
+  it('keeps the same hand for a scrubbing pass either way', () => {
+    const early = instrumented(2.25, DEFAULT_ERASER_INSTRUMENT_ID).instrument!
+    const late = instrumented(2.75, DEFAULT_ERASER_INSTRUMENT_ID).instrument!
+    expect(early.handedness).toBe(late.handedness)
+    expect(early.instrumentId).toBe(late.instrumentId)
+  })
+
+  it('rides the same path for a left-handed eraser', () => {
     const leftHanded = INSTRUMENTS.find((item) => instrumentHandedness(item) === 'left')!
     const early = instrumented(2.25, leftHanded.id).instrument!
     const late = instrumented(2.75, leftHanded.id).instrument!
     expect(early.handedness).toBe('left')
-    expect(early.wipeCursor!.x).toBeLessThan(late.wipeCursor!.x)
+    expect(early.wipeCursor!.y).toBeLessThan(late.wipeCursor!.y)
   })
 })

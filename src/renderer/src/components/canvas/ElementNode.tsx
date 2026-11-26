@@ -1,11 +1,11 @@
 import type { CSSProperties, JSX, PointerEvent as ReactPointerEvent } from 'react'
 import type { ElementVisualState } from '@core/animation/evaluate'
-import { scribbleRects } from '@core/animation/scribble'
+import { scrubCoveredPolygons } from '@core/animation/scrub'
 import type { Asset, Element, Project } from '@core/schema/project'
 import { strokeFontForElement } from '@core/text/strokeFont'
 import { strokeDrawProgress, strokeWritingPlan } from '@core/text/strokeWriting'
 import { assetUrl } from '../../lib/assets'
-import { arrowGeometry, elementGroupTransform, textLines } from './renderUtils'
+import { arrowGeometry, elementGroupTransform, polygonPoints, textLines } from './renderUtils'
 
 interface ElementNodeProps {
   project: Project
@@ -141,14 +141,8 @@ function SvgArtwork({ element, state, asset, registerPath, frame }: SvgArtworkPr
           <g key={drawable.id}>
             {fillClipId ? (
               <clipPath id={fillClipId}>
-                {scribbleRects(drawable.bbox, fill).map((band, index) => (
-                  <rect
-                    key={index}
-                    x={band.x}
-                    y={band.y}
-                    width={band.width}
-                    height={band.height}
-                  />
+                {scrubCoveredPolygons(drawable.bbox, fill).map((points, index) => (
+                  <polygon key={index} points={polygonPoints(points)} />
                 ))}
               </clipPath>
             ) : null}

@@ -1,8 +1,9 @@
 import { clamp01 } from '@core/math'
+import { scrubRemainingRects } from '@core/animation/scrub'
 import { glyphAdvance, strokeFontForElement } from '@core/text/strokeFont'
 import type { Direction, Rect } from '@core/schema/primitives'
 import type { Element, TextElement } from '@core/schema/project'
-import { eraseEdgePoint, eraseEdgeX } from './renderUtils'
+import { eraseEdgePoint } from './renderUtils'
 
 let context: CanvasRenderingContext2D | null | undefined
 const widthCache = new Map<string, number>()
@@ -258,29 +259,21 @@ function inkBlock(inks: TextLineInk[]): Rect {
 }
 
 /**
- * Ink the eraser leaves standing: one box per line, cut where the diagonal
- * front crosses that line. Because the front leans, the top line is always the
- * shortest survivor and the bottom line the longest, which is what makes a
- * single sweep read as a hand dragging an eraser down the board.
+ * Ink the eraser leaves standing: every line, cut back to whatever survives the
+ * scrub of the block that contains it. Splitting by pass is what makes the
+ * eraser clear a line, move down, and come back for the rest.
  */
 export function textEraseRects(element: TextElement, visible: number): Rect[] {
-  const inks = textLineInks(element)
-  const block = inkBlock(inks)
-  return inks
-    .filter((ink) => ink.width > 0)
-    .map((ink) => {
-      const edge = eraseEdgeX(block, visible, (ink.y - block.y) / block.height)
-      const x = Math.max(ink.x, edge)
-      return { x, y: ink.y, width: Math.max(0, ink.x + ink.width - x), height: ink.height }
-    })
-    .filter((rect) => rect.width > 0)
+  const inks = textLineInks(element).filter((ink) => ink.width > 0)
+  if (inks.length === 0) return []
+  return scrubRemainingRects(inkBlock(inks), 1 - clamp01(visible), inks)
 }
 
-/** Where the eraser sits on the front, at the height of the block's middle row. */
+/** Where the eraser sits on the block it is scrubbing. */
 export function textEraseCursor(
   element: TextElement,
   visible: number
-): { x: number; y: number; angle: number } {
+): { x: number; y: number; angle: number; pass: number } {
   return eraseEdgePoint(inkBlock(textLineInks(element)), visible)
 }
 
